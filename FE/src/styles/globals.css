@@ -1,0 +1,128 @@
+/* Import Google Fonts - must be at top */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base styles */
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+/* Product card hover effect */
+.product-card:hover .product-action {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.product-action {
+  transition: all 0.3s ease;
+}
+
+/* Material Symbols configuration */
+.material-symbols-outlined {
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Loading spinner */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #008080;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Form styles */
+@layer components {
+  .btn {
+    @apply px-4 py-2 font-medium uppercase tracking-widest text-sm transition-all;
+  }
+
+  .btn-primary {
+    @apply bg-primary text-white hover:bg-opacity-90;
+  }
+
+  .btn-secondary {
+    @apply border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800;
+  }
+
+  .form-group {
+    @apply mb-4;
+  }
+
+  .form-group label {
+    @apply block text-sm font-medium mb-2 text-slate-700 dark:text-slate-300;
+  }
+
+  .form-group input {
+    @apply w-full px-3 py-2 border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-slate-800 dark:border-slate-700;
+  }
+
+  .error-message {
+    @apply bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4;
+  }
+
+  .auth-page {
+    @apply min-h-screen flex items-center justify-center bg-slate-50 dark:bg-background-dark;
+  }
+
+  .auth-container {
+    @apply bg-white dark:bg-slate-800 p-8 rounded-lg shadow-lg w-full max-w-md;
+  }
+
+  .auth-form {
+    @apply mt-6;
+  }
+
+  .auth-links {
+    @apply mt-6 text-center space-y-2 text-sm text-slate-600 dark:text-slate-400;
+  }
+
+  .auth-links a {
+    @apply block hover:text-primary transition-colors;
+  }
+}
