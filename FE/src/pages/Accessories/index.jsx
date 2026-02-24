@@ -10,13 +10,13 @@ const AccessoriesPage = () => {
   // Get state and actions from Zustand store
   const {
     accessories,
-    categories,
+    accessoryTypes,
     isLoading,
     error,
     pagination,
     filters,
     fetchAccessories,
-    toggleCategory,
+    toggleAccessoryType,
     setPriceRange,
     clearFilters,
     setCurrentPage,
@@ -27,18 +27,18 @@ const AccessoriesPage = () => {
     fetchAccessories();
   }, [
     fetchAccessories,
-    filters.categories,
+    filters.accessoryTypes,
     filters.priceRange,
     filters.searchQuery,
     pagination.currentPage,
     pagination.pageSize,
   ]);
 
-  const handleCategoryChange = useCallback(
-    (categoryId) => {
-      toggleCategory(categoryId);
+  const handleAccessoryTypeChange = useCallback(
+    (accessoryType) => {
+      toggleAccessoryType(accessoryType);
     },
-    [toggleCategory]
+    [toggleAccessoryType]
   );
 
   const handlePriceRangeChange = useCallback(
@@ -152,25 +152,25 @@ const AccessoriesPage = () => {
                   Loại phụ kiện
                 </h3>
                 <div className="space-y-2">
-                  {categories.map((category) => (
+                  {accessoryTypes.map((type) => (
                     <label
-                      key={category.id}
+                      key={type.id}
                       className="flex items-center group cursor-pointer"
                     >
                       <input
                         type="checkbox"
-                        checked={filters.categories.includes(category.id)}
-                        onChange={() => handleCategoryChange(category.id)}
+                        checked={filters.accessoryTypes.includes(type.id)}
+                        onChange={() => handleAccessoryTypeChange(type.id)}
                         className="rounded border-slate-300 text-primary focus:ring-primary h-4 w-4"
                       />
                       <span
                         className={`ml-3 text-sm transition-colors ${
-                          filters.categories.includes(category.id)
+                          filters.accessoryTypes.includes(type.id)
                             ? 'font-medium text-primary'
                             : 'text-slate-600 dark:text-slate-400 group-hover:text-primary'
                         }`}
                       >
-                        {category.label}
+                        {type.label}
                       </span>
                     </label>
                   ))}
