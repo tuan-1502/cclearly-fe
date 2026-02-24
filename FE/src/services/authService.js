@@ -77,6 +77,38 @@ export const authService = {
     const response = await apiClient.post('/v1/auth/reset-password', data);
     return response.data;
   },
+
+  /**
+   * Verify email with token
+   * @param {string} token - Verification token
+   * @returns {Promise<Object>}
+   */
+  verifyEmail: async (token) => {
+    const response = await apiClient.post('/v1/auth/verify-email', { token });
+    return response.data;
+  },
+
+  /**
+   * Resend verification email
+   * @param {string} email - User email
+   * @returns {Promise<Object>}
+   */
+  resendVerificationEmail: async (email) => {
+    const response = await apiClient.post('/v1/auth/resend-verification', {
+      email,
+    });
+    return response.data;
+  },
+
+  /**
+   * Login with Google OAuth
+   * @param {string} idToken - Google ID Token
+   * @returns {Promise<Object>}
+   */
+  loginWithGoogle: async (idToken) => {
+    const response = await apiClient.post('/v1/auth/google', { idToken });
+    return response.data;
+  },
 };
 
 export default authService;
