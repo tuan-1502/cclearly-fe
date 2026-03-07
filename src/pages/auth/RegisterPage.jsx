@@ -44,7 +44,11 @@ const RegisterPage = () => {
         phone: formData.phone,
         password: formData.password,
       })
-      navigate('/')
+      // Redirect to verify email page with email in state
+      navigate('/verify-email', {
+        replace: true,
+        state: { email: formData.email },
+      })
     } catch (error) {
       // Error handled by hook
     }
