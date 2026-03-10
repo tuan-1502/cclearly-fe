@@ -9,8 +9,8 @@ export const adminRequest = {
   },
 
   // Revenue stats
-  getRevenue: async () => {
-    const res = await http.get(ENDPOINT.ADMIN_REVENUE);
+  getRevenue: async (params) => {
+    const res = await http.get(ENDPOINT.ADMIN_REVENUE, { query: params });
     return res.data;
   },
 

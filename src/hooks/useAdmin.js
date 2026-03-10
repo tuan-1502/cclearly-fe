@@ -14,10 +14,10 @@ export const useAdminDashboard = () => {
 };
 
 // ─── Revenue ─────────────────────────────────────────────────
-export const useAdminRevenue = () => {
+export const useAdminRevenue = (params = {}) => {
   return useQuery({
-    queryKey: QUERY_KEYS.ADMIN_REVENUE,
-    queryFn: () => adminRequest.getRevenue(),
+    queryKey: [...QUERY_KEYS.ADMIN_REVENUE, params],
+    queryFn: () => adminRequest.getRevenue(params),
     staleTime: 2 * 60 * 1000,
   });
 };
