@@ -65,7 +65,6 @@ import StaffPage from './pages/manager/StaffPage';
 // Operations Pages
 import InventoryPage from './pages/operations/InventoryPage';
 import OperationsBoardPage from './pages/operations/OperationsBoardPage';
-import OperationsDashboardPage from './pages/operations/OperationsDashboardPage';
 import OperationsLensLabPage from './pages/operations/OperationsLensLabPage';
 import OperationsOrdersPage from './pages/operations/OperationsOrdersPage';
 import OperationsShippingPage from './pages/operations/OperationsShippingPage';
@@ -175,8 +174,7 @@ function App() {
             </OperationsRoute>
           }
         >
-          <Route path="/operations" element={<OperationsDashboardPage />} />
-          <Route path="/operations/board" element={<OperationsBoardPage />} />
+          <Route path="/operations" element={<OperationsBoardPage />} />
           <Route path="/operations/orders" element={<OperationsOrdersPage />} />
           <Route path="/operations/inventory" element={<InventoryPage />} />
           <Route

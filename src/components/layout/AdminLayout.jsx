@@ -43,9 +43,8 @@ const getMenuItems = (role) => {
 
     // Operations: Kho & Gia công
     [ROLES.OPERATIONS]: [
-      { path: '/operations', label: 'Tổng quan', icon: Home },
       {
-        path: '/operations/board',
+        path: '/operations',
         label: 'Điều phối đơn',
         icon: ClipboardList,
       },
