@@ -1,7 +1,8 @@
-import { Search, Package, Truck, CheckCircle } from 'lucide-react';
+import { Search, Package, Truck, CheckCircle, Eye } from 'lucide-react';
 import { useState, useMemo } from 'react';
 import { toast } from 'react-toastify';
 import ConfirmModal from '@/components/ui/ConfirmModal';
+import OrderDetailModal from '@/components/sale/OrderDetailModal';
 import Pagination from '@/components/ui/Pagination';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAdminOrders, useUpdateOrderStatus } from '@/hooks/useOrder';
@@ -36,7 +37,15 @@ const OperationsOrdersPage = () => {
     open: false,
     id: null,
     tracking: '',
+    carrier: '',
   });
+
+  const SHIPPING_CARRIERS = [
+    { value: 'Giao hàng tiết kiệm', label: 'Giao hàng tiết kiệm' },
+    { value: 'Giao hàng nhanh', label: 'Giao hàng nhanh' },
+  ];
+
+  const [selectedOrder, setSelectedOrder] = useState(null);
 
   const currency = (v) =>
     new Intl.NumberFormat('vi-VN', {
@@ -45,12 +54,14 @@ const OperationsOrdersPage = () => {
     }).format(v);
 
   const statusMap = {
-    pending: ['Chờ xác nhận', 'bg-yellow-100 text-yellow-700'],
-    confirmed: ['Đã xác nhận', 'bg-blue-100 text-blue-700'],
-    processing: ['Đang xử lý', 'bg-purple-100 text-purple-700'],
-    shipped: ['Đang giao', 'bg-orange-100 text-orange-700'],
-    delivered: ['Hoàn thành', 'bg-green-100 text-green-700'],
-    cancelled: ['Đã hủy', 'bg-red-100 text-red-700'],
+    PENDING: ['Chờ xác nhận', 'bg-yellow-100 text-yellow-700'],
+    CONFIRMED: ['Đã xác nhận', 'bg-blue-100 text-blue-700'],
+    PROCESSING: ['Đang xử lý', 'bg-purple-100 text-purple-700'],
+    SHIPPED: ['Đang giao', 'bg-orange-100 text-orange-700'],
+    DELIVERED: ['Hoàn thành', 'bg-green-100 text-green-700'],
+    CANCELLED: ['Đã hủy', 'bg-red-100 text-red-700'],
+    RETURN_REQUESTED: ['Yêu cầu đổi trả', 'bg-pink-100 text-pink-700'],
+    RETURNED: ['Đã trả hàng', 'bg-gray-100 text-gray-700'],
   };
 
   const filtered = useMemo(() => {
@@ -113,10 +124,12 @@ const OperationsOrdersPage = () => {
           className="px-3 py-2 border rounded-lg"
         >
           <option value="all">Tất cả</option>
-          <option value="confirmed">Đã xác nhận</option>
-          <option value="processing">Đang xử lý</option>
-          <option value="shipped">Đang giao</option>
-          <option value="delivered">Hoàn thành</option>
+          <option value="PENDING">Chờ xác nhận</option>
+          <option value="CONFIRMED">Đã xác nhận</option>
+          <option value="PROCESSING">Đang xử lý</option>
+          <option value="SHIPPED">Đang giao</option>
+          <option value="DELIVERED">Hoàn thành</option>
+          <option value="CANCELLED">Đã hủy</option>
         </select>
       </div>
 
@@ -137,7 +150,8 @@ const OperationsOrdersPage = () => {
         {/* rows */}
 
         {paginated.map((order) => {
-          const [label, color] = statusMap[order.status] || [
+          const s = (order.status || '').toUpperCase();
+          const [label, color] = statusMap[s] || [
             'Không rõ',
             'bg-gray-100',
           ];
@@ -188,16 +202,24 @@ const OperationsOrdersPage = () => {
               {/* actions */}
 
               <div className="flex justify-end gap-2">
-                {order.status === 'confirmed' && (
+                <button
+                  onClick={() => setSelectedOrder(order)}
+                  className="bg-gray-100 text-gray-600 px-2 py-1 rounded-lg text-xs flex items-center gap-1 hover:bg-gray-200"
+                  title="Xem chi tiết"
+                >
+                  <Eye size={12} />
+                </button>
+
+                {s === 'CONFIRMED' && (
                   <button
-                    onClick={() => updateStatus(order.orderId || order.id, 'processing')}
+                    onClick={() => updateStatus(order.orderId || order.id, 'PROCESSING')}
                     className="bg-purple-500 text-white px-3 py-1 rounded-lg text-xs flex items-center gap-1"
                   >
-                    <Package size={12} /> Lấy
+                    <Package size={12} /> Lấy hàng
                   </button>
                 )}
 
-                {order.status === 'processing' && (
+                {s === 'PROCESSING' && (
                   <button
                     onClick={() =>
                       setTrackingModal({
@@ -208,16 +230,16 @@ const OperationsOrdersPage = () => {
                     }
                     className="bg-blue-500 text-white px-3 py-1 rounded-lg text-xs flex items-center gap-1"
                   >
-                    <CheckCircle size={12} /> Đóng gói
+                    <CheckCircle size={12} /> Giao hàng
                   </button>
                 )}
 
-                {order.status === 'shipped' && (
+                {s === 'SHIPPED' && (
                   <button
-                    onClick={() => updateStatus(order.orderId || order.id, 'delivered')}
+                    onClick={() => updateStatus(order.orderId || order.id, 'DELIVERED')}
                     className="bg-orange-500 text-white px-3 py-1 rounded-lg text-xs flex items-center gap-1"
                   >
-                    <Truck size={12} /> Bàn giao
+                    <Truck size={12} /> Xác nhận giao
                   </button>
                 )}
               </div>
@@ -272,26 +294,51 @@ const OperationsOrdersPage = () => {
           <div
             className="absolute inset-0 bg-black/40"
             onClick={() =>
-              setTrackingModal({ open: false, id: null, tracking: '' })
+              setTrackingModal({ open: false, id: null, tracking: '', carrier: '' })
             }
           />
 
           <div className="relative bg-white p-6 rounded-xl w-full max-w-sm space-y-4">
             <h3 className="font-semibold text-lg">Tạo vận đơn</h3>
 
-            <input
-              value={trackingModal.tracking}
-              onChange={(e) =>
-                setTrackingModal({ ...trackingModal, tracking: e.target.value })
-              }
-              placeholder="Nhập mã vận đơn"
-              className="w-full border p-2 rounded"
-            />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Đơn vị giao hàng <span className="text-red-500">*</span>
+              </label>
+              <select
+                value={trackingModal.carrier}
+                onChange={(e) =>
+                  setTrackingModal({ ...trackingModal, carrier: e.target.value })
+                }
+                className="w-full border p-2 rounded"
+              >
+                <option value="">-- Chọn đơn vị --</option>
+                {SHIPPING_CARRIERS.map((c) => (
+                  <option key={c.value} value={c.value}>
+                    {c.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Mã vận đơn <span className="text-red-500">*</span>
+              </label>
+              <input
+                value={trackingModal.tracking}
+                onChange={(e) =>
+                  setTrackingModal({ ...trackingModal, tracking: e.target.value })
+                }
+                placeholder="Nhập mã vận đơn"
+                className="w-full border p-2 rounded"
+              />
+            </div>
 
             <div className="flex gap-2">
               <button
                 onClick={() =>
-                  setTrackingModal({ open: false, id: null, tracking: '' })
+                  setTrackingModal({ open: false, id: null, tracking: '', carrier: '' })
                 }
                 className="flex-1 bg-gray-200 py-2 rounded"
               >
@@ -300,9 +347,20 @@ const OperationsOrdersPage = () => {
 
               <button
                 onClick={() => {
-                  updateStatus(trackingModal.id, 'shipped');
-                  toast.success('Đã tạo vận đơn');
-                  setTrackingModal({ open: false, id: null, tracking: '' });
+                  if (!trackingModal.carrier) {
+                    toast.error('Vui lòng chọn đơn vị giao hàng');
+                    return;
+                  }
+                  if (!trackingModal.tracking.trim()) {
+                    toast.error('Vui lòng nhập mã vận đơn');
+                    return;
+                  }
+                  updateOrderStatusMutation.mutate({
+                    id: trackingModal.id,
+                    status: 'SHIPPED',
+                    note: `[${trackingModal.carrier}] ${trackingModal.tracking.trim()}`,
+                  });
+                  setTrackingModal({ open: false, id: null, tracking: '', carrier: '' });
                 }}
                 className="flex-1 bg-blue-600 text-white py-2 rounded"
               >
@@ -317,6 +375,14 @@ const OperationsOrdersPage = () => {
         isOpen={confirmModal.open}
         onClose={() => setConfirmModal({ open: false, id: null, action: null })}
       />
+
+      {/* Order Detail Modal */}
+      {selectedOrder && (
+        <OrderDetailModal
+          order={selectedOrder}
+          onClose={() => setSelectedOrder(null)}
+        />
+      )}
     </div>
   );
 };
