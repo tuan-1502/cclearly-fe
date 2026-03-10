@@ -50,7 +50,9 @@ const LoginPage = () => {
         });
         return;
       }
-      navigate(from, { replace: true });
+      const role = data?.user?.role;
+      const dest = STAFF_DASHBOARDS[role] || from;
+      navigate(dest, { replace: true });
     } catch (error) {
       // Error handled by hook
     }
