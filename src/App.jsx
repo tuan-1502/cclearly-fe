@@ -185,6 +185,10 @@ function App() {
             path="/operations/shipping"
             element={<OperationsShippingPage />}
           />
+          <Route
+            path="/operations/preorder"
+            element={<PreorderReceivePage />}
+          />
         </Route>
 
         {/* Fallback */}

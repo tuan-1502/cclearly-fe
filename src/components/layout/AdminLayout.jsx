@@ -55,6 +55,11 @@ const getMenuItems = (role) => {
         label: 'Giao vận & Tracking',
         icon: Truck,
       },
+      {
+        path: '/operations/preorder',
+        label: 'Nhận hàng Pre-order',
+        icon: Package,
+      },
       { path: '/operations/inventory', label: 'Quản lý kho', icon: Warehouse },
     ],
 
