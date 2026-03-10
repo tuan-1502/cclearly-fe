@@ -399,14 +399,14 @@ const ProductDetailPage = () => {
           {/* TAB CONTENT */}
 
           {activeTab === 'description' && (
-            <div className="text-gray-600 leading-relaxed">
+            <div className="text-gray-600 leading-relaxed overflow-hidden">
               {product.description ? (
                 <div
-                  className="prose prose-sm max-w-none
+                  className="prose prose-sm max-w-none break-words overflow-wrap-anywhere
                     [&_h1]:text-2xl [&_h1]:font-bold [&_h1]:mb-3
                     [&_h2]:text-xl [&_h2]:font-bold [&_h2]:mb-2
                     [&_h3]:text-lg [&_h3]:font-semibold [&_h3]:mb-2
-                    [&_p]:mb-3 [&_p]:leading-relaxed
+                    [&_p]:mb-3 [&_p]:leading-relaxed [&_p]:break-words
                     [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:mb-3
                     [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:mb-3
                     [&_li]:mb-1
@@ -414,9 +414,11 @@ const ProductDetailPage = () => {
                     [&_em]:italic
                     [&_u]:underline
                     [&_s]:line-through
-                    [&_a]:text-blue-600 [&_a]:underline
-                    [&_img]:rounded-lg [&_img]:my-4 [&_img]:max-w-full [&_img]:h-auto
-                    [&_blockquote]:border-l-4 [&_blockquote]:border-gray-300 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-gray-500"
+                    [&_a]:text-blue-600 [&_a]:underline [&_a]:break-all
+                    [&_img]:rounded-lg [&_img]:my-4 [&_img]:max-w-full [&_img]:h-auto [&_img]:block
+                    [&_blockquote]:border-l-4 [&_blockquote]:border-gray-300 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-gray-500
+                    [&_*]:max-w-full"
+                  style={{ overflowWrap: 'anywhere', wordBreak: 'break-word' }}
                   dangerouslySetInnerHTML={{ __html: product.description }}
                 />
               ) : (
