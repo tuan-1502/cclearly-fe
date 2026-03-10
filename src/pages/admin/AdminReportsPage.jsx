@@ -8,7 +8,7 @@ import {
   Users,
   ShoppingCart,
   ChevronRight,
-  Filter,
+  ChevronDown,
   Calendar,
   Loader2,
 } from 'lucide-react';
@@ -198,7 +198,7 @@ const AdminReportsPage = () => {
           </div>
           <div className="h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={[...revenueByDay].reverse()}>
+              <LineChart data={revenueByDay}>
                 <CartesianGrid
                   strokeDasharray="3 3"
                   vertical={false}
@@ -359,11 +359,8 @@ const AdminReportsPage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Top Products */}
         <div className="bg-white rounded-2xl p-6 shadow-[0_10px_30px_rgba(13,22,39,0.06)] border border-[#f0f0f0]">
-          <div className="flex items-center justify-between mb-6">
+          <div className="mb-6">
             <h3 className="text-lg font-bold text-[#222]">Sản phẩm bán chạy</h3>
-            <button className="text-[#0f5dd9] text-sm font-medium hover:underline flex items-center gap-1">
-              Xem tất cả <ChevronRight size={14} />
-            </button>
           </div>
           <div className="space-y-4">
             {(stats?.topProducts || []).map((item, i) => (
