@@ -9,20 +9,25 @@ export const SectionHeader = ({ title, description }) => (
 
 export const FormField = ({
   label,
+  value,
   defaultValue,
   type = 'text',
   placeholder,
   readOnly,
   className = '',
+  onChange,
+  ...rest
 }) => (
   <div className="flex flex-col gap-1.5 w-full text-left">
     <label className="text-sm font-medium text-gray-700">{label}</label>
     <input
       type={type}
       readOnly={readOnly}
-      defaultValue={defaultValue}
+      {...(value !== undefined ? { value } : { defaultValue })}
       placeholder={placeholder}
+      onChange={onChange}
       className={`border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 transition-all ${className}`}
+      {...rest}
     />
   </div>
 );
