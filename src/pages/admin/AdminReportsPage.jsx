@@ -80,17 +80,15 @@ const AdminReportsPage = () => {
   const statusData = stats?.ordersByStatus
     ? Object.entries(stats.ordersByStatus).map(([name, value]) => ({
         name:
-          name === 'pending'
+          name === 'PENDING'
             ? 'Chờ xử lý'
-            : name === 'confirmed'
-              ? 'Đã xác nhận'
-              : name === 'processing'
-                ? 'Đang gia công'
-                : name === 'shipped'
-                  ? 'Đang giao'
-                  : name === 'delivered'
-                    ? 'Hoàn thành'
-                    : 'Đã hủy',
+            : name === 'PROCESSING'
+              ? 'Đang gia công'
+              : name === 'DELIVERED'
+                ? 'Hoàn thành'
+                : name === 'CANCELLED'
+                  ? 'Đã hủy'
+                  : name,
         value,
       }))
     : [];

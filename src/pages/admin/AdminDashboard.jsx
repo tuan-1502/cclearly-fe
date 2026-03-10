@@ -29,16 +29,26 @@ const AdminDashboard = () => {
     }).format(amount);
 
   const getStatusBadge = (status) => {
+    const s = status?.toUpperCase();
     const map = {
-      pending: 'bg-yellow-100 text-yellow-800',
-      confirmed: 'bg-blue-100 text-blue-800',
-      processing: 'bg-purple-100 text-purple-800',
-      shipped: 'bg-orange-100 text-orange-800',
-      delivered: 'bg-green-100 text-green-800',
-      cancelled: 'bg-red-100 text-red-800',
+      PENDING: 'bg-yellow-100 text-yellow-800',
+      PROCESSING: 'bg-purple-100 text-purple-800',
+      DELIVERED: 'bg-green-100 text-green-800',
+      CANCELLED: 'bg-red-100 text-red-800',
     };
 
-    return map[status] || 'bg-gray-100 text-gray-800';
+    return map[s] || 'bg-gray-100 text-gray-800';
+  };
+
+  const getStatusLabel = (status) => {
+    const s = status?.toUpperCase();
+    const map = {
+      PENDING: 'Chờ xử lý',
+      PROCESSING: 'Đang gia công',
+      DELIVERED: 'Hoàn thành',
+      CANCELLED: 'Đã hủy',
+    };
+    return map[s] || status;
   };
 
   if (loadingStats) {
@@ -174,7 +184,7 @@ const AdminDashboard = () => {
                         <span
                           className={`px-3 py-1 rounded-full text-xs ${getStatusBadge(order.status)}`}
                         >
-                          {order.status}
+                          {getStatusLabel(order.status)}
                         </span>
                       </td>
                     </tr>
