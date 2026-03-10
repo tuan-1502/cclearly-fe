@@ -33,8 +33,10 @@ export const orderRequest = {
   },
 
   // Update order status (Admin/Staff only)
-  updateOrderStatus: async (id, status) => {
-    const res = await http.patch(ENDPOINT.UPDATE_ORDER_STATUS(id), { status });
+  updateOrderStatus: async (id, status, note) => {
+    const body = { status };
+    if (note) body.note = note;
+    const res = await http.patch(ENDPOINT.UPDATE_ORDER_STATUS(id), body);
     return res.data;
   },
 

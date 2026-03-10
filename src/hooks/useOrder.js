@@ -104,13 +104,14 @@ export const useUpdateOrderStatus = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id, status }) => {
-      const res = await orderRequest.updateOrderStatus(id, status);
+    mutationFn: async ({ id, status, note }) => {
+      const res = await orderRequest.updateOrderStatus(id, status, note);
       return res;
     },
     onSuccess: () => {
       toast.success('Cập nhật trạng thái thành công!');
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.ORDERS });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.ADMIN_ORDERS });
     },
     onError: (error) => {
       handleErrorApi({ error });
