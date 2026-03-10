@@ -1,9 +1,31 @@
-import { Glasses, Scan, Minus, Plus, Truck, ShieldCheck } from 'lucide-react';
-import { useState } from 'react';
+import { Glasses, Scan, Minus, Plus, Truck, ShieldCheck, Package } from 'lucide-react';
+import { useState, useMemo } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAddToCart } from '@/hooks/useCart';
 import { useProductDetail } from '@/hooks/useProduct';
+
+// Vietnamese labels for frame specs
+const FRAME_SPEC_LABELS = {
+  material: 'Chất liệu',
+  shape: 'Dáng kính',
+  lensWidthMm: 'Chiều rộng mắt kính (mm)',
+  bridgeWidthMm: 'Chiều rộng cầu kính (mm)',
+  templeLengthMm: 'Chiều dài càng kính (mm)',
+};
+
+// Vietnamese labels for lens specs
+const LENS_SPEC_LABELS = {
+  lensType: 'Loại tròng',
+  material: 'Chất liệu',
+  technologies: 'Công nghệ',
+};
+
+const TYPE_LABELS = {
+  frame: 'Gọng kính',
+  lens: 'Tròng kính',
+  accessory: 'Phụ kiện',
+};
 
 const ProductDetailPage = () => {
   const { id } = useParams();
@@ -15,21 +37,46 @@ const ProductDetailPage = () => {
   const [quantity, setQuantity] = useState(1);
   const [orderType, setOrderType] = useState('regular');
   const [activeTab, setActiveTab] = useState('description');
+  const [selectedVariantId, setSelectedVariantId] = useState(null);
+  const [mainImage, setMainImage] = useState(null);
+
+  // Determine the selected variant
+  const selectedVariant = useMemo(() => {
+    if (!product?.variants?.length) return null;
+    if (selectedVariantId) {
+      return product.variants.find((v) => v.variantId === selectedVariantId) || product.variants[0];
+    }
+    return product.variants[0];
+  }, [product, selectedVariantId]);
+
+  // Get display price based on selected variant
+  const displayPrice = useMemo(() => {
+    if (selectedVariant?.salePrice) return selectedVariant.salePrice;
+    return product?.basePrice;
+  }, [selectedVariant, product]);
+
+  // Get images to display
+  const displayImages = useMemo(() => {
+    if (selectedVariant?.images?.length) return selectedVariant.images;
+    if (product?.images?.length) return product.images;
+    return [];
+  }, [selectedVariant, product]);
 
   const handleAddToCart = async () => {
+    if (!selectedVariant) return;
     try {
       await addToCart.mutateAsync({
-        productId: product.id,
+        variantId: selectedVariant.variantId,
         quantity,
       });
-      // Success toast is handled by hook
     } catch (err) {}
   };
 
   const handleBuyNow = async () => {
+    if (!selectedVariant) return;
     try {
       await addToCart.mutateAsync({
-        productId: product.id,
+        variantId: selectedVariant.variantId,
         quantity,
       });
       navigate('/checkout');
@@ -55,6 +102,31 @@ const ProductDetailPage = () => {
       </div>
     );
   }
+
+  // Build specs data for display
+  const specsData = [];
+  if (product.type === 'frame' && product.frame) {
+    Object.entries(product.frame).forEach(([key, value]) => {
+      if (value != null) {
+        specsData.push({
+          label: FRAME_SPEC_LABELS[key] || key,
+          value: String(value),
+        });
+      }
+    });
+  } else if (product.type === 'lens' && product.lens) {
+    Object.entries(product.lens).forEach(([key, value]) => {
+      if (value != null) {
+        const displayValue = Array.isArray(value) ? value.join(', ') : String(value);
+        specsData.push({
+          label: LENS_SPEC_LABELS[key] || key,
+          value: displayValue,
+        });
+      }
+    });
+  }
+
+  const hasSpecs = specsData.length > 0;
 
   return (
     <div className="bg-[#ececec] min-h-screen py-10">
