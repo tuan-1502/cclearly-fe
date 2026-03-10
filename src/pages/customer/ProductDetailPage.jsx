@@ -143,11 +143,39 @@ const ProductDetailPage = () => {
         {/* PRODUCT HERO */}
         <div className="grid lg:grid-cols-2 gap-12 mb-16">
           {/* IMAGE */}
-          <div className="bg-white rounded-3xl shadow p-10 flex items-center justify-center">
-            {product.type === 'frame' ? (
-              <Glasses className="w-40 h-40 text-gray-300" />
-            ) : (
-              <Scan className="w-40 h-40 text-gray-300" />
+          <div className="space-y-4">
+            <div className="bg-white rounded-3xl shadow p-10 flex items-center justify-center min-h-[400px]">
+              {displayImages.length > 0 ? (
+                <img
+                  src={mainImage || displayImages[0]}
+                  alt={product.name}
+                  className="max-h-[380px] object-contain"
+                />
+              ) : product.type === 'frame' ? (
+                <Glasses className="w-40 h-40 text-gray-300" />
+              ) : product.type === 'lens' ? (
+                <Scan className="w-40 h-40 text-gray-300" />
+              ) : (
+                <Package className="w-40 h-40 text-gray-300" />
+              )}
+            </div>
+            {/* Thumbnail gallery */}
+            {displayImages.length > 1 && (
+              <div className="flex gap-3 overflow-x-auto pb-2">
+                {displayImages.map((img, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setMainImage(img)}
+                    className={`w-20 h-20 rounded-xl overflow-hidden border-2 flex-shrink-0 ${
+                      (mainImage || displayImages[0]) === img
+                        ? 'border-blue-500'
+                        : 'border-transparent'
+                    }`}
+                  >
+                    <img src={img} alt="" className="w-full h-full object-cover" />
+                  </button>
+                ))}
+              </div>
             )}
           </div>
 
@@ -156,18 +184,12 @@ const ProductDetailPage = () => {
             {/* BADGES */}
             <div className="flex gap-2 mb-4">
               <span className="text-xs bg-blue-50 text-blue-600 px-3 py-1 rounded-full">
-                {product.type === 'frame' ? 'Gọng kính' : 'Tròng kính'}
+                {TYPE_LABELS[product.type] || product.type}
               </span>
 
               {product.isSale && (
                 <span className="bg-yellow-400 text-xs px-3 py-1 rounded-full">
                   Sale
-                </span>
-              )}
-
-              {product.isPreorder && (
-                <span className="bg-blue-600 text-white text-xs px-3 py-1 rounded-full">
-                  Pre-order
                 </span>
               )}
             </div>
@@ -183,22 +205,68 @@ const ProductDetailPage = () => {
                 {new Intl.NumberFormat('vi-VN', {
                   style: 'currency',
                   currency: 'VND',
-                }).format(product.basePrice)}
+                }).format(displayPrice)}
               </span>
 
-              {product.originalPrice &&
-                product.originalPrice > product.basePrice && (
-                  <span className="text-lg line-through text-gray-400">
-                    {new Intl.NumberFormat('vi-VN', {
-                      style: 'currency',
-                      currency: 'VND',
-                    }).format(product.originalPrice)}
-                  </span>
-                )}
+              {product.isSale && product.basePrice > displayPrice && (
+                <span className="text-lg line-through text-gray-400">
+                  {new Intl.NumberFormat('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND',
+                  }).format(product.basePrice)}
+                </span>
+              )}
             </div>
 
             {/* SHORT DESCRIPTION */}
-            <p className="text-gray-600 mb-6">{product.description}</p>
+            {product.description && (
+              <p className="text-gray-600 mb-6">{product.description}</p>
+            )}
+
+            {/* VARIANT SELECTOR */}
+            {product.variants?.length > 0 && (
+              <div className="mb-6">
+                <label className="block text-sm font-semibold text-gray-700 mb-3">
+                  {product.type === 'lens' ? 'Chỉ số khúc xạ' : 'Màu sắc'}
+                </label>
+                <div className="flex flex-wrap gap-3">
+                  {product.variants.map((variant) => {
+                    const isSelected = selectedVariant?.variantId === variant.variantId;
+                    const label =
+                      product.type === 'lens'
+                        ? variant.refractiveIndex
+                          ? `${variant.refractiveIndex}`
+                          : variant.colorName || variant.sku
+                        : variant.colorName || variant.sku;
+
+                    return (
+                      <button
+                        key={variant.variantId}
+                        onClick={() => {
+                          setSelectedVariantId(variant.variantId);
+                          setMainImage(null);
+                        }}
+                        className={`px-4 py-2 rounded-full text-sm font-medium border-2 transition ${
+                          isSelected
+                            ? 'border-blue-600 bg-blue-50 text-blue-700'
+                            : 'border-gray-200 bg-white text-gray-700 hover:border-gray-400'
+                        }`}
+                      >
+                        {label}
+                        {variant.salePrice && variant.salePrice !== product.basePrice && (
+                          <span className="ml-2 text-xs text-gray-500">
+                            {new Intl.NumberFormat('vi-VN', {
+                              style: 'currency',
+                              currency: 'VND',
+                            }).format(variant.salePrice)}
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
 
             {/* ORDER TYPE */}
             <div className="flex gap-3 mb-6">
@@ -211,17 +279,6 @@ const ProductDetailPage = () => {
                 }`}
               >
                 Mua ngay
-              </button>
-
-              <button
-                onClick={() => setOrderType('preorder')}
-                className={`px-5 py-2 rounded-full text-sm font-semibold ${
-                  orderType === 'preorder'
-                    ? 'bg-black text-white'
-                    : 'bg-gray-100'
-                }`}
-              >
-                Pre-order
               </button>
 
               <button
@@ -275,13 +332,15 @@ const ProductDetailPage = () => {
               <div className="flex gap-4">
                 <button
                   onClick={handleAddToCart}
-                  className="flex-1 border-2 border-black text-black py-4 rounded-full font-semibold hover:bg-gray-50 transition"
+                  disabled={!selectedVariant}
+                  className="flex-1 border-2 border-black text-black py-4 rounded-full font-semibold hover:bg-gray-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {orderType === 'preorder' ? 'Đặt trước' : 'Thêm vào giỏ'}
+                  Thêm vào giỏ
                 </button>
                 <button
                   onClick={handleBuyNow}
-                  className="flex-1 bg-black text-white py-4 rounded-full font-semibold hover:bg-gray-900 transition"
+                  disabled={!selectedVariant}
+                  className="flex-1 bg-black text-white py-4 rounded-full font-semibold hover:bg-gray-900 transition disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Mua ngay
                 </button>
@@ -292,7 +351,7 @@ const ProductDetailPage = () => {
             <div className="grid grid-cols-2 gap-4 mt-6">
               <div className="flex items-center gap-3 bg-white p-4 rounded-xl shadow-sm">
                 <Truck size={18} />
-                <span className="text-sm">Free ship toàn quốc</span>
+                <span className="text-sm">Giao hàng toàn quốc</span>
               </div>
 
               <div className="flex items-center gap-3 bg-white p-4 rounded-xl shadow-sm">
@@ -318,16 +377,18 @@ const ProductDetailPage = () => {
               Mô tả chi tiết
             </button>
 
-            <button
-              onClick={() => setActiveTab('specs')}
-              className={`pb-3 ${
-                activeTab === 'specs'
-                  ? 'border-b-2 border-black'
-                  : 'text-gray-400'
-              }`}
-            >
-              Thông số kỹ thuật
-            </button>
+            {hasSpecs && (
+              <button
+                onClick={() => setActiveTab('specs')}
+                className={`pb-3 ${
+                  activeTab === 'specs'
+                    ? 'border-b-2 border-black'
+                    : 'text-gray-400'
+                }`}
+              >
+                Thông số kỹ thuật
+              </button>
+            )}
 
             <button
               onClick={() => setActiveTab('warranty')}
@@ -345,29 +406,25 @@ const ProductDetailPage = () => {
 
           {activeTab === 'description' && (
             <div className="text-gray-600 leading-relaxed space-y-4">
-              <p>{product.description}</p>
-
-              <p>
-                Gọng kính được thiết kế với chất liệu cao cấp, mang lại cảm giác
-                thoải mái khi đeo trong thời gian dài.
-              </p>
-
-              <p>Phù hợp cho cả nam và nữ với phong cách hiện đại.</p>
+              {product.description ? (
+                <p className="whitespace-pre-line">{product.description}</p>
+              ) : (
+                <p className="text-gray-400 italic">Chưa có mô tả cho sản phẩm này.</p>
+              )}
             </div>
           )}
 
-          {activeTab === 'specs' && (product.frame || product.lens) && (
+          {activeTab === 'specs' && hasSpecs && (
             <div className="border rounded-xl overflow-hidden">
-              {Object.entries(product.frame || product.lens || {}).map(([key, value], index) => (
+              {specsData.map((spec, index) => (
                 <div
-                  key={key}
+                  key={spec.label}
                   className={`grid grid-cols-2 px-6 py-3 text-sm ${
                     index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
                   }`}
                 >
-                  <span className="text-gray-500 capitalize">{key}</span>
-
-                  <span className="font-medium">{value}</span>
+                  <span className="text-gray-500">{spec.label}</span>
+                  <span className="font-medium">{spec.value}</span>
                 </div>
               ))}
             </div>
@@ -375,9 +432,9 @@ const ProductDetailPage = () => {
 
           {activeTab === 'warranty' && (
             <div className="text-gray-600 space-y-3">
-              <p>✔ Bảo hành gọng kính 12 tháng.</p>
+              <p>✔ Bảo hành sản phẩm 12 tháng.</p>
 
-              <p>✔ Hỗ trợ chỉnh gọng miễn phí tại cửa hàng.</p>
+              <p>✔ Hỗ trợ chỉnh sửa miễn phí tại cửa hàng.</p>
 
               <p>✔ Đổi mới trong 7 ngày nếu lỗi sản xuất.</p>
             </div>
