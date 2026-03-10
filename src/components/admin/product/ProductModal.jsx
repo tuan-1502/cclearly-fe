@@ -84,46 +84,6 @@ const ProductModal = ({
 
   if (!show) return null;
 
-  // Quill image handler: upload to Cloudinary then insert URL
-  const quillImageHandler = () => {
-    const input = document.createElement('input');
-    input.setAttribute('type', 'file');
-    input.setAttribute('accept', 'image/*');
-    input.click();
-    input.onchange = async () => {
-      const file = input.files[0];
-      if (!file) return;
-      try {
-        const url = await uploadRequest.uploadImage(file, 'products/description');
-        const quill = quillRef.current?.getEditor();
-        if (quill) {
-          const range = quill.getSelection(true);
-          quill.insertEmbed(range.index, 'image', url);
-          quill.setSelection(range.index + 1);
-        }
-      } catch {
-        toast.error('Upload ảnh thất bại');
-      }
-    };
-  };
-
-  const quillModules = useMemo(() => ({
-    toolbar: {
-      container: [
-        [{ header: [1, 2, 3, false] }],
-        ['bold', 'italic', 'underline', 'strike'],
-        [{ color: [] }, { background: [] }],
-        [{ list: 'ordered' }, { list: 'bullet' }],
-        [{ align: [] }],
-        ['link', 'image'],
-        ['clean'],
-      ],
-      handlers: {
-        image: quillImageHandler,
-      },
-    },
-  }), []);
-
   const handleImageUpload = async (e) => {
     const files = Array.from(e.target.files);
     if (files.length === 0) return;
