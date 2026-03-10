@@ -55,21 +55,22 @@ const ManagerOrdersPage = () => {
     }).format(amount);
 
   const getStatusBadge = (status) => {
+    const s = (status || '').toUpperCase();
     const map = {
-      pending: {
+      PENDING: {
         label: 'Chờ xác nhận',
         class: 'bg-yellow-100 text-yellow-800',
       },
-      confirmed: { label: 'Đã xác nhận', class: 'bg-blue-100 text-blue-800' },
-      processing: {
+      CONFIRMED: { label: 'Đã xác nhận', class: 'bg-blue-100 text-blue-800' },
+      PROCESSING: {
         label: 'Đang xử lý',
         class: 'bg-purple-100 text-purple-800',
       },
-      shipped: { label: 'Đang giao', class: 'bg-orange-100 text-orange-800' },
-      delivered: { label: 'Hoàn thành', class: 'bg-green-100 text-green-800' },
-      cancelled: { label: 'Đã hủy', class: 'bg-red-100 text-red-800' },
+      SHIPPED: { label: 'Đang giao', class: 'bg-orange-100 text-orange-800' },
+      DELIVERED: { label: 'Hoàn thành', class: 'bg-green-100 text-green-800' },
+      CANCELLED: { label: 'Đã hủy', class: 'bg-red-100 text-red-800' },
     };
-    return map[status] || { label: status, class: 'bg-gray-100 text-gray-800' };
+    return map[s] || { label: status, class: 'bg-gray-100 text-gray-800' };
   };
 
   return (
