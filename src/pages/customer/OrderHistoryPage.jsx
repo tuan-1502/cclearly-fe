@@ -1,4 +1,4 @@
-import { Lock, Package, X, MapPin, Phone } from 'lucide-react';
+import { Lock, Package, X, MapPin, Phone, User } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -45,21 +45,22 @@ const OrderHistoryPage = () => {
   const orders = ordersData?.data || ordersData || [];
 
   const getStatusBadge = (status) => {
+    const s = (status || '').toUpperCase();
     const statusMap = {
-      pending: {
+      PENDING: {
         label: 'Chờ xác nhận',
         class: 'bg-yellow-100 text-yellow-800',
       },
-      confirmed: { label: 'Đã xác nhận', class: 'bg-blue-100 text-blue-800' },
-      processing: {
+      CONFIRMED: { label: 'Đã xác nhận', class: 'bg-blue-100 text-blue-800' },
+      PROCESSING: {
         label: 'Đang xử lý',
         class: 'bg-purple-100 text-purple-800',
       },
-      shipped: { label: 'Đang giao', class: 'bg-orange-100 text-orange-800' },
-      delivered: { label: 'Hoàn thành', class: 'bg-green-100 text-green-800' },
-      cancelled: { label: 'Đã hủy', class: 'bg-red-100 text-red-800' },
+      SHIPPED: { label: 'Đang giao', class: 'bg-orange-100 text-orange-800' },
+      DELIVERED: { label: 'Hoàn thành', class: 'bg-green-100 text-green-800' },
+      CANCELLED: { label: 'Đã hủy', class: 'bg-red-100 text-red-800' },
     };
-    const info = statusMap[status] || {
+    const info = statusMap[s] || {
       label: status,
       class: 'bg-gray-100 text-gray-800',
     };
@@ -75,6 +76,7 @@ const OrderHistoryPage = () => {
   const getTypeLabel = (type) => {
     const typeMap = {
       regular: 'Mua hàng',
+      standard: 'Mua hàng',
       preorder: 'Pre-order',
       prescription: 'Kính theo đơn',
     };
@@ -85,7 +87,7 @@ const OrderHistoryPage = () => {
     new Intl.NumberFormat('vi-VN', {
       style: 'currency',
       currency: 'VND',
-    }).format(amount);
+    }).format(amount || 0);
 
   const handleCancelClick = (orderId) => {
     setCancelConfirm({ isOpen: true, orderId });
@@ -101,7 +103,7 @@ const OrderHistoryPage = () => {
     }
   };
 
-  const steps = ['pending', 'confirmed', 'processing', 'shipped', 'delivered'];
+  const steps = ['PENDING', 'CONFIRMED', 'PROCESSING', 'SHIPPED', 'DELIVERED'];
 
   if (isLoading) {
     return (
@@ -145,15 +147,17 @@ const OrderHistoryPage = () => {
           </div>
         ) : (
           <div className="space-y-6">
-            {orders.map((order) => (
+            {orders.map((order) => {
+              const orderStatus = (order.status || '').toUpperCase();
+              return (
               <div
-                key={order.id}
+                key={order.orderId}
                 className="bg-white rounded-2xl shadow-[0_10px_30px_rgba(13,22,39,0.06)] overflow-hidden"
               >
                 <div className="bg-[#f9f9f9] px-6 py-4 flex flex-wrap justify-between items-center gap-4">
                   <div>
                     <p className="font-bold text-[#222]">
-                      Đơn hàng #{order.id}
+                      Đơn hàng #{order.code || order.orderId}
                     </p>
                     <p className="text-sm text-[#4f5562]">
                       {new Date(order.createdAt).toLocaleDateString('vi-VN', {
@@ -171,11 +175,11 @@ const OrderHistoryPage = () => {
                   </div>
                 </div>
 
-                {order.status !== 'cancelled' && (
+                {orderStatus !== 'CANCELLED' && (
                   <div className="px-6 py-4 border-b border-[#ececec]">
                     <div className="flex items-center gap-2 overflow-x-auto pb-2">
                       {steps.map((step, index) => {
-                        const orderStatusIndex = steps.indexOf(order.status);
+                        const orderStatusIndex = steps.indexOf(orderStatus);
                         const isCompleted = orderStatusIndex >= index;
                         return (
                           <div
@@ -202,31 +206,35 @@ const OrderHistoryPage = () => {
                 )}
 
                 <div className="px-6 py-4">
-                  <div className="flex justify-between py-2 border-b border-[#ececec]">
-                    <span className="text-[#222]">
-                      {order.items[0]?.name} x{order.items[0]?.quantity}
-                    </span>
-                    <span className="font-medium text-[#222]">
-                      {formatCurrency(
-                        order.items[0]?.price * order.items[0]?.quantity
+                  {order.items && order.items.length > 0 && (
+                    <>
+                      <div className="flex justify-between py-2 border-b border-[#ececec]">
+                        <span className="text-[#222]">
+                          {order.items[0]?.productName} x{order.items[0]?.quantity}
+                        </span>
+                        <span className="font-medium text-[#222]">
+                          {formatCurrency(
+                            order.items[0]?.unitPrice * order.items[0]?.quantity
+                          )}
+                        </span>
+                      </div>
+                      {order.items.length > 1 && (
+                        <p className="text-sm text-[#4f5562] py-2">
+                          +{order.items.length - 1} sản phẩm khác
+                        </p>
                       )}
-                    </span>
-                  </div>
-                  {order.items.length > 1 && (
-                    <p className="text-sm text-[#4f5562] py-2">
-                      +{order.items.length - 1} sản phẩm khác
-                    </p>
+                    </>
                   )}
                 </div>
 
                 <div className="px-6 py-4 bg-[#f9f9f9] flex flex-wrap justify-between items-center gap-4">
                   <div className="font-bold text-xl text-[#222]">
-                    Tổng: {formatCurrency(order.totalAmount)}
+                    Tổng: {formatCurrency(order.finalAmount)}
                   </div>
                   <div className="flex gap-3">
-                    {order.status === 'pending' && (
+                    {orderStatus === 'PENDING' && (
                       <button
-                        onClick={() => handleCancelClick(order.id)}
+                        onClick={() => handleCancelClick(order.orderId)}
                         className="px-5 py-2.5 text-red-600 border-2 border-red-200 rounded-full hover:bg-red-50 transition font-medium"
                       >
                         Hủy đơn
@@ -241,7 +249,8 @@ const OrderHistoryPage = () => {
                   </div>
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
@@ -255,7 +264,7 @@ const OrderHistoryPage = () => {
           <div className="relative bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-white border-b px-6 py-4 flex justify-between items-center">
               <h2 className="text-xl font-bold text-[#222]">
-                Chi tiết đơn hàng #{selectedOrder.id}
+                Chi tiết đơn hàng #{selectedOrder.code || selectedOrder.orderId}
               </h2>
               <button
                 onClick={() => setSelectedOrder(null)}
@@ -293,42 +302,59 @@ const OrderHistoryPage = () => {
                   Thông tin giao hàng
                 </h3>
                 <div className="space-y-2 text-sm">
+                  {selectedOrder.recipientName && (
+                    <p className="flex items-center gap-2 text-[#4f5562]">
+                      <User className="w-4 h-4" />
+                      {selectedOrder.recipientName}
+                    </p>
+                  )}
                   <p className="flex items-center gap-2 text-[#4f5562]">
                     <MapPin className="w-4 h-4" />
-                    {selectedOrder.shippingAddress?.address},{' '}
-                    {selectedOrder.shippingAddress?.district},{' '}
-                    {selectedOrder.shippingAddress?.city}
+                    {[selectedOrder.shippingStreet, selectedOrder.shippingCity]
+                      .filter(Boolean)
+                      .join(', ') || 'N/A'}
                   </p>
-                  <p className="flex items-center gap-2 text-[#4f5562]">
-                    <Phone className="w-4 h-4" />
-                    {selectedOrder.shippingAddress?.phone}
-                  </p>
+                  {selectedOrder.shippingPhone && (
+                    <p className="flex items-center gap-2 text-[#4f5562]">
+                      <Phone className="w-4 h-4" />
+                      {selectedOrder.shippingPhone}
+                    </p>
+                  )}
                 </div>
               </div>
 
               <div className="border-t pt-4">
                 <h3 className="font-medium text-[#222] mb-3">Sản phẩm</h3>
                 <div className="space-y-3">
-                  {selectedOrder.items.map((item, idx) => (
+                  {(selectedOrder.items || []).map((item, idx) => (
                     <div key={idx} className="flex justify-between">
                       <div>
-                        <p className="text-[#222]">{item.name}</p>
+                        <p className="text-[#222]">{item.productName}</p>
                         <p className="text-sm text-[#4f5562]">
                           x{item.quantity}
                         </p>
                       </div>
                       <p className="font-medium text-[#222]">
-                        {formatCurrency(item.price * item.quantity)}
+                        {formatCurrency(item.unitPrice * item.quantity)}
                       </p>
                     </div>
                   ))}
                 </div>
               </div>
 
+              {selectedOrder.shippingFee != null && (
+                <div className="border-t pt-4">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-[#4f5562]">Phí vận chuyển</span>
+                    <span>{formatCurrency(selectedOrder.shippingFee)}</span>
+                  </div>
+                </div>
+              )}
+
               <div className="border-t pt-4">
                 <div className="flex justify-between text-lg font-bold">
                   <span>Tổng cộng</span>
-                  <span>{formatCurrency(selectedOrder.totalAmount)}</span>
+                  <span>{formatCurrency(selectedOrder.finalAmount)}</span>
                 </div>
               </div>
             </div>
