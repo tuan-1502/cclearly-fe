@@ -42,8 +42,13 @@ const ManagerInventoryPage = () => {
   const importStockMutation = useImportStock();
 
   // Stats from API data
-  const totalStock = inventoryItems.reduce((sum, item) => sum + (item.totalStock || 0), 0);
-  const lowStockItems = inventoryItems.filter((item) => item.totalStock < 10).length;
+  const totalStock = inventoryItems.reduce(
+    (sum, item) => sum + (item.totalStock || 0),
+    0
+  );
+  const lowStockItems = inventoryItems.filter(
+    (item) => item.totalStock < 10
+  ).length;
   const totalVariants = inventoryItems.length;
 
   // Toggle expand product
@@ -112,7 +117,9 @@ const ManagerInventoryPage = () => {
     );
   };
 
-  const selectedItem = inventoryItems.find((item) => item.variantId === importForm.variantId);
+  const selectedItem = inventoryItems.find(
+    (item) => item.variantId === importForm.variantId
+  );
 
   return (
     <div className="space-y-6">
@@ -176,9 +183,7 @@ const ManagerInventoryPage = () => {
               <AlertTriangle className="w-6 h-6 text-orange-600" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-[#222]">
-                {lowStockItems}
-              </p>
+              <p className="text-2xl font-bold text-[#222]">{lowStockItems}</p>
               <p className="text-sm text-[#4f5562]">Sắp hết hàng</p>
             </div>
           </div>
@@ -493,36 +498,38 @@ const ManagerInventoryPage = () => {
                   <option value="">Chọn biến thể</option>
                   {inventoryItems.map((item) => (
                     <option key={item.variantId} value={item.variantId}>
-                      {item.productName} - {item.variantSku} {item.colorName ? `(${item.colorName})` : ''}
+                      {item.productName} - {item.variantSku}{' '}
+                      {item.colorName ? `(${item.colorName})` : ''}
                     </option>
                   ))}
                 </select>
               </div>
 
-              {selectedItem?.warehouseStocks && selectedItem.warehouseStocks.length > 0 && (
-                <div>
-                  <label className="block text-sm font-medium text-[#222] mb-1">
-                    Kho nhập
-                  </label>
-                  <select
-                    value={importForm.warehouseId}
-                    onChange={(e) =>
-                      setImportForm({
-                        ...importForm,
-                        warehouseId: e.target.value,
-                      })
-                    }
-                    className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0f5dd9]"
-                  >
-                    <option value="">Chọn kho</option>
-                    {selectedItem.warehouseStocks.map((ws) => (
-                      <option key={ws.warehouseId} value={ws.warehouseId}>
-                        {ws.warehouseName} (Hiện có: {ws.quantityOnHand})
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
+              {selectedItem?.warehouseStocks &&
+                selectedItem.warehouseStocks.length > 0 && (
+                  <div>
+                    <label className="block text-sm font-medium text-[#222] mb-1">
+                      Kho nhập
+                    </label>
+                    <select
+                      value={importForm.warehouseId}
+                      onChange={(e) =>
+                        setImportForm({
+                          ...importForm,
+                          warehouseId: e.target.value,
+                        })
+                      }
+                      className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0f5dd9]"
+                    >
+                      <option value="">Chọn kho</option>
+                      {selectedItem.warehouseStocks.map((ws) => (
+                        <option key={ws.warehouseId} value={ws.warehouseId}>
+                          {ws.warehouseName} (Hiện có: {ws.quantityOnHand})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
 
               <div>
                 <label className="block text-sm font-medium text-[#222] mb-1">

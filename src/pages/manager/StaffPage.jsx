@@ -1,13 +1,18 @@
 // Staff Management Page
-import { Plus, X, Save, Loader2, Search, Edit2, Lock, Unlock } from 'lucide-react';
+import {
+  Plus,
+  X,
+  Save,
+  Loader2,
+  Search,
+  Edit2,
+  Lock,
+  Unlock,
+} from 'lucide-react';
 import { useState } from 'react';
 import ConfirmModal from '@/components/ui/ConfirmModal';
 import { useAuth } from '@/contexts/AuthContext';
-import {
-  useAdminUsers,
-  useCreateUser,
-  useUpdateUser,
-} from '@/hooks/useAdmin';
+import { useAdminUsers, useCreateUser, useUpdateUser } from '@/hooks/useAdmin';
 
 const ROLES = [
   { value: 'MANAGER', label: 'Quản lý' },
@@ -45,7 +50,10 @@ const StaffPage = () => {
   const [lockModal, setLockModal] = useState({ isOpen: false, user: null });
 
   const { user: currentUser } = useAuth();
-  const { data: allUsers = [], isLoading } = useAdminUsers({ page: 1, size: 100 });
+  const { data: allUsers = [], isLoading } = useAdminUsers({
+    page: 1,
+    size: 100,
+  });
   const createUser = useCreateUser();
   const updateUser = useUpdateUser();
 
@@ -164,7 +172,9 @@ const StaffPage = () => {
             <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
           </div>
         ) : staff.length === 0 ? (
-          <div className="py-16 text-center text-gray-400">Không có nhân viên nào</div>
+          <div className="py-16 text-center text-gray-400">
+            Không có nhân viên nào
+          </div>
         ) : (
           <table className="w-full">
             <thead className="bg-[#f3f3f3]">
@@ -197,10 +207,14 @@ const StaffPage = () => {
                       <div className="w-9 h-9 bg-[#141f36] rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0">
                         {user.fullName?.charAt(0)?.toUpperCase() || '?'}
                       </div>
-                      <span className="font-semibold text-[#222] text-sm">{user.fullName}</span>
+                      <span className="font-semibold text-[#222] text-sm">
+                        {user.fullName}
+                      </span>
                     </div>
                   </td>
-                  <td className="px-6 py-3 text-sm text-[#4f5562]">{user.email}</td>
+                  <td className="px-6 py-3 text-sm text-[#4f5562]">
+                    {user.email}
+                  </td>
                   <td className="px-6 py-3">
                     <span
                       className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase ${ROLE_COLOR[user.role?.toUpperCase()] || 'bg-gray-100 text-gray-600'}`}
@@ -239,7 +253,11 @@ const StaffPage = () => {
                               ? 'text-gray-400 hover:text-orange-500 hover:bg-orange-50'
                               : 'text-gray-400 hover:text-green-600 hover:bg-green-50'
                           }`}
-                          title={user.status === 'ACTIVE' ? 'Khóa tài khoản' : 'Mở khóa tài khoản'}
+                          title={
+                            user.status === 'ACTIVE'
+                              ? 'Khóa tài khoản'
+                              : 'Mở khóa tài khoản'
+                          }
                         >
                           {user.status === 'ACTIVE' ? (
                             <Lock className="w-4 h-4" />
@@ -282,7 +300,9 @@ const StaffPage = () => {
                   type="text"
                   required
                   value={formData.fullName}
-                  onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, fullName: e.target.value })
+                  }
                   className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500/20 outline-none"
                   placeholder="Nguyễn Văn A"
                 />
@@ -297,7 +317,9 @@ const StaffPage = () => {
                   required
                   disabled={!!editingUser}
                   value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
                   className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500/20 outline-none disabled:bg-gray-100 disabled:text-gray-500"
                   placeholder="email@cclearly.vn"
                 />
@@ -311,7 +333,9 @@ const StaffPage = () => {
                   <input
                     type="tel"
                     value={formData.phoneNumber}
-                    onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, phoneNumber: e.target.value })
+                    }
                     className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500/20 outline-none"
                     placeholder="0912 xxx xxx"
                   />
@@ -322,7 +346,9 @@ const StaffPage = () => {
                   </label>
                   <select
                     value={formData.role}
-                    onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, role: e.target.value })
+                    }
                     className="w-full px-3 py-2 border border-gray-200 rounded-lg outline-none bg-white"
                   >
                     {ROLES.map((r) => (
@@ -343,7 +369,9 @@ const StaffPage = () => {
                     type="password"
                     required={!editingUser}
                     value={formData.password}
-                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, password: e.target.value })
+                    }
                     className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500/20 outline-none"
                     placeholder="Tối thiểu 6 ký tự"
                   />
@@ -391,7 +419,9 @@ const StaffPage = () => {
             ? `Bạn có chắc muốn khóa tài khoản "${lockModal.user?.fullName}"? Nhân viên sẽ không thể đăng nhập cho đến khi được mở khóa.`
             : `Bạn có chắc muốn mở khóa tài khoản "${lockModal.user?.fullName}"? Nhân viên sẽ có thể đăng nhập lại.`
         }
-        confirmText={lockModal.user?.status === 'ACTIVE' ? 'Khóa tài khoản' : 'Mở khóa'}
+        confirmText={
+          lockModal.user?.status === 'ACTIVE' ? 'Khóa tài khoản' : 'Mở khóa'
+        }
         type={lockModal.user?.status === 'ACTIVE' ? 'warning' : 'info'}
       />
     </div>

@@ -12,8 +12,8 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import ConfirmModal from '@/components/ui/ConfirmModal';
 import OrderDetailModal from '@/components/sale/OrderDetailModal';
+import ConfirmModal from '@/components/ui/ConfirmModal';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAdminOrders, useUpdateOrderStatus } from '@/hooks/useOrder';
 
@@ -52,11 +52,14 @@ const OperationsShippingPage = () => {
   });
 
   const filteredOrders = shippingOrders.filter((order) => {
-    const id = (order.code || order.orderId || order.id || '').toString().toLowerCase();
+    const id = (order.code || order.orderId || order.id || '')
+      .toString()
+      .toLowerCase();
     const name = (order.recipientName || '').toLowerCase();
     const tracking = (order.trackingNumber || '').toLowerCase();
     const term = searchTerm.toLowerCase();
-    const matchSearch = id.includes(term) || tracking.includes(term) || name.includes(term);
+    const matchSearch =
+      id.includes(term) || tracking.includes(term) || name.includes(term);
 
     // Filter by status tab
     const s = (order.status || '').toUpperCase();
@@ -87,7 +90,8 @@ const OperationsShippingPage = () => {
         updateStatusMutation.mutate(
           { id: orderId, status: 'DELIVERED' },
           {
-            onSuccess: () => toast.success(`Đã cập nhật đơn ${orderId} thành đã giao`),
+            onSuccess: () =>
+              toast.success(`Đã cập nhật đơn ${orderId} thành đã giao`),
           }
         );
         setConfirmModal((m) => ({ ...m, isOpen: false }));
@@ -122,7 +126,11 @@ const OperationsShippingPage = () => {
           <div className="flex justify-between items-start">
             <div>
               <p className="text-2xl font-bold text-orange-600">
-                {shippingOrders.filter((o) => (o.status || '').toUpperCase() === 'SHIPPED').length}
+                {
+                  shippingOrders.filter(
+                    (o) => (o.status || '').toUpperCase() === 'SHIPPED'
+                  ).length
+                }
               </p>
               <p className="text-sm text-[#4f5562] font-medium">
                 Đang giao hàng
@@ -140,7 +148,11 @@ const OperationsShippingPage = () => {
           <div className="flex justify-between items-start">
             <div>
               <p className="text-2xl font-bold text-green-600">
-                {shippingOrders.filter((o) => (o.status || '').toUpperCase() === 'DELIVERED').length}
+                {
+                  shippingOrders.filter(
+                    (o) => (o.status || '').toUpperCase() === 'DELIVERED'
+                  ).length
+                }
               </p>
               <p className="text-sm text-[#4f5562] font-medium">
                 Đã giao thành công
@@ -223,12 +235,13 @@ const OperationsShippingPage = () => {
                           : 'bg-orange-100 text-orange-700'
                       }`}
                     >
-                      {(order.status || '').toUpperCase() === 'DELIVERED' ? 'Đã giao' : 'Đang giao'}
+                      {(order.status || '').toUpperCase() === 'DELIVERED'
+                        ? 'Đã giao'
+                        : 'Đang giao'}
                     </span>
                   </div>
                   <p className="text-sm text-[#4f5562] mt-0.5">
-                    {order.recipientName} •{' '}
-                    {order.shippingPhone}
+                    {order.recipientName} • {order.shippingPhone}
                   </p>
                 </div>
               </div>
@@ -236,7 +249,7 @@ const OperationsShippingPage = () => {
                 <p className="text-lg font-bold text-[#222]">
                   {formatCurrency(order.finalAmount || order.totalAmount)}
                 </p>
-                {(order.shippingFee != null && order.shippingFee > 0) && (
+                {order.shippingFee != null && order.shippingFee > 0 && (
                   <p className="text-xs text-orange-500 font-medium">
                     (Phí ship: {formatCurrency(order.shippingFee)})
                   </p>
@@ -338,9 +351,7 @@ const OperationsShippingPage = () => {
                 <div className="bg-[#fcfcfc] rounded-2xl p-5 border border-gray-50 h-full flex flex-col">
                   <div className="flex items-center gap-2 mb-4">
                     <CreditCard className="w-4 h-4 text-[#0f5dd9]" />
-                    <p className="text-sm font-bold text-[#222]">
-                      Thanh toán
-                    </p>
+                    <p className="text-sm font-bold text-[#222]">Thanh toán</p>
                   </div>
                   <div className="space-y-3 flex-1">
                     <div>
@@ -351,12 +362,12 @@ const OperationsShippingPage = () => {
                         {order.paymentMethod === 'PAYOS'
                           ? 'Chuyển khoản (PayOS)'
                           : order.paymentMethod === 'COD'
-                          ? 'Thanh toán khi nhận hàng'
-                          : order.paymentMethod === 'BANK_TRANSFER'
-                          ? 'Chuyển khoản'
-                          : order.isPreorder
-                          ? 'Đặt cọc + COD'
-                          : order.paymentMethod || 'Chưa xác định'}
+                            ? 'Thanh toán khi nhận hàng'
+                            : order.paymentMethod === 'BANK_TRANSFER'
+                              ? 'Chuyển khoản'
+                              : order.isPreorder
+                                ? 'Đặt cọc + COD'
+                                : order.paymentMethod || 'Chưa xác định'}
                       </p>
                     </div>
                     <div>
@@ -371,7 +382,9 @@ const OperationsShippingPage = () => {
                       <p className="text-[10px] text-[#4f5562] uppercase font-bold tracking-wider">
                         Cần thu (COD)
                       </p>
-                      <p className={`text-sm font-bold ${(order.codAmount || 0) > 0 ? 'text-orange-600' : 'text-green-600'}`}>
+                      <p
+                        className={`text-sm font-bold ${(order.codAmount || 0) > 0 ? 'text-orange-600' : 'text-green-600'}`}
+                      >
                         {(order.codAmount || 0) > 0
                           ? formatCurrency(order.codAmount)
                           : 'Đã thanh toán đủ'}
@@ -382,7 +395,9 @@ const OperationsShippingPage = () => {
                         <p className="text-[10px] text-[#4f5562] uppercase font-bold tracking-wider">
                           Phí vận chuyển
                         </p>
-                        <p className={`text-sm font-bold ${order.shippingFee > 0 ? 'text-orange-600' : 'text-green-600'}`}>
+                        <p
+                          className={`text-sm font-bold ${order.shippingFee > 0 ? 'text-orange-600' : 'text-green-600'}`}
+                        >
                           {order.shippingFee > 0
                             ? formatCurrency(order.shippingFee)
                             : 'Miễn phí'}

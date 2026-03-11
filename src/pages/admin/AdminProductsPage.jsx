@@ -67,17 +67,21 @@ const AdminProductsPage = () => {
         lensMaterial: product.lens?.material || '',
         lensType: product.lens?.lensType || '',
         subCategory: product.subCategory || '',
-        images: product.images?.map((url, idx) => ({ id: idx, url, preview: url })) || [],
+        images:
+          product.images?.map((url, idx) => ({ id: idx, url, preview: url })) ||
+          [],
       });
-      setVariants(product.variants?.map(v => ({
-        id: v.variantId,
-        sku: v.sku,
-        color: v.colorName || '',
-        colorCode: '#000000',
-        refractiveIndex: v.refractiveIndex || '',
-        variantName: v.colorName || '',
-        price: v.salePrice || product.basePrice,
-      })) || []);
+      setVariants(
+        product.variants?.map((v) => ({
+          id: v.variantId,
+          sku: v.sku,
+          color: v.colorName || '',
+          colorCode: '#000000',
+          refractiveIndex: v.refractiveIndex || '',
+          variantName: v.colorName || '',
+          price: v.salePrice || product.basePrice,
+        })) || []
+      );
     } else {
       setEditingProduct(null);
       setFormData({
@@ -113,7 +117,8 @@ const AdminProductsPage = () => {
         type: formData.type,
         price: formData.type === 'accessory' ? Number(formData.price) : 0,
         description: formData.description,
-        subCategory: formData.type === 'accessory' ? null : (formData.subCategory || null),
+        subCategory:
+          formData.type === 'accessory' ? null : formData.subCategory || null,
         imageUrls: formData.images?.map((img) => img.url).filter(Boolean) || [],
       };
 
@@ -122,8 +127,12 @@ const AdminProductsPage = () => {
           material: formData.material,
           shape: formData.shape,
           lensWidth: formData.lensWidth ? Number(formData.lensWidth) : null,
-          bridgeWidth: formData.bridgeWidth ? Number(formData.bridgeWidth) : null,
-          templeLength: formData.templeLength ? Number(formData.templeLength) : null,
+          bridgeWidth: formData.bridgeWidth
+            ? Number(formData.bridgeWidth)
+            : null,
+          templeLength: formData.templeLength
+            ? Number(formData.templeLength)
+            : null,
         };
       } else if (formData.type === 'lens') {
         productData.lensAttributes = {
@@ -133,10 +142,18 @@ const AdminProductsPage = () => {
       }
 
       if (variants.length > 0) {
-        productData.variants = variants.map(v => ({
-          variantId: typeof v.id === 'string' && v.id.startsWith('v') || v.id?.toString().startsWith('lv') || v.id?.toString().startsWith('av') ? null : v.id,
+        productData.variants = variants.map((v) => ({
+          variantId:
+            (typeof v.id === 'string' && v.id.startsWith('v')) ||
+            v.id?.toString().startsWith('lv') ||
+            v.id?.toString().startsWith('av')
+              ? null
+              : v.id,
           sku: v.sku,
-          colorName: formData.type === 'accessory' ? (v.variantName || null) : (v.color || null),
+          colorName:
+            formData.type === 'accessory'
+              ? v.variantName || null
+              : v.color || null,
           refractiveIndex: v.refractiveIndex ? Number(v.refractiveIndex) : null,
           salePrice: v.price ? Number(v.price) : null,
           isPreorder: false,
@@ -299,7 +316,9 @@ const AdminProductsPage = () => {
                             ) : product.type === 'lens' ? (
                               <Scan className="w-5 h-5 text-gray-400" />
                             ) : (
-                              <span className="text-gray-400 text-xs font-bold">PK</span>
+                              <span className="text-gray-400 text-xs font-bold">
+                                PK
+                              </span>
                             )}
                           </div>
                           <div className="min-w-0">
@@ -319,12 +338,18 @@ const AdminProductsPage = () => {
                       </td>
                       <td className="px-4 py-2.5">
                         <span className="px-2 py-0.5 bg-gray-100 text-gray-600 text-[10px] font-bold rounded-md uppercase">
-                          {product.type === 'frame' ? 'Gọng' : product.type === 'lens' ? 'Tròng' : 'Phụ kiện'}
+                          {product.type === 'frame'
+                            ? 'Gọng'
+                            : product.type === 'lens'
+                              ? 'Tròng'
+                              : 'Phụ kiện'}
                         </span>
                       </td>
                       <td className="px-4 py-2.5 text-sm font-bold text-[#222]">
                         {product.variants?.length > 1 && (
-                          <span className="text-xs font-normal text-gray-400 mr-0.5">Từ </span>
+                          <span className="text-xs font-normal text-gray-400 mr-0.5">
+                            Từ{' '}
+                          </span>
                         )}
                         {new Intl.NumberFormat('vi-VN', {
                           style: 'currency',

@@ -24,20 +24,42 @@ import {
 } from '@/hooks/useReturn';
 
 const STATUS_MAP = {
-  PENDING: { label: 'Chờ xử lý', css: 'bg-yellow-100 text-yellow-700 border-yellow-200', icon: Clock },
-  APPROVED: { label: 'Đã duyệt', css: 'bg-blue-100 text-blue-700 border-blue-200', icon: CheckCircle },
-  COMPLETED: { label: 'Hoàn thành', css: 'bg-green-100 text-green-700 border-green-200', icon: CheckCircle },
-  REJECTED: { label: 'Từ chối', css: 'bg-red-100 text-red-700 border-red-200', icon: XCircle },
+  PENDING: {
+    label: 'Chờ xử lý',
+    css: 'bg-yellow-100 text-yellow-700 border-yellow-200',
+    icon: Clock,
+  },
+  APPROVED: {
+    label: 'Đã duyệt',
+    css: 'bg-blue-100 text-blue-700 border-blue-200',
+    icon: CheckCircle,
+  },
+  COMPLETED: {
+    label: 'Hoàn thành',
+    css: 'bg-green-100 text-green-700 border-green-200',
+    icon: CheckCircle,
+  },
+  REJECTED: {
+    label: 'Từ chối',
+    css: 'bg-red-100 text-red-700 border-red-200',
+    icon: XCircle,
+  },
 };
 
 const TYPE_MAP = {
-  refund: { label: 'Hoàn tiền', css: 'bg-orange-100 text-orange-700 border-orange-200' },
-  return: { label: 'Đổi hàng', css: 'bg-purple-100 text-purple-700 border-purple-200' },
+  refund: {
+    label: 'Hoàn tiền',
+    css: 'bg-orange-100 text-orange-700 border-orange-200',
+  },
+  return: {
+    label: 'Đổi hàng',
+    css: 'bg-purple-100 text-purple-700 border-purple-200',
+  },
 };
 
 const formatCurrency = (amount) =>
   new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(
-    amount || 0,
+    amount || 0
   );
 
 const SalesReturnsPage = () => {
@@ -66,8 +88,7 @@ const SalesReturnsPage = () => {
       retId.toLowerCase().includes(searchTerm.toLowerCase()) ||
       orderId.toLowerCase().includes(searchTerm.toLowerCase()) ||
       ret.customerName?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus =
-      statusFilter === 'all' || ret.status === statusFilter;
+    const matchesStatus = statusFilter === 'all' || ret.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
 
@@ -104,7 +125,11 @@ const SalesReturnsPage = () => {
 
   // --- Helpers ---
   const getStatusInfo = (status) =>
-    STATUS_MAP[status] || { label: status, css: 'bg-gray-100 text-gray-600', icon: Clock };
+    STATUS_MAP[status] || {
+      label: status,
+      css: 'bg-gray-100 text-gray-600',
+      icon: Clock,
+    };
 
   const getTypeInfo = (type) =>
     TYPE_MAP[type] || { label: type || '—', css: 'bg-gray-100 text-gray-600' };
@@ -138,7 +163,7 @@ const SalesReturnsPage = () => {
           {
             onSettled: () =>
               setConfirmModal((prev) => ({ ...prev, isOpen: false })),
-          },
+          }
         );
       },
     });
@@ -163,9 +188,7 @@ const SalesReturnsPage = () => {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-[#222]">
-          Đổi trả & Khiếu nại
-        </h1>
+        <h1 className="text-2xl font-bold text-[#222]">Đổi trả & Khiếu nại</h1>
         <p className="text-[#4f5562]">
           Xin chào, {user?.fullName || user?.name || 'Sales'}!
         </p>
@@ -280,7 +303,7 @@ const SalesReturnsPage = () => {
                           <Calendar size={12} />
                           {ret.requestDate
                             ? new Date(ret.requestDate).toLocaleDateString(
-                                'vi-VN',
+                                'vi-VN'
                               )
                             : '—'}
                         </span>
@@ -289,7 +312,7 @@ const SalesReturnsPage = () => {
                             <CheckCircle size={12} />
                             Xử lý:{' '}
                             {new Date(ret.processedDate).toLocaleDateString(
-                              'vi-VN',
+                              'vi-VN'
                             )}
                           </span>
                         )}
@@ -334,9 +357,7 @@ const SalesReturnsPage = () => {
                     <p className="text-xs font-semibold text-[#4f5562] uppercase tracking-wider">
                       Lý do
                     </p>
-                    <p className="text-sm text-[#222]">
-                      {ret.reason || '—'}
-                    </p>
+                    <p className="text-sm text-[#222]">{ret.reason || '—'}</p>
                   </div>
                 </div>
 
@@ -354,7 +375,9 @@ const SalesReturnsPage = () => {
                         >
                           <span className="text-[#222]">
                             {item.name}{' '}
-                            <span className="text-[#4f5562]">x{item.quantity}</span>
+                            <span className="text-[#4f5562]">
+                              x{item.quantity}
+                            </span>
                           </span>
                           <span className="font-medium text-[#222]">
                             {formatCurrency(item.price * item.quantity)}

@@ -62,4 +62,13 @@ export const productRequest = {
     const res = await http.get(ENDPOINT.SHIPPING_CONFIG);
     return res.data;
   },
+
+  // Validate voucher code (public)
+  validateVoucher: async (code, orderTotal) => {
+    const res = await http.post(ENDPOINT.VALIDATE_VOUCHER, {
+      code,
+      orderTotal,
+    });
+    return res.data;
+  },
 };

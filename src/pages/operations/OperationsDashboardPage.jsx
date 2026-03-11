@@ -3,7 +3,11 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import ConfirmModal from '@/components/ui/ConfirmModal';
 import { useAdminOrders, useUpdateOrderStatus } from '@/hooks/useOrder';
-import { useReturns, useApproveReturn, useRejectReturn } from '@/hooks/useReturn';
+import {
+  useReturns,
+  useApproveReturn,
+  useRejectReturn,
+} from '@/hooks/useReturn';
 
 const OperationsDashboardPage = () => {
   const [tab, setTab] = useState('pending');
@@ -25,7 +29,9 @@ const OperationsDashboardPage = () => {
   );
   const processingOrders = orders.filter((o) => o.status === 'processing');
   const shippedOrders = orders.filter((o) => o.status === 'shipped');
-  const pendingReturns = allReturns.filter((r) => r.status === 'pending' || r.status === 'PENDING');
+  const pendingReturns = allReturns.filter(
+    (r) => r.status === 'pending' || r.status === 'PENDING'
+  );
 
   const getStatusBadge = (status) => {
     const map = {
@@ -139,10 +145,15 @@ const OperationsDashboardPage = () => {
               pendingReturns.map((ret) => {
                 const statusBadge = getReturnStatusBadge(ret.status);
                 return (
-                  <div key={ret.refundId || ret.id} className="p-4 bg-[#f9f9f9] rounded-xl">
+                  <div
+                    key={ret.refundId || ret.id}
+                    className="p-4 bg-[#f9f9f9] rounded-xl"
+                  >
                     <div className="flex justify-between items-start mb-3">
                       <div>
-                        <p className="font-bold text-[#222]">{ret.refundId || ret.id}</p>
+                        <p className="font-bold text-[#222]">
+                          {ret.refundId || ret.id}
+                        </p>
                         <p className="text-sm text-[#4f5562]">
                           Order: {ret.orderCode || ret.orderId}
                         </p>
@@ -173,7 +184,10 @@ const OperationsDashboardPage = () => {
                       </button>
                       <button
                         onClick={() =>
-                          rejectReturnMutation.mutate({ id: ret.refundId || ret.id, reason: 'Từ chối bởi vận hành' })
+                          rejectReturnMutation.mutate({
+                            id: ret.refundId || ret.id,
+                            reason: 'Từ chối bởi vận hành',
+                          })
                         }
                         className="flex-1 bg-red-500 text-white py-2 rounded-full text-sm font-medium hover:bg-red-600"
                       >
@@ -209,7 +223,9 @@ const OperationsDashboardPage = () => {
                 >
                   <div className="flex justify-between items-start mb-4">
                     <div>
-                      <p className="font-bold text-[#222]">{order.code || order.orderId || order.id}</p>
+                      <p className="font-bold text-[#222]">
+                        {order.code || order.orderId || order.id}
+                      </p>
                       <p className="text-sm text-[#4f5562]">
                         {order.recipientName || order.shippingAddress?.name}
                       </p>
@@ -232,7 +248,8 @@ const OperationsDashboardPage = () => {
 
                   <div className="border-t border-gray-100 pt-3 mb-3">
                     <p className="text-sm font-medium text-[#222]">
-                      Tổng: {formatCurrency(order.finalAmount || order.totalAmount)}
+                      Tổng:{' '}
+                      {formatCurrency(order.finalAmount || order.totalAmount)}
                     </p>
                     {order.trackingNumber && (
                       <p className="text-xs text-[#4f5562]">
@@ -244,7 +261,9 @@ const OperationsDashboardPage = () => {
                   <div className="flex gap-2">
                     {tab === 'pending' && (
                       <button
-                        onClick={() => handleConfirmOrder(order.orderId || order.id)}
+                        onClick={() =>
+                          handleConfirmOrder(order.orderId || order.id)
+                        }
                         className="flex-1 bg-[#0f5dd9] text-white py-2 rounded-full text-sm font-medium hover:bg-[#0b4fc0]"
                       >
                         Xác nhận
@@ -252,7 +271,9 @@ const OperationsDashboardPage = () => {
                     )}
                     {tab === 'processing' && (
                       <button
-                        onClick={() => handleCompleteOrder(order.orderId || order.id)}
+                        onClick={() =>
+                          handleCompleteOrder(order.orderId || order.id)
+                        }
                         className="flex-1 bg-[#0f5dd9] text-white py-2 rounded-full text-sm font-medium hover:bg-[#0b4fc0]"
                       >
                         Hoàn thành đóng gói
@@ -260,7 +281,9 @@ const OperationsDashboardPage = () => {
                     )}
                     {tab === 'shipping' && (
                       <button
-                        onClick={() => handleUpdateTracking(order.orderId || order.id)}
+                        onClick={() =>
+                          handleUpdateTracking(order.orderId || order.id)
+                        }
                         className="flex-1 bg-[#0f5dd9] text-white py-2 rounded-full text-sm font-medium hover:bg-[#0b4fc0]"
                       >
                         Cập nhật tracking

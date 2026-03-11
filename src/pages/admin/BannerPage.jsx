@@ -1,4 +1,13 @@
-import { Plus, Trash2, Edit2, Image as ImageIcon, Loader2, Eye, EyeOff, GripVertical } from 'lucide-react';
+import {
+  Plus,
+  Trash2,
+  Edit2,
+  Image as ImageIcon,
+  Loader2,
+  Eye,
+  EyeOff,
+  GripVertical,
+} from 'lucide-react';
 import { useState } from 'react';
 import BannerModal from '@/components/admin/bannar/BannerModal';
 import {
@@ -121,9 +130,14 @@ const BannerPage = () => {
           const count = banners.filter((b) => b.position === pos.value).length;
           if (count === 0) return null;
           return (
-            <div key={pos.value} className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+            <div
+              key={pos.value}
+              className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100"
+            >
               <p className="text-2xl font-bold text-blue-600">{count}</p>
-              <p className="text-sm text-gray-500">{pos.label.split(' - ').pop() || pos.label}</p>
+              <p className="text-sm text-gray-500">
+                {pos.label.split(' - ').pop() || pos.label}
+              </p>
             </div>
           );
         })}
@@ -230,7 +244,9 @@ const BannerPage = () => {
         editingBanner={editingBanner}
         formData={formData}
         setFormData={setFormData}
-        isSaving={createBannerMutation.isPending || updateBannerMutation.isPending}
+        isSaving={
+          createBannerMutation.isPending || updateBannerMutation.isPending
+        }
       />
     </div>
   );

@@ -15,28 +15,70 @@ import {
 } from 'lucide-react';
 
 const STATUS_MAP = {
-  PENDING: { label: 'Chờ xác nhận', bg: 'bg-yellow-50 text-yellow-700 border-yellow-200', icon: Clock },
-  CONFIRMED: { label: 'Đã xác nhận', bg: 'bg-blue-50 text-blue-700 border-blue-200', icon: CheckCircle },
-  SHIPPED: { label: 'Đang giao hàng', bg: 'bg-purple-50 text-purple-700 border-purple-200', icon: Truck },
-  DELIVERED: { label: 'Đã giao', bg: 'bg-green-50 text-green-700 border-green-200', icon: CheckCircle },
-  CANCELLED: { label: 'Đã hủy', bg: 'bg-red-50 text-red-700 border-red-200', icon: XCircle },
-  RETURN_REQUESTED: { label: 'Yêu cầu trả hàng', bg: 'bg-orange-50 text-orange-700 border-orange-200', icon: RotateCcw },
-  RETURNED: { label: 'Đã trả hàng', bg: 'bg-gray-50 text-gray-700 border-gray-200', icon: RotateCcw },
+  PENDING: {
+    label: 'Chờ xác nhận',
+    bg: 'bg-yellow-50 text-yellow-700 border-yellow-200',
+    icon: Clock,
+  },
+  CONFIRMED: {
+    label: 'Đã xác nhận',
+    bg: 'bg-blue-50 text-blue-700 border-blue-200',
+    icon: CheckCircle,
+  },
+  SHIPPED: {
+    label: 'Đang giao hàng',
+    bg: 'bg-purple-50 text-purple-700 border-purple-200',
+    icon: Truck,
+  },
+  DELIVERED: {
+    label: 'Đã giao',
+    bg: 'bg-green-50 text-green-700 border-green-200',
+    icon: CheckCircle,
+  },
+  CANCELLED: {
+    label: 'Đã hủy',
+    bg: 'bg-red-50 text-red-700 border-red-200',
+    icon: XCircle,
+  },
+  RETURN_REQUESTED: {
+    label: 'Yêu cầu trả hàng',
+    bg: 'bg-orange-50 text-orange-700 border-orange-200',
+    icon: RotateCcw,
+  },
+  RETURNED: {
+    label: 'Đã trả hàng',
+    bg: 'bg-gray-50 text-gray-700 border-gray-200',
+    icon: RotateCcw,
+  },
 };
 
 const TYPE_MAP = {
-  standard: { label: 'Thường', bg: 'bg-green-50 text-green-700 border-green-200' },
-  prescription: { label: 'Có toa', bg: 'bg-blue-50 text-blue-700 border-blue-200' },
+  standard: {
+    label: 'Thường',
+    bg: 'bg-green-50 text-green-700 border-green-200',
+  },
+  prescription: {
+    label: 'Có toa',
+    bg: 'bg-blue-50 text-blue-700 border-blue-200',
+  },
 };
 
 const fmt = (amount) =>
-  new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount || 0);
+  new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(
+    amount || 0
+  );
 
 const OrderDetailModal = ({ order, onClose, onConfirm, onCancel }) => {
   if (!order) return null;
 
-  const statusInfo = STATUS_MAP[order.status] || { label: order.status, bg: 'bg-gray-50 text-gray-600 border-gray-200' };
-  const typeInfo = TYPE_MAP[order.type] || { label: order.type || 'Thường', bg: 'bg-gray-50 text-gray-600 border-gray-200' };
+  const statusInfo = STATUS_MAP[order.status] || {
+    label: order.status,
+    bg: 'bg-gray-50 text-gray-600 border-gray-200',
+  };
+  const typeInfo = TYPE_MAP[order.type] || {
+    label: order.type || 'Thường',
+    bg: 'bg-gray-50 text-gray-600 border-gray-200',
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
@@ -64,10 +106,14 @@ const OrderDetailModal = ({ order, onClose, onConfirm, onCancel }) => {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className={`px-2.5 py-1 rounded-full text-xs font-medium border ${typeInfo.bg}`}>
+                <span
+                  className={`px-2.5 py-1 rounded-full text-xs font-medium border ${typeInfo.bg}`}
+                >
                   {typeInfo.label}
                 </span>
-                <span className={`px-2.5 py-1 rounded-full text-xs font-medium border ${statusInfo.bg}`}>
+                <span
+                  className={`px-2.5 py-1 rounded-full text-xs font-medium border ${statusInfo.bg}`}
+                >
                   {statusInfo.label}
                 </span>
               </div>
@@ -142,7 +188,9 @@ const OrderDetailModal = ({ order, onClose, onConfirm, onCancel }) => {
                         {item.productName}
                       </p>
                       <p className="text-xs text-[#4f5562]">
-                        {[item.variantSku, item.colorName].filter(Boolean).join(' · ')}
+                        {[item.variantSku, item.colorName]
+                          .filter(Boolean)
+                          .join(' · ')}
                       </p>
                     </div>
                   </div>
@@ -179,15 +227,19 @@ const OrderDetailModal = ({ order, onClose, onConfirm, onCancel }) => {
               )}
               <div className="flex justify-between text-sm font-semibold pt-2 border-t">
                 <span>Tổng cộng:</span>
-                <span className="text-[#0f5dd9]">
-                  {fmt(order.finalAmount)}
-                </span>
+                <span className="text-[#0f5dd9]">{fmt(order.finalAmount)}</span>
               </div>
               {order.shippingFee != null && (
                 <div className="flex justify-between text-sm">
-                  <span className="text-[#4f5562]">Phí vận chuyển (đã tính trong tổng):</span>
-                  <span className={`font-medium ${order.shippingFee > 0 ? 'text-orange-600' : 'text-green-600'}`}>
-                    {order.shippingFee > 0 ? fmt(order.shippingFee) : 'Miễn phí'}
+                  <span className="text-[#4f5562]">
+                    Phí vận chuyển (đã tính trong tổng):
+                  </span>
+                  <span
+                    className={`font-medium ${order.shippingFee > 0 ? 'text-orange-600' : 'text-green-600'}`}
+                  >
+                    {order.shippingFee > 0
+                      ? fmt(order.shippingFee)
+                      : 'Miễn phí'}
                   </span>
                 </div>
               )}
@@ -238,7 +290,9 @@ const OrderDetailModal = ({ order, onClose, onConfirm, onCancel }) => {
           {/* Notes */}
           {order.notes && (
             <div>
-              <h3 className="text-sm font-semibold text-[#222] mb-2">Ghi chú</h3>
+              <h3 className="text-sm font-semibold text-[#222] mb-2">
+                Ghi chú
+              </h3>
               <p className="text-sm text-[#4f5562] bg-gray-50 rounded-xl p-4">
                 {order.notes}
               </p>

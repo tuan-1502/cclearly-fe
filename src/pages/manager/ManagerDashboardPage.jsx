@@ -28,8 +28,8 @@ import {
   useAdminUsers,
   usePromotions,
 } from '@/hooks/useAdmin';
-import { useAdminOrders } from '@/hooks/useOrder';
 import { useInventory } from '@/hooks/useInventory';
+import { useAdminOrders } from '@/hooks/useOrder';
 
 const ROLE_LABEL = {
   ADMIN: 'Admin',
@@ -60,7 +60,14 @@ const STATUS_COLOR = {
   RETURNED: 'bg-gray-200 text-gray-800',
 };
 
-const PIE_COLORS = ['#0f5dd9', '#22c55e', '#f59e0b', '#8b5cf6', '#ef4444', '#64748b'];
+const PIE_COLORS = [
+  '#0f5dd9',
+  '#22c55e',
+  '#f59e0b',
+  '#8b5cf6',
+  '#ef4444',
+  '#64748b',
+];
 
 const ManagerDashboardPage = () => {
   const { user } = useAuth();
@@ -71,16 +78,23 @@ const ManagerDashboardPage = () => {
   const { data: ordersData } = useAdminOrders({ page: 1, size: 5 });
   const { data: inventoryItems = [] } = useInventory();
 
-  const staffList = (Array.isArray(allUsers) ? allUsers : allUsers?.content || []).filter(
-    (u) => u.role !== 'CUSTOMER'
+  const staffList = (
+    Array.isArray(allUsers) ? allUsers : allUsers?.content || []
+  ).filter((u) => u.role !== 'CUSTOMER');
+  const activeStaff = staffList.filter(
+    (u) => u.status?.toUpperCase() === 'ACTIVE'
   );
-  const activeStaff = staffList.filter((u) => u.status?.toUpperCase() === 'ACTIVE');
   const activeCoupons = (allPromotions || []).filter((c) => c.isActive);
   const recentOrders = ordersData?.items || [];
-  const lowStock = inventoryItems.filter((item) => item.totalStock < 20).slice(0, 5);
+  const lowStock = inventoryItems
+    .filter((item) => item.totalStock < 20)
+    .slice(0, 5);
 
   const formatCurrency = (amount) =>
-    new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+    new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }).format(amount);
 
   // Chart data
   const revenueData = (stats?.revenueByMonth || []).map((item) => ({
@@ -114,7 +128,9 @@ const ManagerDashboardPage = () => {
       {/* HEADER */}
       <div>
         <h1 className="text-3xl font-bold text-[#222]">Tổng quan</h1>
-        <p className="text-[#4f5562] mt-1">Xin chào, {user?.name || 'Manager'}!</p>
+        <p className="text-[#4f5562] mt-1">
+          Xin chào, {user?.name || 'Manager'}!
+        </p>
       </div>
 
       {/* KPI STATS */}
@@ -150,7 +166,9 @@ const ManagerDashboardPage = () => {
         {/* REVENUE CHART */}
         <div className="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm border border-[#f0f0f0]">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-bold text-[#222]">Doanh thu theo tháng</h3>
+            <h3 className="text-lg font-bold text-[#222]">
+              Doanh thu theo tháng
+            </h3>
             <Link
               to="/manager/reports"
               className="text-[#0f5dd9] text-sm flex items-center gap-1 hover:underline"
@@ -160,7 +178,11 @@ const ManagerDashboardPage = () => {
           </div>
           <ResponsiveContainer width="100%" height={280}>
             <BarChart data={revenueData}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+              <CartesianGrid
+                strokeDasharray="3 3"
+                vertical={false}
+                stroke="#f0f0f0"
+              />
               <XAxis dataKey="name" axisLine={false} tickLine={false} />
               <YAxis
                 axisLine={false}
@@ -230,10 +252,19 @@ const ManagerDashboardPage = () => {
                   recentOrders.map((order) => {
                     const s = order.status?.toUpperCase();
                     return (
-                      <tr key={order.orderId || order.id} className="border-b last:border-0">
-                        <td className="py-3 font-medium">{order.code || order.orderId}</td>
-                        <td className="text-[#4f5562]">{order.recipientName || 'N/A'}</td>
-                        <td className="font-medium">{formatCurrency(order.finalAmount || 0)}</td>
+                      <tr
+                        key={order.orderId || order.id}
+                        className="border-b last:border-0"
+                      >
+                        <td className="py-3 font-medium">
+                          {order.code || order.orderId}
+                        </td>
+                        <td className="text-[#4f5562]">
+                          {order.recipientName || 'N/A'}
+                        </td>
+                        <td className="font-medium">
+                          {formatCurrency(order.finalAmount || 0)}
+                        </td>
                         <td>
                           <span
                             className={`px-2.5 py-1 rounded-full text-xs font-medium ${STATUS_COLOR[s] || 'bg-gray-100 text-gray-800'}`}
@@ -305,7 +336,9 @@ const ManagerDashboardPage = () => {
         {/* STAFF */}
         <div className="bg-white rounded-2xl p-6 shadow-sm border border-[#f0f0f0]">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-bold text-[#222]">Nhân viên ({activeStaff.length})</h3>
+            <h3 className="font-bold text-[#222]">
+              Nhân viên ({activeStaff.length})
+            </h3>
             <Link
               to="/manager/staff"
               className="text-[#0f5dd9] text-sm flex items-center gap-1 hover:underline"
@@ -337,7 +370,9 @@ const ManagerDashboardPage = () => {
                 </div>
               ))
             ) : (
-              <p className="text-gray-400 text-center py-4 text-sm">Không có nhân viên</p>
+              <p className="text-gray-400 text-center py-4 text-sm">
+                Không có nhân viên
+              </p>
             )}
           </div>
         </div>
@@ -345,7 +380,9 @@ const ManagerDashboardPage = () => {
         {/* PROMOTIONS */}
         <div className="bg-white rounded-2xl p-6 shadow-sm border border-[#f0f0f0]">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-bold text-[#222]">Khuyến mãi ({activeCoupons.length})</h3>
+            <h3 className="font-bold text-[#222]">
+              Khuyến mãi ({activeCoupons.length})
+            </h3>
             <Link
               to="/manager/promotions"
               className="text-[#0f5dd9] text-sm flex items-center gap-1 hover:underline"
@@ -364,13 +401,16 @@ const ManagerDashboardPage = () => {
                     <Tag className="text-orange-600 w-4 h-4" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-medium text-[#222] truncate">{coupon.code}</p>
+                    <p className="font-medium text-[#222] truncate">
+                      {coupon.code}
+                    </p>
                     <p className="text-xs text-[#4f5562] truncate">
                       {coupon.description || 'Mã giảm giá'}
                     </p>
                   </div>
                   <span className="text-[#0f5dd9] font-bold text-sm whitespace-nowrap">
-                    {coupon.discountType === 'PERCENT' || coupon.discountType === 'PERCENTAGE'
+                    {coupon.discountType === 'PERCENT' ||
+                    coupon.discountType === 'PERCENTAGE'
                       ? `${coupon.value}%`
                       : formatCurrency(coupon.value || 0)}
                   </span>
@@ -406,8 +446,12 @@ const ManagerDashboardPage = () => {
                   className="flex items-center justify-between p-3 bg-red-50 rounded-xl"
                 >
                   <div className="flex-1 min-w-0">
-                    <p className="font-medium text-[#222] truncate">{item.productName}</p>
-                    <p className="text-xs text-[#4f5562]">SKU: {item.variantSku}</p>
+                    <p className="font-medium text-[#222] truncate">
+                      {item.productName}
+                    </p>
+                    <p className="text-xs text-[#4f5562]">
+                      SKU: {item.variantSku}
+                    </p>
                   </div>
                   <span className="bg-red-200 text-red-700 px-2.5 py-1 rounded-lg text-sm font-bold">
                     {item.totalStock}

@@ -39,8 +39,7 @@ export const useApproveReturn = () => {
 export const useRejectReturn = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, reason }) =>
-      returnRequest.rejectReturn(id, { reason }),
+    mutationFn: ({ id, reason }) => returnRequest.rejectReturn(id, { reason }),
     onSuccess: () => {
       toast.success('Đã từ chối yêu cầu đổi trả!');
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.RETURNS });

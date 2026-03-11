@@ -100,7 +100,10 @@ const ReturnPage = () => {
             >
               <option value="">Chọn đơn hàng...</option>
               {orders.map((order) => (
-                <option key={order.orderId || order.id} value={order.orderId || order.id}>
+                <option
+                  key={order.orderId || order.id}
+                  value={order.orderId || order.id}
+                >
                   {order.code || order.orderId || order.id} -{' '}
                   {new Intl.NumberFormat('vi-VN', {
                     style: 'currency',

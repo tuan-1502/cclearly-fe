@@ -22,7 +22,8 @@ const ManagerOrdersPage = () => {
 
   const orders = ordersData?.items || ordersData || [];
   const totalItems = ordersData?.meta?.totalElements || orders.length;
-  const totalPages = ordersData?.meta?.totalPages || Math.ceil(totalItems / pageSize);
+  const totalPages =
+    ordersData?.meta?.totalPages || Math.ceil(totalItems / pageSize);
 
   // Client-side search filter (if BE doesn't support it)
   const filteredOrders = searchTerm
@@ -142,7 +143,10 @@ const ManagerOrdersPage = () => {
             {paginatedOrders.map((order) => {
               const statusBadge = getStatusBadge(order.status);
               return (
-                <tr key={order.orderId || order.id} className="hover:bg-gray-50">
+                <tr
+                  key={order.orderId || order.id}
+                  className="hover:bg-gray-50"
+                >
                   <td className="px-6 py-4 whitespace-nowrap font-medium text-[#222]">
                     {order.code || order.orderId || order.id}
                   </td>

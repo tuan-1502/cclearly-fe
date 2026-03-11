@@ -1,6 +1,6 @@
 import { Lock, Package, X, MapPin, Phone, User } from 'lucide-react';
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import ConfirmModal from '@/components/ui/ConfirmModal';
 import { useAuth } from '@/contexts/AuthContext';
@@ -8,6 +8,7 @@ import { useUserOrders, useCancelOrder } from '@/hooks/useOrder';
 
 const OrderHistoryPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { isAuthenticated } = useAuth();
   const { data: ordersData, isLoading } = useUserOrders();
   const cancelOrder = useCancelOrder();
@@ -32,7 +33,7 @@ const OrderHistoryPage = () => {
             Đăng nhập để xem lịch sử đơn hàng
           </p>
           <button
-            onClick={() => navigate('/login')}
+            onClick={() => navigate('/login', { state: { from: location.pathname } })}
             className="bg-[#141f36] text-white px-10 py-4 rounded-full font-medium hover:bg-[#0d1322] transition"
           >
             Đăng nhập
@@ -150,105 +151,107 @@ const OrderHistoryPage = () => {
             {orders.map((order) => {
               const orderStatus = (order.status || '').toUpperCase();
               return (
-              <div
-                key={order.orderId}
-                className="bg-white rounded-2xl shadow-[0_10px_30px_rgba(13,22,39,0.06)] overflow-hidden"
-              >
-                <div className="bg-[#f9f9f9] px-6 py-4 flex flex-wrap justify-between items-center gap-4">
-                  <div>
-                    <p className="font-bold text-[#222]">
-                      Đơn hàng #{order.code || order.orderId}
-                    </p>
-                    <p className="text-sm text-[#4f5562]">
-                      {new Date(order.createdAt).toLocaleDateString('vi-VN', {
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: 'numeric',
-                      })}
-                    </p>
+                <div
+                  key={order.orderId}
+                  className="bg-white rounded-2xl shadow-[0_10px_30px_rgba(13,22,39,0.06)] overflow-hidden"
+                >
+                  <div className="bg-[#f9f9f9] px-6 py-4 flex flex-wrap justify-between items-center gap-4">
+                    <div>
+                      <p className="font-bold text-[#222]">
+                        Đơn hàng #{order.code || order.orderId}
+                      </p>
+                      <p className="text-sm text-[#4f5562]">
+                        {new Date(order.createdAt).toLocaleDateString('vi-VN', {
+                          day: '2-digit',
+                          month: '2-digit',
+                          year: 'numeric',
+                        })}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className="text-sm text-[#4f5562] bg-white px-3 py-1 rounded-full">
+                        {getTypeLabel(order.type)}
+                      </span>
+                      {getStatusBadge(order.status)}
+                    </div>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-sm text-[#4f5562] bg-white px-3 py-1 rounded-full">
-                      {getTypeLabel(order.type)}
-                    </span>
-                    {getStatusBadge(order.status)}
-                  </div>
-                </div>
 
-                {orderStatus !== 'CANCELLED' && (
-                  <div className="px-6 py-4 border-b border-[#ececec]">
-                    <div className="flex items-center gap-2 overflow-x-auto pb-2">
-                      {steps.map((step, index) => {
-                        const orderStatusIndex = steps.indexOf(orderStatus);
-                        const isCompleted = orderStatusIndex >= index;
-                        return (
-                          <div
-                            key={step}
-                            className="flex items-center flex-shrink-0"
-                          >
+                  {orderStatus !== 'CANCELLED' && (
+                    <div className="px-6 py-4 border-b border-[#ececec]">
+                      <div className="flex items-center gap-2 overflow-x-auto pb-2">
+                        {steps.map((step, index) => {
+                          const orderStatusIndex = steps.indexOf(orderStatus);
+                          const isCompleted = orderStatusIndex >= index;
+                          return (
                             <div
-                              className={`w-3 h-3 rounded-full ${isCompleted ? 'bg-[#0f5dd9]' : 'bg-gray-300'}`}
-                            ></div>
-                            {index < 4 && (
+                              key={step}
+                              className="flex items-center flex-shrink-0"
+                            >
                               <div
-                                className={`w-8 h-0.5 ${isCompleted ? 'bg-[#0f5dd9]' : 'bg-gray-300'}`}
+                                className={`w-3 h-3 rounded-full ${isCompleted ? 'bg-[#0f5dd9]' : 'bg-gray-300'}`}
                               ></div>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
-                    <div className="flex justify-between text-xs text-[#4f5562] mt-2">
-                      <span>Chờ xác nhận</span>
-                      <span>Hoàn thành</span>
-                    </div>
-                  </div>
-                )}
-
-                <div className="px-6 py-4">
-                  {order.items && order.items.length > 0 && (
-                    <>
-                      <div className="flex justify-between py-2 border-b border-[#ececec]">
-                        <span className="text-[#222]">
-                          {order.items[0]?.productName} x{order.items[0]?.quantity}
-                        </span>
-                        <span className="font-medium text-[#222]">
-                          {formatCurrency(
-                            order.items[0]?.unitPrice * order.items[0]?.quantity
-                          )}
-                        </span>
+                              {index < 4 && (
+                                <div
+                                  className={`w-8 h-0.5 ${isCompleted ? 'bg-[#0f5dd9]' : 'bg-gray-300'}`}
+                                ></div>
+                              )}
+                            </div>
+                          );
+                        })}
                       </div>
-                      {order.items.length > 1 && (
-                        <p className="text-sm text-[#4f5562] py-2">
-                          +{order.items.length - 1} sản phẩm khác
-                        </p>
-                      )}
-                    </>
+                      <div className="flex justify-between text-xs text-[#4f5562] mt-2">
+                        <span>Chờ xác nhận</span>
+                        <span>Hoàn thành</span>
+                      </div>
+                    </div>
                   )}
-                </div>
 
-                <div className="px-6 py-4 bg-[#f9f9f9] flex flex-wrap justify-between items-center gap-4">
-                  <div className="font-bold text-xl text-[#222]">
-                    Tổng: {formatCurrency(order.finalAmount)}
-                  </div>
-                  <div className="flex gap-3">
-                    {orderStatus === 'PENDING' && (
-                      <button
-                        onClick={() => handleCancelClick(order.orderId)}
-                        className="px-5 py-2.5 text-red-600 border-2 border-red-200 rounded-full hover:bg-red-50 transition font-medium"
-                      >
-                        Hủy đơn
-                      </button>
+                  <div className="px-6 py-4">
+                    {order.items && order.items.length > 0 && (
+                      <>
+                        <div className="flex justify-between py-2 border-b border-[#ececec]">
+                          <span className="text-[#222]">
+                            {order.items[0]?.productName} x
+                            {order.items[0]?.quantity}
+                          </span>
+                          <span className="font-medium text-[#222]">
+                            {formatCurrency(
+                              order.items[0]?.unitPrice *
+                                order.items[0]?.quantity
+                            )}
+                          </span>
+                        </div>
+                        {order.items.length > 1 && (
+                          <p className="text-sm text-[#4f5562] py-2">
+                            +{order.items.length - 1} sản phẩm khác
+                          </p>
+                        )}
+                      </>
                     )}
-                    <button
-                      onClick={() => setSelectedOrder(order)}
-                      className="px-5 py-2.5 text-[#0f5dd9] border-2 border-[#0f5dd9] rounded-full hover:bg-[#f0f7ff] transition font-medium"
-                    >
-                      Xem chi tiết
-                    </button>
+                  </div>
+
+                  <div className="px-6 py-4 bg-[#f9f9f9] flex flex-wrap justify-between items-center gap-4">
+                    <div className="font-bold text-xl text-[#222]">
+                      Tổng: {formatCurrency(order.finalAmount)}
+                    </div>
+                    <div className="flex gap-3">
+                      {orderStatus === 'PENDING' && (
+                        <button
+                          onClick={() => handleCancelClick(order.orderId)}
+                          className="px-5 py-2.5 text-red-600 border-2 border-red-200 rounded-full hover:bg-red-50 transition font-medium"
+                        >
+                          Hủy đơn
+                        </button>
+                      )}
+                      <button
+                        onClick={() => setSelectedOrder(order)}
+                        className="px-5 py-2.5 text-[#0f5dd9] border-2 border-[#0f5dd9] rounded-full hover:bg-[#f0f7ff] transition font-medium"
+                      >
+                        Xem chi tiết
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
               );
             })}
           </div>

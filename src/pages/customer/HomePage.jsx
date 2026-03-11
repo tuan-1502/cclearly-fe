@@ -1,6 +1,6 @@
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 import heroWoman from '@/assets/homepage/hero_woman_v2.png';
 import polarizedImg from '@/assets/homepage/polarized_lenses.png';
 import virtualTryOnImg from '@/assets/homepage/virtual_try_on.png';
@@ -124,9 +124,12 @@ const HomePage = () => {
 
   // Fetch active banners
   const { data: allBanners } = useActiveBanners();
-  const headerBanners = allBanners?.filter((b) => b.position === 'HEADER') || [];
-  const mainBanners = allBanners?.filter((b) => b.position === 'HOME_MAIN') || [];
-  const promoBanners = allBanners?.filter((b) => b.position === 'HOME_PROMO') || [];
+  const headerBanners =
+    allBanners?.filter((b) => b.position === 'HEADER') || [];
+  const mainBanners =
+    allBanners?.filter((b) => b.position === 'HOME_MAIN') || [];
+  const promoBanners =
+    allBanners?.filter((b) => b.position === 'HOME_PROMO') || [];
 
   // Carousel state for HOME_MAIN
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -134,7 +137,10 @@ const HomePage = () => {
     setCurrentSlide((prev) => (prev + 1) % (mainBanners.length || 1));
   }, [mainBanners.length]);
   const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + (mainBanners.length || 1)) % (mainBanners.length || 1));
+    setCurrentSlide(
+      (prev) =>
+        (prev - 1 + (mainBanners.length || 1)) % (mainBanners.length || 1)
+    );
   };
 
   // Auto-advance carousel

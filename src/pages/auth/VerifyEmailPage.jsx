@@ -8,8 +8,9 @@ const VerifyEmailPage = () => {
   const verifyEmail = useVerifyEmail();
   const resendVerification = useResendVerification();
 
-  // Get email from navigation state (passed from RegisterPage)
+  // Get email and redirect-from from navigation state (passed from RegisterPage)
   const email = location.state?.email || '';
+  const from = location.state?.from;
 
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [error, setError] = useState('');
@@ -86,6 +87,7 @@ const VerifyEmailPage = () => {
         replace: true,
         state: {
           message: 'Email đã được xác thực thành công! Vui lòng đăng nhập.',
+          from,
         },
       });
     } catch {

@@ -1,4 +1,13 @@
-import { Glasses, Scan, Minus, Plus, Truck, ShieldCheck, Package } from 'lucide-react';
+import {
+  Glasses,
+  Scan,
+  Minus,
+  Plus,
+  Truck,
+  ShieldCheck,
+  Package,
+  Clock,
+} from 'lucide-react';
 import { useState, useMemo } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -44,7 +53,10 @@ const ProductDetailPage = () => {
   const selectedVariant = useMemo(() => {
     if (!product?.variants?.length) return null;
     if (selectedVariantId) {
-      return product.variants.find((v) => v.variantId === selectedVariantId) || product.variants[0];
+      return (
+        product.variants.find((v) => v.variantId === selectedVariantId) ||
+        product.variants[0]
+      );
     }
     return product.variants[0];
   }, [product, selectedVariantId]);
@@ -62,23 +74,34 @@ const ProductDetailPage = () => {
     return [];
   }, [selectedVariant, product]);
 
+  // Whether the product can be purchased (has variant or is a no-variant product)
+  const canPurchase = !!selectedVariant || (product && !product.variants?.length);
+
+  // Build cart item data (includes product info for guest cart)
+  const buildCartData = () => ({
+    variantId: selectedVariant?.variantId || undefined,
+    productId: !selectedVariant ? product?.id : undefined,
+    quantity,
+    productName: product?.name || '',
+    variantSku: selectedVariant?.sku || '',
+    colorName: selectedVariant?.colorName || '',
+    productType: product?.type || '',
+    price: displayPrice || 0,
+    imageUrl: displayImages?.[0]?.url || displayImages?.[0] || '',
+    isPreorder: selectedVariant?.isPreorder || false,
+  });
+
   const handleAddToCart = async () => {
-    if (!selectedVariant) return;
+    if (!canPurchase) return;
     try {
-      await addToCart.mutateAsync({
-        variantId: selectedVariant.variantId,
-        quantity,
-      });
+      await addToCart.mutateAsync(buildCartData());
     } catch (err) {}
   };
 
   const handleBuyNow = async () => {
-    if (!selectedVariant) return;
+    if (!canPurchase) return;
     try {
-      await addToCart.mutateAsync({
-        variantId: selectedVariant.variantId,
-        quantity,
-      });
+      await addToCart.mutateAsync(buildCartData());
       navigate('/checkout');
     } catch (err) {}
   };
@@ -117,7 +140,9 @@ const ProductDetailPage = () => {
   } else if (product.type === 'lens' && product.lens) {
     Object.entries(product.lens).forEach(([key, value]) => {
       if (value != null) {
-        const displayValue = Array.isArray(value) ? value.join(', ') : String(value);
+        const displayValue = Array.isArray(value)
+          ? value.join(', ')
+          : String(value);
         specsData.push({
           label: LENS_SPEC_LABELS[key] || key,
           value: displayValue,
@@ -172,7 +197,11 @@ const ProductDetailPage = () => {
                         : 'border-transparent'
                     }`}
                   >
-                    <img src={img} alt="" className="w-full h-full object-cover" />
+                    <img
+                      src={img}
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
                   </button>
                 ))}
               </div>
@@ -189,7 +218,13 @@ const ProductDetailPage = () => {
 
               {product.isSale && (
                 <span className="bg-yellow-400 text-xs px-3 py-1 rounded-full">
-                  Sale
+                  Giảm giá
+                </span>
+              )}
+
+              {selectedVariant?.isPreorder && (
+                <span className="flex items-center gap-1 bg-purple-100 text-purple-700 text-xs px-3 py-1 rounded-full">
+                  <Clock className="w-3 h-3" /> Đặt trước
                 </span>
               )}
             </div>
@@ -218,6 +253,21 @@ const ProductDetailPage = () => {
               )}
             </div>
 
+            {/* PREORDER NOTICE */}
+            {selectedVariant?.isPreorder && (
+              <div className="mb-6 flex items-start gap-3 rounded-xl bg-purple-50 border border-purple-200 p-4">
+                <Clock className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm font-semibold text-purple-800">
+                    Sản phẩm đặt trước (Pre-order)
+                  </p>
+                  <p className="text-xs text-purple-600 mt-1">
+                    Sản phẩm chưa có hàng sẵn. Thanh toán COD khi nhận hàng.
+                  </p>
+                </div>
+              </div>
+            )}
+
             {/* VARIANT SELECTOR */}
             {product.variants?.length > 0 && (
               <div className="mb-6">
@@ -228,64 +278,69 @@ const ProductDetailPage = () => {
                   {[...product.variants]
                     .sort((a, b) => {
                       if (product.type === 'lens') {
-                        return (a.refractiveIndex || 0) - (b.refractiveIndex || 0);
+                        return (
+                          (a.refractiveIndex || 0) - (b.refractiveIndex || 0)
+                        );
                       }
                       return 0;
                     })
                     .map((variant) => {
-                    const isSelected = selectedVariant?.variantId === variant.variantId;
-                    const label =
-                      product.type === 'lens'
-                        ? variant.refractiveIndex
-                          ? `${variant.refractiveIndex}`
-                          : variant.colorName || variant.sku
-                        : variant.colorName || variant.sku;
+                      const isSelected =
+                        selectedVariant?.variantId === variant.variantId;
+                      const label =
+                        product.type === 'lens'
+                          ? variant.refractiveIndex
+                            ? `${variant.refractiveIndex}`
+                            : variant.colorName || variant.sku
+                          : variant.colorName || variant.sku;
 
-                    return (
-                      <button
-                        key={variant.variantId}
-                        onClick={() => {
-                          setSelectedVariantId(variant.variantId);
-                          setMainImage(null);
-                        }}
-                        className={`px-4 py-2 rounded-full text-sm font-medium border-2 transition ${
-                          isSelected
-                            ? 'border-blue-600 bg-blue-50 text-blue-700'
-                            : 'border-gray-200 bg-white text-gray-700 hover:border-gray-400'
-                        }`}
-                      >
-                        {label}
-                      </button>
-                    );
-                  })}
+                      return (
+                        <button
+                          key={variant.variantId}
+                          onClick={() => {
+                            setSelectedVariantId(variant.variantId);
+                            setMainImage(null);
+                          }}
+                          className={`px-4 py-2 rounded-full text-sm font-medium border-2 transition ${
+                            isSelected
+                              ? 'border-blue-600 bg-blue-50 text-blue-700'
+                              : 'border-gray-200 bg-white text-gray-700 hover:border-gray-400'
+                          }`}
+                        >
+                          {label}
+                        </button>
+                      );
+                    })}
                 </div>
               </div>
             )}
 
-            {/* ORDER TYPE */}
-            <div className="flex gap-3 mb-6">
-              <button
-                onClick={() => setOrderType('regular')}
-                className={`px-5 py-2 rounded-full text-sm font-semibold ${
-                  orderType === 'regular'
-                    ? 'bg-black text-white'
-                    : 'bg-gray-100'
-                }`}
-              >
-                Mua ngay
-              </button>
+            {/* ORDER TYPE — only lenses support prescription */}
+            {product.type === 'lens' && (
+              <div className="flex gap-3 mb-6">
+                <button
+                  onClick={() => setOrderType('regular')}
+                  className={`px-5 py-2 rounded-full text-sm font-semibold ${
+                    orderType === 'regular'
+                      ? 'bg-black text-white'
+                      : 'bg-gray-100'
+                  }`}
+                >
+                  Mua ngay
+                </button>
 
-              <button
-                onClick={() => setOrderType('prescription')}
-                className={`px-5 py-2 rounded-full text-sm font-semibold ${
-                  orderType === 'prescription'
-                    ? 'bg-black text-white'
-                    : 'bg-gray-100'
-                }`}
-              >
-                Theo đơn kính
-              </button>
-            </div>
+                <button
+                  onClick={() => setOrderType('prescription')}
+                  className={`px-5 py-2 rounded-full text-sm font-semibold ${
+                    orderType === 'prescription'
+                      ? 'bg-black text-white'
+                      : 'bg-gray-100'
+                  }`}
+                >
+                  Theo đơn kính
+                </button>
+              </div>
+            )}
 
             {/* QUANTITY */}
             <div className="flex items-center gap-4 mb-6">
@@ -311,11 +366,11 @@ const ProductDetailPage = () => {
             </div>
 
             {/* ACTION BUTTON */}
-            {orderType === 'prescription' ? (
+            {product.type === 'lens' && orderType === 'prescription' ? (
               <button
                 onClick={() =>
                   navigate(
-                    `/prescription-form?productId=${product.id}&quantity=${quantity}`
+                    `/prescription-form?productId=${product.id}&variantId=${selectedVariant?.variantId}&quantity=${quantity}`
                   )
                 }
                 className="w-full bg-blue-600 text-white py-4 rounded-full font-semibold hover:bg-blue-700"
@@ -326,14 +381,14 @@ const ProductDetailPage = () => {
               <div className="flex gap-4">
                 <button
                   onClick={handleAddToCart}
-                  disabled={!selectedVariant}
+                  disabled={!canPurchase}
                   className="flex-1 border-2 border-black text-black py-4 rounded-full font-semibold hover:bg-gray-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Thêm vào giỏ
                 </button>
                 <button
                   onClick={handleBuyNow}
-                  disabled={!selectedVariant}
+                  disabled={!canPurchase}
                   className="flex-1 bg-black text-white py-4 rounded-full font-semibold hover:bg-gray-900 transition disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Mua ngay
@@ -422,7 +477,9 @@ const ProductDetailPage = () => {
                   dangerouslySetInnerHTML={{ __html: product.description }}
                 />
               ) : (
-                <p className="text-gray-400 italic">Chưa có mô tả cho sản phẩm này.</p>
+                <p className="text-gray-400 italic">
+                  Chưa có mô tả cho sản phẩm này.
+                </p>
               )}
             </div>
           )}

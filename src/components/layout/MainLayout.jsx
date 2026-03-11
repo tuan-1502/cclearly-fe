@@ -11,7 +11,13 @@ import {
   Settings,
 } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
-import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
+import {
+  Link,
+  NavLink,
+  Outlet,
+  useNavigate,
+  useLocation,
+} from 'react-router-dom';
 import { useAuth, ROLES } from '@/contexts/AuthContext';
 import { useCart } from '@/hooks/useCart';
 import SupportChat from '../common/SupportChat';
@@ -94,7 +100,7 @@ const socialLinks = [
 const MainLayout = () => {
   const { isAuthenticated, user, logout } = useAuth();
   const isCustomer = !user?.role || user.role === ROLES.CUSTOMER;
-  const { data: cartData } = useCart({ enabled: isAuthenticated && isCustomer });
+  const { data: cartData } = useCart();
   const navigate = useNavigate();
   const [isProductsOpen, setIsProductsOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -214,6 +220,22 @@ const MainLayout = () => {
               <Search className="h-5 w-5" />
             </Link>
 
+            {/* Cart icon — only for customers & guests */}
+            {isCustomer && (
+              <Link
+                to="/cart"
+                className="relative rounded-full p-1.5 hover:bg-[#f3f3f3]"
+                aria-label="Giỏ hàng"
+              >
+                <ShoppingBag className="h-5 w-5" />
+                {cartItemCount > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-[#0f5dd9] px-1 text-[10px] font-bold text-white">
+                    {cartItemCount}
+                  </span>
+                )}
+              </Link>
+            )}
+
             {/* Profile Dropdown */}
             <div className="relative" ref={profileDropdownRef}>
               {isAuthenticated ? (
@@ -238,48 +260,32 @@ const MainLayout = () => {
                         <p className="font-medium text-[#222]">{user?.name}</p>
                         <p className="text-sm text-[#666]">{user?.email}</p>
                         <span className="inline-block mt-1 px-2 py-0.5 bg-[#0f5dd9]/10 text-[#0f5dd9] text-xs rounded-full capitalize">
-                          {user?.role}
+                          {user?.role === 'CUSTOMER'
+                            ? 'Khách hàng'
+                            : user?.role}
                         </span>
                       </div>
 
-                      {/* Wishlist & Cart in dropdown - only for customers */}
+                      {/* Cart in dropdown - only for customers */}
                       {!isStaffRole && (
-                        <>
-                          <Link
-                            to="/wishlist"
-                            onClick={() => setIsProfileDropdownOpen(false)}
-                            className="flex items-center justify-between px-4 py-2.5 text-[#666] hover:bg-[#f3f3f3] hover:text-[#0f5dd9]"
-                          >
-                            <div className="flex items-center gap-3">
-                              <Heart className="h-4 w-4" />
-                              <span className="text-sm">Yêu thích</span>
-                            </div>
-                            {wishlistCount > 0 && (
-                              <span className="bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">
-                                {wishlistCount}
-                              </span>
-                            )}
-                          </Link>
-
-                          <Link
-                            to="/cart"
-                            onClick={() => setIsProfileDropdownOpen(false)}
-                            className="flex items-center justify-between px-4 py-2.5 text-[#666] hover:bg-[#f3f3f3] hover:text-[#0f5dd9]"
-                          >
-                            <div className="flex items-center gap-3">
-                              <ShoppingBag className="h-4 w-4" />
-                              <span className="text-sm">Giỏ hàng</span>
-                            </div>
-                            {cartItemCount > 0 && (
-                              <span className="bg-[#0f5dd9] text-white text-xs px-1.5 py-0.5 rounded-full">
-                                {cartItemCount}
-                              </span>
-                            )}
-                          </Link>
-                        </>
+                        <Link
+                          to="/cart"
+                          onClick={() => setIsProfileDropdownOpen(false)}
+                          className="flex items-center justify-between px-4 py-2.5 text-[#666] hover:bg-[#f3f3f3] hover:text-[#0f5dd9]"
+                        >
+                          <div className="flex items-center gap-3">
+                            <ShoppingBag className="h-4 w-4" />
+                            <span className="text-sm">Giỏ hàng</span>
+                          </div>
+                          {cartItemCount > 0 && (
+                            <span className="bg-[#0f5dd9] text-white text-xs px-1.5 py-0.5 rounded-full">
+                              {cartItemCount}
+                            </span>
+                          )}
+                        </Link>
                       )}
 
-                      <div className="border-t border-[#efefef] mt-2 pt-2">
+                      <div className="pt-1">
                         <Link
                           to={dashboardLink}
                           onClick={() => setIsProfileDropdownOpen(false)}
@@ -287,15 +293,6 @@ const MainLayout = () => {
                         >
                           <LayoutDashboard className="h-4 w-4" />
                           <span className="text-sm">{dashboardLabel}</span>
-                        </Link>
-
-                        <Link
-                          to="/profile"
-                          onClick={() => setIsProfileDropdownOpen(false)}
-                          className="flex items-center gap-3 px-4 py-2.5 text-[#666] hover:bg-[#f3f3f3] hover:text-[#0f5dd9]"
-                        >
-                          <User className="h-4 w-4" />
-                          <span className="text-sm">Thông tin tài khoản</span>
                         </Link>
 
                         {(user?.role === ROLES.ADMIN ||
@@ -328,14 +325,29 @@ const MainLayout = () => {
                   )}
                 </>
               ) : (
-                // Not logged in - show Order Now button
-                <Link
-                  to="/login"
-                  className="flex items-center gap-2 px-4 py-2 bg-[#0f5dd9] text-white rounded-full text-sm font-medium hover:bg-[#0b4fc0]"
-                >
-                  <ShoppingBag className="h-4 w-4" />
-                  Order Now
-                </Link>
+                // Not logged in - show Cart + Login buttons
+                <div className="flex items-center gap-3">
+                  <Link
+                    to="/cart"
+                    className="relative flex items-center justify-center w-10 h-10 rounded-full hover:bg-[#f3f3f3] transition"
+                    title="Giỏ hàng"
+                  >
+                    <ShoppingBag className="h-5 w-5 text-[#222]" />
+                    {cartItemCount > 0 && (
+                      <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#0f5dd9] text-[10px] font-bold text-white">
+                        {cartItemCount}
+                      </span>
+                    )}
+                  </Link>
+                  <Link
+                    to="/login"
+                    state={{ from: location.pathname }}
+                    className="flex items-center gap-2 px-5 py-2 bg-[#0f5dd9] text-white rounded-full text-sm font-medium hover:bg-[#0b4fc0] transition"
+                  >
+                    <User className="h-4 w-4" />
+                    Đăng nhập
+                  </Link>
+                </div>
               )}
             </div>
           </div>
@@ -416,6 +428,7 @@ const MainLayout = () => {
               <div className="border-t border-[#efefef] pt-2 mt-2">
                 <Link
                   to="/login"
+                  state={{ from: location.pathname }}
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="flex items-center justify-center rounded-xl px-4 py-3 text-sm font-semibold bg-[#0f5dd9] text-white"
                 >

@@ -1,13 +1,35 @@
-import { Scan, Upload, ArrowRight, Info } from 'lucide-react';
-import { useState } from 'react';
+import { Scan, Upload, ArrowRight, Info, Loader2 } from 'lucide-react';
+import { useState, useMemo } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { uploadRequest } from '@/api/upload';
+import { useAddToCart } from '@/hooks/useCart';
+import { useProductDetail } from '@/hooks/useProduct';
 
 const PrescriptionFormPage = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const productId = searchParams.get('productId');
-  const quantity = searchParams.get('quantity') || 1;
+  const variantId = searchParams.get('variantId');
+  const quantity = parseInt(searchParams.get('quantity')) || 1;
+
+  const addToCart = useAddToCart();
+  const { data: product } = useProductDetail(productId);
+
+  const selectedVariant = useMemo(() => {
+    if (!product?.variants?.length) return null;
+    if (variantId)
+      return (
+        product.variants.find((v) => v.variantId === variantId) ||
+        product.variants[0]
+      );
+    return product.variants[0];
+  }, [product, variantId]);
+
+  const displayPrice =
+    selectedVariant?.salePrice || product?.salePrice || product?.basePrice || 0;
+  const displayImage =
+    selectedVariant?.images?.[0] || product?.images?.[0] || '';
 
   const [prescription, setPrescription] = useState({
     od_sph: '',
@@ -28,10 +50,53 @@ const PrescriptionFormPage = () => {
     setPrescription((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    toast.success('Đã lưu đơn kính!');
-    navigate('/cart');
+    if (!uploadFile) {
+      toast.error('Vui lòng tải ảnh đơn kính lên!');
+      return;
+    }
+    try {
+      // 1. Upload prescription image
+      let imageUrl = '';
+      try {
+        imageUrl = await uploadRequest.uploadImage(uploadFile, 'prescriptions');
+      } catch {
+        toast.error('Lỗi tải ảnh lên, vui lòng thử lại');
+        return;
+      }
+
+      // 2. Add product to cart
+      await addToCart.mutateAsync({
+        variantId,
+        quantity,
+        productName: product?.name || '',
+        price: displayPrice,
+        imageUrl: displayImage,
+        colorName: selectedVariant?.colorName || '',
+        productType: product?.type || '',
+        variantSku: selectedVariant?.sku || '',
+        isPreorder: selectedVariant?.isPreorder || false,
+      });
+
+      // 3. Save prescription data to sessionStorage (keyed by variantId)
+      const prescriptionData = {
+        ...prescription,
+        imageUrl,
+        productName: product?.name || '',
+        variantId,
+      };
+      const saved = JSON.parse(
+        sessionStorage.getItem('cartPrescriptions') || '{}'
+      );
+      saved[variantId] = prescriptionData;
+      sessionStorage.setItem('cartPrescriptions', JSON.stringify(saved));
+
+      toast.success('Đã lưu đơn kính và thêm vào giỏ hàng!');
+      navigate(-1);
+    } catch (err) {
+      toast.error('Không thể thêm vào giỏ hàng, vui lòng thử lại');
+    }
   };
 
   const SPH_VALUES = Array.from({ length: 81 }, (_, i) =>
@@ -173,9 +238,13 @@ const PrescriptionFormPage = () => {
 
               {/* UPLOAD */}
               <div className="bg-white rounded-3xl shadow p-6">
-                <h3 className="font-semibold mb-4">Hoặc tải ảnh đơn kính</h3>
+                <h3 className="font-semibold mb-4">
+                  Tải ảnh đơn kính <span className="text-red-500">*</span>
+                </h3>
 
-                <div className="border-2 border-dashed rounded-xl p-8 text-center hover:bg-gray-50">
+                <div
+                  className={`border-2 border-dashed rounded-xl p-8 text-center hover:bg-gray-50 ${!uploadFile ? 'border-red-300' : 'border-green-300'}`}
+                >
                   <input
                     type="file"
                     id="rx-upload"
@@ -192,10 +261,12 @@ const PrescriptionFormPage = () => {
                       JPG / PNG / PDF (5MB)
                     </p>
 
-                    {uploadFile && (
+                    {uploadFile ? (
                       <p className="text-xs text-green-600 mt-3">
                         ✓ {uploadFile.name}
                       </p>
+                    ) : (
+                      <p className="text-xs text-red-500 mt-3">Bắt buộc *</p>
                     )}
                   </label>
                 </div>
@@ -215,10 +286,15 @@ const PrescriptionFormPage = () => {
 
             <button
               type="submit"
-              className="px-8 py-3 bg-[#141f36] text-white rounded-full flex items-center gap-2"
+              disabled={addToCart.isPending}
+              className="px-8 py-3 bg-[#141f36] text-white rounded-full flex items-center gap-2 disabled:opacity-50"
             >
-              Lưu & Tiếp tục
-              <ArrowRight size={18} />
+              {addToCart.isPending ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <ArrowRight size={18} />
+              )}
+              {addToCart.isPending ? 'Đang xử lý...' : 'Lưu & Thêm vào giỏ'}
             </button>
           </div>
         </form>

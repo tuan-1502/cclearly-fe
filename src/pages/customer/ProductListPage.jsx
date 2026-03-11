@@ -8,6 +8,7 @@ import {
   ChevronDown,
   ChevronUp,
   X,
+  Clock,
 } from 'lucide-react';
 import { useState, useMemo, useEffect, useCallback } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
@@ -288,10 +289,7 @@ const ProductListPage = ({ type }) => {
   ]);
 
   // ── Pagination ──
-  const totalPages = Math.max(
-    1,
-    Math.ceil(filteredProducts.length / pageSize)
-  );
+  const totalPages = Math.max(1, Math.ceil(filteredProducts.length / pageSize));
   const currentPage = Math.min(page, totalPages);
   const paginatedProducts = useMemo(() => {
     const start = (currentPage - 1) * pageSize;
@@ -517,6 +515,28 @@ const ProductListPage = ({ type }) => {
         </>
       )}
 
+      {/* ─ ALL PRODUCTS filters (no type) ─ */}
+      {!type && (
+        <>
+          {facets.subCategories.length > 0 && (
+            <FilterSection title="Danh mục">
+              {facets.subCategories.map((sc) => (
+                <CheckItem
+                  key={sc}
+                  label={sc}
+                  count={subCatCount(sc)}
+                  checked={selSubCat.has(sc)}
+                  onChange={() => {
+                    setSelSubCat((p) => toggleSet(p, sc));
+                    setPage(1);
+                  }}
+                />
+              ))}
+            </FilterSection>
+          )}
+        </>
+      )}
+
       {/* ─ Price range (all types) ─ */}
       {facets.maxPrice > facets.minPrice && (
         <FilterSection title="Khoảng giá">
@@ -687,6 +707,9 @@ const ProductListPage = ({ type }) => {
                   const variantColors = unique(
                     (product.variants || []).map((v) => v.colorName)
                   );
+                  const isPreorder = (product.variants || []).some(
+                    (v) => v.isPreorder
+                  );
 
                   return (
                     <Link
@@ -707,11 +730,18 @@ const ProductListPage = ({ type }) => {
                           </div>
                         )}
 
-                        {product.isSale && (
-                          <span className="absolute left-2 top-2 rounded bg-[#f7c948] px-2 py-0.5 text-[10px] font-bold text-[#222]">
-                            Sale
-                          </span>
-                        )}
+                        <div className="absolute left-2 top-2 flex flex-col gap-1">
+                          {product.isSale && (
+                            <span className="rounded bg-[#f7c948] px-2 py-0.5 text-[10px] font-bold text-[#222]">
+                              Giảm giá
+                            </span>
+                          )}
+                          {isPreorder && (
+                            <span className="flex items-center gap-0.5 rounded bg-[#7c3aed] px-2 py-0.5 text-[10px] font-bold text-white">
+                              <Clock className="h-2.5 w-2.5" /> Đặt trước
+                            </span>
+                          )}
+                        </div>
                         {hasDiscount && (
                           <span className="absolute right-2 top-2 rounded bg-[#ef4444] px-2 py-0.5 text-[10px] font-bold text-white">
                             -{discountPercent}%
@@ -720,9 +750,16 @@ const ProductListPage = ({ type }) => {
                       </div>
 
                       <div className="space-y-2 p-4">
-                        <span className="inline-block rounded bg-[#eff4ff] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-[#0f5dd9]">
-                          {product.subCategory || getTypeLabel(product.type)}
-                        </span>
+                        <div className="flex flex-wrap gap-1">
+                          <span className="inline-block rounded bg-[#eff4ff] px-2 py-0.5 text-[10px] font-semibold tracking-wider text-[#0f5dd9]">
+                            {product.subCategory || getTypeLabel(product.type)}
+                          </span>
+                          {isPreorder && (
+                            <span className="inline-block rounded bg-purple-50 px-2 py-0.5 text-[10px] font-semibold tracking-wider text-purple-600">
+                              Pre-order
+                            </span>
+                          )}
+                        </div>
                         <h3 className="line-clamp-2 text-sm font-bold leading-tight text-[#1d2433]">
                           {product.name}
                         </h3>

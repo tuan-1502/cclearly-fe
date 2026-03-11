@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useLogin, useLoginWithGoogle } from '@/hooks/useAuth';
+import { useSyncGuestCart } from '@/hooks/useCart';
 
 const STAFF_DASHBOARDS = {
   ADMIN: '/admin',
@@ -16,13 +17,14 @@ const LoginPage = () => {
   const location = useLocation();
   const login = useLogin();
   const loginWithGoogle = useLoginWithGoogle();
+  const syncGuestCart = useSyncGuestCart();
 
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
 
-  const from = location.state?.from?.pathname || '/';
+  const from = location.state?.from?.pathname || location.state?.from || '/';
 
   // Show success message from verify-email or reset-password redirect
   const toastShownRef = useRef(false);
@@ -51,6 +53,10 @@ const LoginPage = () => {
         return;
       }
       const role = data?.user?.role;
+      // Sync guest cart to server after login (customer only)
+      if (!role || role === 'CUSTOMER') {
+        await syncGuestCart();
+      }
       const dest = STAFF_DASHBOARDS[role] || from;
       navigate(dest, { replace: true });
     } catch (error) {
@@ -71,6 +77,10 @@ const LoginPage = () => {
         return;
       }
       const role = data?.user?.role;
+      // Sync guest cart to server after login (customer only)
+      if (!role || role === 'CUSTOMER') {
+        await syncGuestCart();
+      }
       const dest = STAFF_DASHBOARDS[role] || from;
       navigate(dest, { replace: true });
     } catch (error) {
@@ -178,6 +188,7 @@ const LoginPage = () => {
         Chưa có tài khoản?{' '}
         <Link
           to="/register"
+          state={{ from: location.state?.from?.pathname || location.state?.from }}
           className="text-[#0f5dd9] hover:underline font-medium"
         >
           Đăng ký ngay

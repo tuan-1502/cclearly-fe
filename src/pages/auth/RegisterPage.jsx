@@ -1,11 +1,14 @@
 import { Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useRegister } from '@/hooks/useAuth';
 
 const RegisterPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const register = useRegister();
+
+  const from = location.state?.from;
 
   const [formData, setFormData] = useState({
     name: '',
@@ -47,7 +50,7 @@ const RegisterPage = () => {
       // Redirect to verify email page with email in state
       navigate('/verify-email', {
         replace: true,
-        state: { email: formData.email },
+        state: { email: formData.email, from },
       });
     } catch (error) {
       // Error handled by hook
@@ -200,6 +203,7 @@ const RegisterPage = () => {
         Đã có tài khoản?{' '}
         <Link
           to="/login"
+          state={{ from }}
           className="text-[#0f5dd9] hover:underline font-medium"
         >
           Đăng nhập ngay

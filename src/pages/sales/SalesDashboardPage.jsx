@@ -15,18 +15,53 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import OrderDetailModal from '@/components/sale/OrderDetailModal';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAdminOrders } from '@/hooks/useOrder';
-import OrderDetailModal from '@/components/sale/OrderDetailModal';
 
 const STATUS_MAP = {
-  PENDING: { label: 'Chờ xác nhận', bg: 'bg-yellow-50 text-yellow-700 border-yellow-200', icon: Clock, color: 'text-yellow-600' },
-  CONFIRMED: { label: 'Đã xác nhận', bg: 'bg-blue-50 text-blue-700 border-blue-200', icon: CheckCircle, color: 'text-blue-600' },
-  SHIPPED: { label: 'Đang giao hàng', bg: 'bg-purple-50 text-purple-700 border-purple-200', icon: Truck, color: 'text-purple-600' },
-  DELIVERED: { label: 'Đã giao', bg: 'bg-green-50 text-green-700 border-green-200', icon: CheckCircle, color: 'text-green-600' },
-  CANCELLED: { label: 'Đã hủy', bg: 'bg-red-50 text-red-700 border-red-200', icon: XCircle, color: 'text-red-600' },
-  RETURN_REQUESTED: { label: 'Yêu cầu trả hàng', bg: 'bg-orange-50 text-orange-700 border-orange-200', icon: RotateCcw, color: 'text-orange-600' },
-  RETURNED: { label: 'Đã trả hàng', bg: 'bg-gray-50 text-gray-700 border-gray-200', icon: RotateCcw, color: 'text-gray-600' },
+  PENDING: {
+    label: 'Chờ xác nhận',
+    bg: 'bg-yellow-50 text-yellow-700 border-yellow-200',
+    icon: Clock,
+    color: 'text-yellow-600',
+  },
+  CONFIRMED: {
+    label: 'Đã xác nhận',
+    bg: 'bg-blue-50 text-blue-700 border-blue-200',
+    icon: CheckCircle,
+    color: 'text-blue-600',
+  },
+  SHIPPED: {
+    label: 'Đang giao hàng',
+    bg: 'bg-purple-50 text-purple-700 border-purple-200',
+    icon: Truck,
+    color: 'text-purple-600',
+  },
+  DELIVERED: {
+    label: 'Đã giao',
+    bg: 'bg-green-50 text-green-700 border-green-200',
+    icon: CheckCircle,
+    color: 'text-green-600',
+  },
+  CANCELLED: {
+    label: 'Đã hủy',
+    bg: 'bg-red-50 text-red-700 border-red-200',
+    icon: XCircle,
+    color: 'text-red-600',
+  },
+  RETURN_REQUESTED: {
+    label: 'Yêu cầu trả hàng',
+    bg: 'bg-orange-50 text-orange-700 border-orange-200',
+    icon: RotateCcw,
+    color: 'text-orange-600',
+  },
+  RETURNED: {
+    label: 'Đã trả hàng',
+    bg: 'bg-gray-50 text-gray-700 border-gray-200',
+    icon: RotateCcw,
+    color: 'text-gray-600',
+  },
 };
 
 const SalesDashboardPage = () => {
@@ -52,13 +87,17 @@ const SalesDashboardPage = () => {
     return matchesSearch && matchesStatus;
   });
 
-  const countByStatus = (status) => orders.filter((o) => o.status === status).length;
+  const countByStatus = (status) =>
+    orders.filter((o) => o.status === status).length;
   const totalRevenue = orders
     .filter((o) => o.status === 'DELIVERED')
     .reduce((sum, o) => sum + (o.finalAmount || 0), 0);
 
   const formatCurrency = (amount) =>
-    new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount || 0);
+    new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }).format(amount || 0);
 
   const formatDate = (dateStr) => {
     if (!dateStr) return '—';
@@ -66,9 +105,14 @@ const SalesDashboardPage = () => {
   };
 
   const getStatusBadge = (status) => {
-    const s = STATUS_MAP[status] || { label: status, bg: 'bg-gray-50 text-gray-600 border-gray-200' };
+    const s = STATUS_MAP[status] || {
+      label: status,
+      bg: 'bg-gray-50 text-gray-600 border-gray-200',
+    };
     return (
-      <span className={`px-2.5 py-1 rounded-full text-xs font-medium border ${s.bg}`}>
+      <span
+        className={`px-2.5 py-1 rounded-full text-xs font-medium border ${s.bg}`}
+      >
         {s.label}
       </span>
     );
@@ -100,7 +144,9 @@ const SalesDashboardPage = () => {
               <Clock className="w-6 h-6 text-yellow-600" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-[#222]">{countByStatus('PENDING')}</p>
+              <p className="text-2xl font-bold text-[#222]">
+                {countByStatus('PENDING')}
+              </p>
               <p className="text-xs text-[#4f5562]">Chờ xác nhận</p>
             </div>
           </div>
@@ -112,7 +158,9 @@ const SalesDashboardPage = () => {
               <ShoppingBag className="w-6 h-6 text-blue-600" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-[#222]">{countByStatus('CONFIRMED')}</p>
+              <p className="text-2xl font-bold text-[#222]">
+                {countByStatus('CONFIRMED')}
+              </p>
               <p className="text-xs text-[#4f5562]">Đã xác nhận</p>
             </div>
           </div>
@@ -124,7 +172,9 @@ const SalesDashboardPage = () => {
               <CheckCircle className="w-6 h-6 text-green-600" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-[#222]">{countByStatus('DELIVERED')}</p>
+              <p className="text-2xl font-bold text-[#222]">
+                {countByStatus('DELIVERED')}
+              </p>
               <p className="text-xs text-[#4f5562]">Đã giao</p>
             </div>
           </div>
@@ -136,7 +186,9 @@ const SalesDashboardPage = () => {
               <DollarSign className="w-6 h-6 text-amber-600" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-[#222]">{formatCurrency(totalRevenue)}</p>
+              <p className="text-2xl font-bold text-[#222]">
+                {formatCurrency(totalRevenue)}
+              </p>
               <p className="text-xs text-[#4f5562]">Doanh thu</p>
             </div>
           </div>
@@ -189,7 +241,10 @@ const SalesDashboardPage = () => {
         {isLoading ? (
           <div className="space-y-3">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl animate-pulse">
+              <div
+                key={i}
+                className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl animate-pulse"
+              >
                 <div className="w-12 h-12 bg-gray-200 rounded-xl" />
                 <div className="flex-1 space-y-2">
                   <div className="h-4 w-1/4 bg-gray-200 rounded" />
@@ -210,8 +265,12 @@ const SalesDashboardPage = () => {
                   className="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition cursor-pointer group"
                 >
                   <div className="flex items-center gap-4">
-                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${statusInfo ? statusInfo.bg.split(' ')[0] : 'bg-gray-100'}`}>
-                      <StatusIcon className={`w-6 h-6 ${statusInfo?.color || 'text-gray-500'}`} />
+                    <div
+                      className={`w-12 h-12 rounded-xl flex items-center justify-center ${statusInfo ? statusInfo.bg.split(' ')[0] : 'bg-gray-100'}`}
+                    >
+                      <StatusIcon
+                        className={`w-6 h-6 ${statusInfo?.color || 'text-gray-500'}`}
+                      />
                     </div>
                     <div>
                       <p className="font-medium text-[#222]">
@@ -221,7 +280,8 @@ const SalesDashboardPage = () => {
                         {order.recipientName || order.customerEmail || '—'}
                       </p>
                       <p className="text-xs text-[#4f5562]">
-                        {order.items?.length || 0} sản phẩm · {formatDate(order.createdAt)}
+                        {order.items?.length || 0} sản phẩm ·{' '}
+                        {formatDate(order.createdAt)}
                       </p>
                     </div>
                   </div>

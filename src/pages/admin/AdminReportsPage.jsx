@@ -1,5 +1,4 @@
 // Admin Reports Page - Báo cáo cho System Admin
-import { useState, useRef, useEffect } from 'react';
 import {
   TrendingUp,
   TrendingDown,
@@ -12,6 +11,7 @@ import {
   Calendar,
   Loader2,
 } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
 import {
   AreaChart,
   Area,
@@ -47,9 +47,13 @@ const AdminReportsPage = () => {
   const [showFilter, setShowFilter] = useState(false);
   const filterRef = useRef(null);
 
-  const { data: revenueData, isLoading: loadingRevenue } = useAdminRevenue({ days: filterDays });
+  const { data: revenueData, isLoading: loadingRevenue } = useAdminRevenue({
+    days: filterDays,
+  });
 
-  const selectedLabel = FILTER_OPTIONS.find((o) => o.value === filterDays)?.label;
+  const selectedLabel = FILTER_OPTIONS.find(
+    (o) => o.value === filterDays
+  )?.label;
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -122,7 +126,10 @@ const AdminReportsPage = () => {
           >
             <Calendar size={16} className="text-[#0f5dd9]" />
             {selectedLabel}
-            <ChevronDown size={14} className={`transition-transform ${showFilter ? 'rotate-180' : ''}`} />
+            <ChevronDown
+              size={14}
+              className={`transition-transform ${showFilter ? 'rotate-180' : ''}`}
+            />
           </button>
           {showFilter && (
             <div className="absolute right-0 mt-2 w-44 bg-white border border-[#e0e0e0] rounded-xl shadow-lg z-20 overflow-hidden">

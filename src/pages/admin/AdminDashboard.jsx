@@ -182,9 +182,7 @@ const AdminDashboard = () => {
                         {order.code || order.orderId}
                       </td>
 
-                      <td>
-                        {order.recipientName || 'N/A'}
-                      </td>
+                      <td>{order.recipientName || 'N/A'}</td>
 
                       <td>{formatCurrency(order.finalAmount)}</td>
 

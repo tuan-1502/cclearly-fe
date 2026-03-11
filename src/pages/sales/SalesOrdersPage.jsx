@@ -39,7 +39,8 @@ const SalesOrdersPage = () => {
   });
   const orders = ordersData?.items || ordersData || [];
   const totalItems = ordersData?.meta?.totalElements || orders.length;
-  const totalPages = ordersData?.meta?.totalPages || Math.ceil(totalItems / pageSize);
+  const totalPages =
+    ordersData?.meta?.totalPages || Math.ceil(totalItems / pageSize);
 
   const savePrescriptionMutation = useSavePrescription();
   const updateStatusMutation = useUpdateOrderStatus();
@@ -71,8 +72,10 @@ const SalesOrdersPage = () => {
 
   const filteredOrders = orders.filter((order) => {
     const orderId = order.code || order.orderId || order.id || '';
-    const customerName = order.recipientName || order.shippingAddress?.name || '';
-    const customerPhone = order.shippingPhone || order.shippingAddress?.phone || '';
+    const customerName =
+      order.recipientName || order.shippingAddress?.name || '';
+    const customerPhone =
+      order.shippingPhone || order.shippingAddress?.phone || '';
     const matchesSearch =
       orderId.toLowerCase().includes(searchTerm.toLowerCase()) ||
       customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -95,7 +98,10 @@ const SalesOrdersPage = () => {
     SHIPPED: { label: 'Đang giao hàng', css: 'bg-purple-100 text-purple-700' },
     DELIVERED: { label: 'Đã giao', css: 'bg-green-100 text-green-700' },
     CANCELLED: { label: 'Đã hủy', css: 'bg-red-100 text-red-700' },
-    RETURN_REQUESTED: { label: 'Yêu cầu trả hàng', css: 'bg-orange-100 text-orange-700' },
+    RETURN_REQUESTED: {
+      label: 'Yêu cầu trả hàng',
+      css: 'bg-orange-100 text-orange-700',
+    },
     RETURNED: { label: 'Đã trả hàng', css: 'bg-gray-100 text-gray-700' },
   };
 
@@ -104,8 +110,13 @@ const SalesOrdersPage = () => {
     prescription: { label: 'Có toa', css: 'bg-blue-100 text-blue-700' },
   };
 
-  const getStatusBadge = (status) => STATUS_MAP[status] || { label: status, css: 'bg-gray-100 text-gray-700' };
-  const getTypeBadge = (type) => TYPE_MAP[type] || { label: type || 'Thường', css: 'bg-gray-100 text-gray-700' };
+  const getStatusBadge = (status) =>
+    STATUS_MAP[status] || { label: status, css: 'bg-gray-100 text-gray-700' };
+  const getTypeBadge = (type) =>
+    TYPE_MAP[type] || {
+      label: type || 'Thường',
+      css: 'bg-gray-100 text-gray-700',
+    };
 
   const handleEditPrescription = (order) => {
     setOrderToEdit(order);
@@ -143,7 +154,7 @@ const SalesOrdersPage = () => {
           {
             onSettled: () =>
               setConfirmModal((prev) => ({ ...prev, isOpen: false })),
-          },
+          }
         );
       },
     });
@@ -160,7 +171,7 @@ const SalesOrdersPage = () => {
           {
             onSettled: () =>
               setConfirmModal((prev) => ({ ...prev, isOpen: false })),
-          },
+          }
         );
       },
     });
@@ -423,13 +434,13 @@ const SalesOrdersPage = () => {
         onConfirm={(orderId) => {
           updateStatusMutation.mutate(
             { id: orderId, status: 'CONFIRMED' },
-            { onSettled: () => setSelectedOrder(null) },
+            { onSettled: () => setSelectedOrder(null) }
           );
         }}
         onCancel={(orderId) => {
           updateStatusMutation.mutate(
             { id: orderId, status: 'CANCELLED' },
-            { onSettled: () => setSelectedOrder(null) },
+            { onSettled: () => setSelectedOrder(null) }
           );
         }}
       />
@@ -444,11 +455,15 @@ const SalesOrdersPage = () => {
           const data = {
             sphOd: prescriptionForm.rightEye.sph || null,
             cylOd: prescriptionForm.rightEye.cyl || null,
-            axisOd: prescriptionForm.rightEye.axis ? Number(prescriptionForm.rightEye.axis) : null,
+            axisOd: prescriptionForm.rightEye.axis
+              ? Number(prescriptionForm.rightEye.axis)
+              : null,
             addOd: prescriptionForm.rightEye.add || null,
             sphOs: prescriptionForm.leftEye.sph || null,
             cylOs: prescriptionForm.leftEye.cyl || null,
-            axisOs: prescriptionForm.leftEye.axis ? Number(prescriptionForm.leftEye.axis) : null,
+            axisOs: prescriptionForm.leftEye.axis
+              ? Number(prescriptionForm.leftEye.axis)
+              : null,
             addOs: prescriptionForm.leftEye.add || null,
             pd: prescriptionForm.pd || null,
             imageUrl: prescriptionForm.prescriptionImage || null,

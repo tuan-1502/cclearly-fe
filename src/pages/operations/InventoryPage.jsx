@@ -39,8 +39,13 @@ const InventoryPage = () => {
   const importStockMutation = useImportStock();
 
   // Stats
-  const totalStock = inventoryItems.reduce((sum, item) => sum + (item.totalStock || 0), 0);
-  const lowStockItems = inventoryItems.filter((item) => item.totalStock < 10).length;
+  const totalStock = inventoryItems.reduce(
+    (sum, item) => sum + (item.totalStock || 0),
+    0
+  );
+  const lowStockItems = inventoryItems.filter(
+    (item) => item.totalStock < 10
+  ).length;
   const totalVariants = inventoryItems.length;
 
   // Filter items
@@ -83,13 +88,20 @@ const InventoryPage = () => {
       {
         onSuccess: () => {
           setShowImportModal(false);
-          setImportForm({ variantId: '', warehouseId: '', quantity: '', reason: '' });
+          setImportForm({
+            variantId: '',
+            warehouseId: '',
+            quantity: '',
+            reason: '',
+          });
         },
       }
     );
   };
 
-  const selectedVariant = inventoryItems.find((item) => item.variantId === importForm.variantId);
+  const selectedVariant = inventoryItems.find(
+    (item) => item.variantId === importForm.variantId
+  );
 
   return (
     <div className="space-y-6">
@@ -153,9 +165,7 @@ const InventoryPage = () => {
               <AlertTriangle className="w-6 h-6 text-orange-600" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-[#222]">
-                {lowStockItems}
-              </p>
+              <p className="text-2xl font-bold text-[#222]">{lowStockItems}</p>
               <p className="text-sm text-[#4f5562]">Sắp hết hàng</p>
             </div>
           </div>
@@ -277,7 +287,9 @@ const InventoryPage = () => {
                     </span>
                     {item.warehouseStocks?.length > 0 && (
                       <p className="text-xs text-gray-400 mt-0.5">
-                        {item.warehouseStocks.map(w => `${w.warehouseName}: ${w.quantityOnHand}`).join(' | ')}
+                        {item.warehouseStocks
+                          .map((w) => `${w.warehouseName}: ${w.quantityOnHand}`)
+                          .join(' | ')}
                       </p>
                     )}
                   </td>
@@ -302,7 +314,12 @@ const InventoryPage = () => {
                   <td className="px-4 py-3">
                     <button
                       onClick={() => {
-                        setImportForm({ ...importForm, variantId: item.variantId, warehouseId: item.warehouseStocks?.[0]?.warehouseId || '' });
+                        setImportForm({
+                          ...importForm,
+                          variantId: item.variantId,
+                          warehouseId:
+                            item.warehouseStocks?.[0]?.warehouseId || '',
+                        });
                         setShowImportModal(true);
                       }}
                       className="text-[#0f5dd9] hover:bg-blue-50 px-3 py-1 rounded-lg text-sm font-medium"
@@ -376,11 +393,14 @@ const InventoryPage = () => {
                 <select
                   value={importForm.variantId}
                   onChange={(e) => {
-                    const variant = inventoryItems.find(v => v.variantId === e.target.value);
+                    const variant = inventoryItems.find(
+                      (v) => v.variantId === e.target.value
+                    );
                     setImportForm({
                       ...importForm,
                       variantId: e.target.value,
-                      warehouseId: variant?.warehouseStocks?.[0]?.warehouseId || '',
+                      warehouseId:
+                        variant?.warehouseStocks?.[0]?.warehouseId || '',
                     });
                   }}
                   className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0f5dd9]"
@@ -402,7 +422,10 @@ const InventoryPage = () => {
                   <select
                     value={importForm.warehouseId}
                     onChange={(e) =>
-                      setImportForm({ ...importForm, warehouseId: e.target.value })
+                      setImportForm({
+                        ...importForm,
+                        warehouseId: e.target.value,
+                      })
                     }
                     className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0f5dd9]"
                   >

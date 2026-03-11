@@ -12,10 +12,7 @@ import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 
 import PaymentTab from '@/components/admin/setting/PaymentTab';
-import {
-  SectionHeader,
-  FormField,
-} from '@/components/common/CommonControls';
+import { SectionHeader, FormField } from '@/components/common/CommonControls';
 import { useAdminSettings, useUpdateSettings } from '@/hooks/useAdmin';
 
 const AdminSettingsPage = () => {
@@ -104,7 +101,7 @@ const AdminSettingsPage = () => {
                 label="Tên cửa hàng"
                 defaultValue={getSetting(
                   'store_name',
-                  'CClearly - Eye Care Center',
+                  'CClearly - Eye Care Center'
                 )}
                 onChange={(e) => updateLocal('store_name', e.target.value)}
               />
@@ -117,7 +114,7 @@ const AdminSettingsPage = () => {
                 label="Email hỗ trợ"
                 defaultValue={getSetting(
                   'support_email',
-                  'support@cclearly.com',
+                  'support@cclearly.com'
                 )}
                 onChange={(e) => updateLocal('support_email', e.target.value)}
               />
@@ -176,7 +173,7 @@ const AdminSettingsPage = () => {
         const bannerColor = getSetting('email_banner_color', '#4F46E5');
         const footerText = getSetting(
           'email_footer_text',
-          '© 2024 CClearly. All rights reserved.',
+          '© 2024 CClearly. All rights reserved.'
         );
 
         const presetColors = [
@@ -229,9 +226,7 @@ const AdminSettingsPage = () => {
                   {presetColors.map((p) => (
                     <button
                       key={p.color}
-                      onClick={() =>
-                        updateLocal('email_banner_color', p.color)
-                      }
+                      onClick={() => updateLocal('email_banner_color', p.color)}
                       className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
                         bannerColor === p.color
                           ? 'border-gray-800 shadow-sm ring-1 ring-gray-300'

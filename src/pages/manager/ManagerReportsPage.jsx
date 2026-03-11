@@ -37,7 +37,9 @@ const ManagerReportsPage = () => {
     ([name, value]) => ({ name, value })
   );
 
-  const lowStock = inventoryItems.filter((item) => item.totalStock < 20).slice(0, 5);
+  const lowStock = inventoryItems
+    .filter((item) => item.totalStock < 20)
+    .slice(0, 5);
 
   const COLORS = [
     '#2563eb',
@@ -207,7 +209,9 @@ const ManagerReportsPage = () => {
                 >
                   <div>
                     <p className="font-medium">{item.productName}</p>
-                    <p className="text-xs text-gray-500">SKU: {item.variantSku}</p>
+                    <p className="text-xs text-gray-500">
+                      SKU: {item.variantSku}
+                    </p>
                   </div>
 
                   <span className="bg-red-200 text-red-700 px-2 py-1 rounded text-sm">

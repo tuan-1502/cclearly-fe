@@ -97,7 +97,9 @@ const BannerModal = ({
               {uploading ? (
                 <div className="flex flex-col items-center py-6">
                   <Loader2 className="w-8 h-8 animate-spin text-[#0f5dd9] mb-2" />
-                  <p className="text-sm text-gray-500">Đang tải ảnh lên Cloudinary...</p>
+                  <p className="text-sm text-gray-500">
+                    Đang tải ảnh lên Cloudinary...
+                  </p>
                 </div>
               ) : displayImage ? (
                 <div className="relative h-32 w-full rounded-lg overflow-hidden">
@@ -122,7 +124,9 @@ const BannerModal = ({
               )}
             </div>
             {formData.imageUrl && (
-              <p className="mt-1.5 text-xs text-gray-400 truncate">{formData.imageUrl}</p>
+              <p className="mt-1.5 text-xs text-gray-400 truncate">
+                {formData.imageUrl}
+              </p>
             )}
           </div>
 
@@ -154,7 +158,10 @@ const BannerModal = ({
                 min={1}
                 value={formData.displayOrder}
                 onChange={(e) =>
-                  setFormData({ ...formData, displayOrder: Number(e.target.value) })
+                  setFormData({
+                    ...formData,
+                    displayOrder: Number(e.target.value),
+                  })
                 }
                 className="w-full px-4 py-2 border border-gray-200 rounded-xl outline-none"
               />

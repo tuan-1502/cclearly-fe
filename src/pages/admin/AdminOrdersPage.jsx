@@ -76,10 +76,10 @@ const AdminOrdersPage = () => {
   });
 
   const SPH_VALUES = Array.from({ length: 81 }, (_, i) =>
-    (i * 0.25 - 10).toFixed(2),
+    (i * 0.25 - 10).toFixed(2)
   );
   const CYL_VALUES = Array.from({ length: 25 }, (_, i) =>
-    (i * 0.25 - 3).toFixed(2),
+    (i * 0.25 - 3).toFixed(2)
   );
   const AXS_VALUES = Array.from({ length: 181 }, (_, i) => i.toString());
 
@@ -130,7 +130,10 @@ const AdminOrdersPage = () => {
   const getStatusBadge = (status) =>
     STATUS_MAP[status] || { label: status, css: 'bg-gray-100 text-gray-700' };
   const getTypeBadge = (type) =>
-    TYPE_MAP[type] || { label: type || 'Thường', css: 'bg-gray-100 text-gray-700' };
+    TYPE_MAP[type] || {
+      label: type || 'Thường',
+      css: 'bg-gray-100 text-gray-700',
+    };
 
   /* ---------- Actions ---------- */
 
@@ -146,7 +149,7 @@ const AdminOrdersPage = () => {
           {
             onSettled: () =>
               setConfirmModal((prev) => ({ ...prev, isOpen: false })),
-          },
+          }
         );
       },
     });
@@ -163,7 +166,7 @@ const AdminOrdersPage = () => {
           {
             onSettled: () =>
               setConfirmModal((prev) => ({ ...prev, isOpen: false })),
-          },
+          }
         );
       },
     });
@@ -204,7 +207,7 @@ const AdminOrdersPage = () => {
           {
             onSettled: () =>
               setConfirmModal((prev) => ({ ...prev, isOpen: false })),
-          },
+          }
         );
       },
     });
@@ -230,7 +233,7 @@ const AdminOrdersPage = () => {
           {
             onSettled: () =>
               setConfirmModal((prev) => ({ ...prev, isOpen: false })),
-          },
+          }
         );
       },
     });
@@ -534,7 +537,12 @@ const AdminOrdersPage = () => {
           <div
             className="absolute inset-0 bg-black/40"
             onClick={() =>
-              setTrackingModal({ open: false, id: null, tracking: '', carrier: '' })
+              setTrackingModal({
+                open: false,
+                id: null,
+                tracking: '',
+                carrier: '',
+              })
             }
           />
           <div className="relative bg-white p-6 rounded-xl w-full max-w-sm space-y-4">
@@ -547,7 +555,10 @@ const AdminOrdersPage = () => {
               <select
                 value={trackingModal.carrier}
                 onChange={(e) =>
-                  setTrackingModal({ ...trackingModal, carrier: e.target.value })
+                  setTrackingModal({
+                    ...trackingModal,
+                    carrier: e.target.value,
+                  })
                 }
                 className="w-full border p-2 rounded"
               >
@@ -567,7 +578,10 @@ const AdminOrdersPage = () => {
               <input
                 value={trackingModal.tracking}
                 onChange={(e) =>
-                  setTrackingModal({ ...trackingModal, tracking: e.target.value })
+                  setTrackingModal({
+                    ...trackingModal,
+                    tracking: e.target.value,
+                  })
                 }
                 placeholder="Nhập mã vận đơn"
                 className="w-full border p-2 rounded"
@@ -577,7 +591,12 @@ const AdminOrdersPage = () => {
             <div className="flex gap-2">
               <button
                 onClick={() =>
-                  setTrackingModal({ open: false, id: null, tracking: '', carrier: '' })
+                  setTrackingModal({
+                    open: false,
+                    id: null,
+                    tracking: '',
+                    carrier: '',
+                  })
                 }
                 className="flex-1 bg-gray-200 py-2 rounded"
               >
@@ -598,7 +617,12 @@ const AdminOrdersPage = () => {
                     status: 'SHIPPED',
                     note: `[${trackingModal.carrier}] ${trackingModal.tracking.trim()}`,
                   });
-                  setTrackingModal({ open: false, id: null, tracking: '', carrier: '' });
+                  setTrackingModal({
+                    open: false,
+                    id: null,
+                    tracking: '',
+                    carrier: '',
+                  });
                 }}
                 className="flex-1 bg-blue-600 text-white py-2 rounded"
               >
@@ -616,13 +640,13 @@ const AdminOrdersPage = () => {
         onConfirm={(orderId) => {
           updateStatusMutation.mutate(
             { id: orderId, status: 'CONFIRMED' },
-            { onSettled: () => setSelectedOrder(null) },
+            { onSettled: () => setSelectedOrder(null) }
           );
         }}
         onCancel={(orderId) => {
           updateStatusMutation.mutate(
             { id: orderId, status: 'CANCELLED' },
-            { onSettled: () => setSelectedOrder(null) },
+            { onSettled: () => setSelectedOrder(null) }
           );
         }}
       />
@@ -652,7 +676,7 @@ const AdminOrdersPage = () => {
           };
           savePrescriptionMutation.mutate(
             { orderId, data },
-            { onSuccess: () => setOrderToEdit(null) },
+            { onSuccess: () => setOrderToEdit(null) }
           );
         }}
         form={prescriptionForm}

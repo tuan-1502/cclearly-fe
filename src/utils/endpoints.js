@@ -84,6 +84,7 @@ export const ENDPOINT = {
   // Public config
   SHIPPING_CONFIG: '/public/shipping-config',
   MAINTENANCE_STATUS: '/public/maintenance-status',
+  VALIDATE_VOUCHER: '/public/promotions/validate',
 };
 
 // Query Keys for React Query

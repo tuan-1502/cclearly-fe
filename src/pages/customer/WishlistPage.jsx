@@ -1,12 +1,13 @@
 // Wishlist Page
 import { Lock, Heart, Glasses, Scan } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { wishlist, products } from '@/mocks/data';
 
 const WishlistPage = () => {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const wishlistProducts = wishlist
     .map((w) => products.find((p) => p.id === w.productId))
@@ -26,7 +27,7 @@ const WishlistPage = () => {
             Đăng nhập để xem danh sách yêu thích
           </p>
           <button
-            onClick={() => navigate('/login')}
+            onClick={() => navigate('/login', { state: { from: location.pathname } })}
             className="bg-[#141f36] text-white px-10 py-4 rounded-full font-medium hover:bg-[#0d1322]"
           >
             Đăng nhập

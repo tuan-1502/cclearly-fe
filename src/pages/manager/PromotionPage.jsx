@@ -60,7 +60,9 @@ const PromotionPage = () => {
       value: Number(couponFormData.value),
       minOrder: Number(couponFormData.minOrder) || 0,
       maxDiscount: Number(couponFormData.maxDiscount) || 0,
-      usageLimit: couponFormData.usageLimit ? Number(couponFormData.usageLimit) : null,
+      usageLimit: couponFormData.usageLimit
+        ? Number(couponFormData.usageLimit)
+        : null,
       description: couponFormData.description,
       isActive: couponFormData.isActive,
     };
@@ -140,8 +142,7 @@ const PromotionPage = () => {
     return matchesSearch;
   });
 
-  const isPercent = (type) =>
-    type === 'PERCENT' || type === 'PERCENTAGE';
+  const isPercent = (type) => type === 'PERCENT' || type === 'PERCENTAGE';
 
   const formatDiscount = (coupon) => {
     if (isPercent(coupon.discountType)) return `${coupon.value}%`;
@@ -329,7 +330,10 @@ const PromotionPage = () => {
                     </span>
                   </td>
 
-                  <td className="px-5 py-3 text-gray-500 max-w-[200px] truncate" title={coupon.description}>
+                  <td
+                    className="px-5 py-3 text-gray-500 max-w-[200px] truncate"
+                    title={coupon.description}
+                  >
                     {coupon.description || '—'}
                   </td>
 
@@ -383,7 +387,10 @@ const PromotionPage = () => {
                 {editingCoupon ? 'Sửa Voucher' : 'Tạo Voucher mới'}
               </h3>
               <button
-                onClick={() => { setShowCouponModal(false); setEditingCoupon(null); }}
+                onClick={() => {
+                  setShowCouponModal(false);
+                  setEditingCoupon(null);
+                }}
                 className="text-gray-400 hover:text-gray-600"
               >
                 <X size={20} />
@@ -392,11 +399,18 @@ const PromotionPage = () => {
 
             <form onSubmit={handleCouponSubmit} className="p-5 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Mã voucher</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Mã voucher
+                </label>
                 <input
                   type="text"
                   value={couponFormData.code}
-                  onChange={(e) => setCouponFormData({ ...couponFormData, code: e.target.value.toUpperCase() })}
+                  onChange={(e) =>
+                    setCouponFormData({
+                      ...couponFormData,
+                      code: e.target.value.toUpperCase(),
+                    })
+                  }
                   placeholder="VD: SUMMER20"
                   className="w-full border rounded-lg px-3 py-2 text-sm"
                   required
@@ -406,10 +420,17 @@ const PromotionPage = () => {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Loại giảm giá</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Loại giảm giá
+                  </label>
                   <select
                     value={couponFormData.discountType}
-                    onChange={(e) => setCouponFormData({ ...couponFormData, discountType: e.target.value })}
+                    onChange={(e) =>
+                      setCouponFormData({
+                        ...couponFormData,
+                        discountType: e.target.value,
+                      })
+                    }
                     className="w-full border rounded-lg px-3 py-2 text-sm"
                   >
                     <option value="PERCENT">Phần trăm (%)</option>
@@ -419,12 +440,18 @@ const PromotionPage = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Giá trị {isPercent(couponFormData.discountType) ? '(%)' : '(₫)'}
+                    Giá trị{' '}
+                    {isPercent(couponFormData.discountType) ? '(%)' : '(₫)'}
                   </label>
                   <input
                     type="number"
                     value={couponFormData.value}
-                    onChange={(e) => setCouponFormData({ ...couponFormData, value: e.target.value })}
+                    onChange={(e) =>
+                      setCouponFormData({
+                        ...couponFormData,
+                        value: e.target.value,
+                      })
+                    }
                     className="w-full border rounded-lg px-3 py-2 text-sm"
                     min="0"
                     required
@@ -434,22 +461,36 @@ const PromotionPage = () => {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Đơn tối thiểu (₫)</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Đơn tối thiểu (₫)
+                  </label>
                   <input
                     type="number"
                     value={couponFormData.minOrder}
-                    onChange={(e) => setCouponFormData({ ...couponFormData, minOrder: e.target.value })}
+                    onChange={(e) =>
+                      setCouponFormData({
+                        ...couponFormData,
+                        minOrder: e.target.value,
+                      })
+                    }
                     className="w-full border rounded-lg px-3 py-2 text-sm"
                     min="0"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Giảm tối đa (₫)</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Giảm tối đa (₫)
+                  </label>
                   <input
                     type="number"
                     value={couponFormData.maxDiscount}
-                    onChange={(e) => setCouponFormData({ ...couponFormData, maxDiscount: e.target.value })}
+                    onChange={(e) =>
+                      setCouponFormData({
+                        ...couponFormData,
+                        maxDiscount: e.target.value,
+                      })
+                    }
                     className="w-full border rounded-lg px-3 py-2 text-sm"
                     min="0"
                   />
@@ -457,11 +498,20 @@ const PromotionPage = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Giới hạn sử dụng</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Giới hạn sử dụng
+                </label>
                 <input
                   type="number"
                   value={couponFormData.usageLimit || ''}
-                  onChange={(e) => setCouponFormData({ ...couponFormData, usageLimit: e.target.value ? Number(e.target.value) : null })}
+                  onChange={(e) =>
+                    setCouponFormData({
+                      ...couponFormData,
+                      usageLimit: e.target.value
+                        ? Number(e.target.value)
+                        : null,
+                    })
+                  }
                   placeholder="Để trống = không giới hạn"
                   className="w-full border rounded-lg px-3 py-2 text-sm"
                   min="0"
@@ -469,10 +519,17 @@ const PromotionPage = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Mô tả</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Mô tả
+                </label>
                 <textarea
                   value={couponFormData.description}
-                  onChange={(e) => setCouponFormData({ ...couponFormData, description: e.target.value })}
+                  onChange={(e) =>
+                    setCouponFormData({
+                      ...couponFormData,
+                      description: e.target.value,
+                    })
+                  }
                   placeholder="Mô tả khuyến mãi..."
                   className="w-full border rounded-lg px-3 py-2 text-sm"
                   rows={2}
@@ -484,28 +541,44 @@ const PromotionPage = () => {
                   type="checkbox"
                   id="couponActive"
                   checked={couponFormData.isActive}
-                  onChange={(e) => setCouponFormData({ ...couponFormData, isActive: e.target.checked })}
+                  onChange={(e) =>
+                    setCouponFormData({
+                      ...couponFormData,
+                      isActive: e.target.checked,
+                    })
+                  }
                   className="rounded"
                 />
-                <label htmlFor="couponActive" className="text-sm text-gray-700">Kích hoạt ngay</label>
+                <label htmlFor="couponActive" className="text-sm text-gray-700">
+                  Kích hoạt ngay
+                </label>
               </div>
 
               <div className="flex justify-end gap-3 pt-2">
                 <button
                   type="button"
-                  onClick={() => { setShowCouponModal(false); setEditingCoupon(null); }}
+                  onClick={() => {
+                    setShowCouponModal(false);
+                    setEditingCoupon(null);
+                  }}
                   className="px-4 py-2 text-sm border rounded-lg hover:bg-gray-50"
                 >
                   Hủy
                 </button>
                 <button
                   type="submit"
-                  disabled={createPromotionMutation.isPending || updatePromotionMutation.isPending}
+                  disabled={
+                    createPromotionMutation.isPending ||
+                    updatePromotionMutation.isPending
+                  }
                   className="px-5 py-2 text-sm bg-gray-900 text-white rounded-lg hover:bg-gray-800 disabled:opacity-50"
                 >
-                  {createPromotionMutation.isPending || updatePromotionMutation.isPending
+                  {createPromotionMutation.isPending ||
+                  updatePromotionMutation.isPending
                     ? 'Đang lưu...'
-                    : editingCoupon ? 'Cập nhật' : 'Tạo mới'}
+                    : editingCoupon
+                      ? 'Cập nhật'
+                      : 'Tạo mới'}
                 </button>
               </div>
             </form>
