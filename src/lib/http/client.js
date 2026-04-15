@@ -92,6 +92,14 @@ async function request(method, url, options, retryCount = 0) {
 
   const authToken = options?.skipAuth ? null : tokenInterceptor.getValidToken();
 
+  // Add logging to verify token
+  console.log('Access Token:', authToken);
+
+  // Check if token is null and log an error
+  if (!authToken && !options?.skipAuth) {
+    console.error('No access token found. Ensure the user is logged in.');
+  }
+
   const headers = {};
   if (!(body instanceof FormData)) {
     headers['Content-Type'] = 'application/json';

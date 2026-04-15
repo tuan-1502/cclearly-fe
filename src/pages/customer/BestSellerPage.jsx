@@ -23,18 +23,117 @@ const BestSellerPage = () => {
   const [pageSize, setPageSize] = useState(8);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { data: allProducts = [] } = useProducts();
+  const { data: allProductsData = {}, isLoading, isError } = useProducts();
+  const allProducts = Array.isArray(allProductsData.content)
+    ? allProductsData.content
+    : [];
 
+  if (!Array.isArray(allProducts)) {
+    console.error('Invalid data format for allProducts:', allProductsData);
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-lg font-semibold text-red-500">
+          Dữ liệu sản phẩm không hợp lệ. Vui lòng thử lại sau.
+        </p>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-lg font-semibold">Loading products...</p>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-lg font-semibold text-red-500">
+          Failed to load products. Please try again later.
+        </p>
+      </div>
+    );
+  }
+
+  console.log('All Products Data:', allProductsData);
+  console.log('All Products Count:', allProducts.length);
+  
+  if (allProducts.length > 0) {
+    console.log('First Product Structure:', allProducts[0]);
+    console.log('First Product Keys:', Object.keys(allProducts[0]));
+  }
+
+  if (!allProducts) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-lg font-semibold text-red-500">
+          Không thể tải dữ liệu sản phẩm. Vui lòng thử lại sau.
+        </p>
+      </div>
+    );
+  }
+
+  // Improved filter criteria for Best Sellers
   const bestSellers = useMemo(() => {
-    const getScore = (product) =>
-      (product.rating || 0) * 100 +
-      (product.reviewCount || 0) +
-      (product.isSale ? 50 : 0);
+    console.log('Filtering products for Best Sellers...');
+    
+    // Try multiple filter strategies
+    let filtered = [];
+    
+    // Strategy 1: Filter by isSale or high rating
+    const bySaleOrRating = allProducts.filter((product) => {
+      return product.isSale || (product.rating && product.rating >= 4.5);
+    });
+    console.log(`Strategy 1 (isSale or rating>=4.5): ${bySaleOrRating.length} products`);
+    
+    if (bySaleOrRating.length > 0) {
+      filtered = bySaleOrRating;
+    } else {
+      // Strategy 2: Filter by stock and category (frames and lenses)
+      const byStockAndCategory = allProducts.filter((product) => {
+        return product.stock > 0 && (product.type === 'frame' || product.type === 'lens');
+      });
+      console.log(`Strategy 2 (stock>0 and frame/lens): ${byStockAndCategory.length} products`);
+      
+      if (byStockAndCategory.length > 0) {
+        filtered = byStockAndCategory;
+      } else {
+        // Strategy 3: Just use products with stock
+        const byStock = allProducts.filter((product) => product.stock > 0);
+        console.log(`Strategy 3 (stock>0): ${byStock.length} products`);
+        filtered = byStock.length > 0 ? byStock : allProducts;
+      }
+    }
 
-    return allProducts
-      .filter((product) => product.isSale || product.rating >= 4.5)
-      .sort((a, b) => getScore(b) - getScore(a));
+    // Scoring function for sorting
+    const getScore = (product) => {
+      let score = 0;
+      
+      // Higher score for sale items
+      if (product.isSale) score += 1000;
+      
+      // Higher score for products with better ratings
+      if (product.rating) score += product.rating * 100;
+      
+      // Higher score for products with more reviews
+      if (product.reviewCount) score += product.reviewCount * 10;
+      
+      // Higher score for higher price (premium products)
+      if (product.price) score += product.price / 1000;
+      
+      // Higher score for more stock
+      if (product.stock) score += Math.min(product.stock, 100);
+      
+      return score;
+    };
+
+    return filtered.sort((a, b) => getScore(b) - getScore(a));
   }, [allProducts]);
+
+  console.log('Best Sellers Count:', bestSellers.length);
+  console.log('Best Sellers:', bestSellers);
 
   const summaryStats = useMemo(() => {
     const saleCount = bestSellers.filter((product) => product.isSale).length;
@@ -86,6 +185,8 @@ const BestSellerPage = () => {
     return result;
   }, [bestSellers, searchTerm, categoryFilter]);
 
+  console.log('Filtered Products:', filteredProducts);
+
   const totalPages = Math.max(1, Math.ceil(filteredProducts.length / pageSize));
   const normalizedCurrentPage = Math.min(currentPage, totalPages);
 
@@ -94,6 +195,8 @@ const BestSellerPage = () => {
     const endIndex = startIndex + pageSize;
     return filteredProducts.slice(startIndex, endIndex);
   }, [filteredProducts, normalizedCurrentPage, pageSize]);
+
+  console.log('Paginated Products:', paginatedProducts);
 
   const shownFrom =
     filteredProducts.length === 0
