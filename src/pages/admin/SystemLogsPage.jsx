@@ -1,4 +1,4 @@
-import {
+﻿import {
   Search,
   Download,
   Eye,
@@ -90,9 +90,9 @@ const SystemLogsPage = () => {
 
   const getActionBadge = (action) => {
     const badges = {
-      IMPORT_STOCK: 'bg-blue-100 text-blue-700',
+      IMPORT_STOCK: 'bg-red-100 text-red-700',
       ADD_PRODUCT: 'bg-green-100 text-green-700',
-      UPDATE_PRODUCT: 'bg-blue-100 text-blue-700',
+      UPDATE_PRODUCT: 'bg-red-100 text-red-700',
       DELETE_PRODUCT: 'bg-red-100 text-red-700',
       ADD_VOUCHER: 'bg-purple-100 text-purple-700',
       UPDATE_VOUCHER: 'bg-purple-100 text-purple-700',
@@ -101,7 +101,7 @@ const SystemLogsPage = () => {
       CHANGE_EMAIL_TEMPLATE: 'bg-cyan-100 text-cyan-700',
       BAN_ACCOUNT: 'bg-red-100 text-red-700',
       CREATE_USER: 'bg-emerald-100 text-emerald-700',
-      UPDATE_USER: 'bg-blue-100 text-blue-700',
+      UPDATE_USER: 'bg-red-100 text-red-700',
       RESET_PASSWORD: 'bg-amber-100 text-amber-700',
       UPDATE_SETTINGS: 'bg-teal-100 text-teal-700',
       LOGIN: 'bg-violet-100 text-violet-700',
@@ -119,7 +119,7 @@ const SystemLogsPage = () => {
             Theo dõi các hoạt động trong hệ thống
           </p>
         </div>
-        <button className="flex items-center gap-2 px-4 py-2 bg-[#0f5dd9] text-white rounded-xl font-medium hover:bg-[#0b4fc0] transition-colors">
+        <button className="flex items-center gap-2 px-4 py-2 bg-[#d90f0f] text-white rounded-xl font-medium hover:bg-[#b00c0c] transition-colors">
           <Download size={18} />
           Xuất log
         </button>
@@ -135,7 +135,7 @@ const SystemLogsPage = () => {
               placeholder="Tìm kiếm theo người dùng hoặc nội dung..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-12 pr-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0f5dd9]/20 focus:border-[#0f5dd9]"
+              className="w-full pl-12 pr-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d90f0f]/20 focus:border-[#d90f0f]"
             />
           </div>
           <select
@@ -144,7 +144,7 @@ const SystemLogsPage = () => {
               setActionFilter(e.target.value);
               setPage(0);
             }}
-            className="px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0f5dd9]/20 focus:border-[#0f5dd9] bg-white cursor-pointer"
+            className="px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d90f0f]/20 focus:border-[#d90f0f] bg-white cursor-pointer"
           >
             {ACTION_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -162,7 +162,7 @@ const SystemLogsPage = () => {
                   setFromDate(e.target.value);
                   setPage(0);
                 }}
-                className="pl-9 pr-3 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0f5dd9]/20 focus:border-[#0f5dd9] bg-white text-sm"
+                className="pl-9 pr-3 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d90f0f]/20 focus:border-[#d90f0f] bg-white text-sm"
               />
             </div>
             <span className="text-gray-400">-</span>
@@ -175,7 +175,7 @@ const SystemLogsPage = () => {
                   setToDate(e.target.value);
                   setPage(0);
                 }}
-                className="pl-9 pr-3 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0f5dd9]/20 focus:border-[#0f5dd9] bg-white text-sm"
+                className="pl-9 pr-3 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d90f0f]/20 focus:border-[#d90f0f] bg-white text-sm"
               />
             </div>
           </div>
@@ -248,7 +248,7 @@ const SystemLogsPage = () => {
                     <td className="px-6 py-4 text-right">
                       <button
                         onClick={() => setSelectedLog(log)}
-                        className="p-2 text-gray-400 hover:text-[#0f5dd9] hover:bg-blue-50 rounded-lg transition-colors"
+                        className="p-2 text-gray-400 hover:text-[#d90f0f] hover:bg-blue-50 rounded-lg transition-colors"
                         title="Xem chi tiết"
                       >
                         <Eye className="w-5 h-5" />
@@ -402,3 +402,4 @@ const SystemLogsPage = () => {
 };
 
 export default SystemLogsPage;
+

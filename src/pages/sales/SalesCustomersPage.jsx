@@ -1,4 +1,4 @@
-// Sales Customers Page - Quản lý khách hàng
+﻿// Sales Customers Page - Quản lý khách hàng
 import {
   Search,
   User,
@@ -87,7 +87,7 @@ const SalesCustomersPage = () => {
   const getOrderStatusBadge = (status) => {
     const map = {
       PENDING: { bg: 'bg-yellow-50 text-yellow-700 border-yellow-200', label: 'Chờ xử lý' },
-      CONFIRMED: { bg: 'bg-blue-50 text-blue-700 border-blue-200', label: 'Đã xác nhận' },
+      CONFIRMED: { bg: 'bg-blue-50 text-red-700 border-red-200', label: 'Đã xác nhận' },
       SHIPPED: { bg: 'bg-purple-50 text-purple-700 border-purple-200', label: 'Đang giao' },
       DELIVERED: { bg: 'bg-green-50 text-green-700 border-green-200', label: 'Đã giao' },
       CANCELLED: { bg: 'bg-red-50 text-red-700 border-red-200', label: 'Đã hủy' },
@@ -124,7 +124,7 @@ const SalesCustomersPage = () => {
         <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center">
-              <Users className="w-5 h-5 text-[#0f5dd9]" />
+              <Users className="w-5 h-5 text-[#d90f0f]" />
             </div>
             <div>
               <p className="text-2xl font-bold text-[#222]">{totalCustomers}</p>
@@ -167,7 +167,7 @@ const SalesCustomersPage = () => {
             placeholder="Tìm kiếm: tên, email, SĐT..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0f5dd9]/20"
+            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d90f0f]/20"
           />
         </div>
         <select
@@ -210,12 +210,12 @@ const SalesCustomersPage = () => {
                 onClick={() => setSelectedCustomer(cust)}
                 className={`bg-white rounded-xl p-6 shadow-sm cursor-pointer transition ${
                   selectedCustomer?.userId === cust.userId
-                    ? 'ring-2 ring-[#0f5dd9]'
+                    ? 'ring-2 ring-[#d90f0f]'
                     : 'hover:shadow-md'
                 }`}
               >
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-[#0f5dd9] rounded-full flex items-center justify-center text-white font-bold text-lg shrink-0">
+                  <div className="w-12 h-12 bg-[#d90f0f] rounded-full flex items-center justify-center text-white font-bold text-lg shrink-0">
                     {(cust.fullName || '?').charAt(0)}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -273,7 +273,7 @@ const SalesCustomersPage = () => {
             {selectedCustomer ? (
               <div>
                 <div className="flex items-center gap-4 mb-6">
-                  <div className="w-16 h-16 bg-[#0f5dd9] rounded-full flex items-center justify-center text-white text-2xl font-bold shrink-0">
+                  <div className="w-16 h-16 bg-[#d90f0f] rounded-full flex items-center justify-center text-white text-2xl font-bold shrink-0">
                     {(selectedCustomer.fullName || '?').charAt(0)}
                   </div>
                   <div className="min-w-0">
@@ -304,14 +304,14 @@ const SalesCustomersPage = () => {
 
                 <div className="grid grid-cols-2 gap-4 mb-6">
                   <div className="bg-gray-50 rounded-xl p-4 text-center">
-                    <ShoppingBag className="w-6 h-6 mx-auto text-[#0f5dd9] mb-2" />
+                    <ShoppingBag className="w-6 h-6 mx-auto text-[#d90f0f] mb-2" />
                     <p className="text-xl font-bold text-[#222]">
                       {selectedCustomer.totalOrders}
                     </p>
                     <p className="text-xs text-[#4f5562]">Đơn hàng</p>
                   </div>
                   <div className="bg-gray-50 rounded-xl p-4 text-center">
-                    <DollarSign className="w-6 h-6 mx-auto text-[#0f5dd9] mb-2" />
+                    <DollarSign className="w-6 h-6 mx-auto text-[#d90f0f] mb-2" />
                     <p className="text-xl font-bold text-[#222]">
                       {formatCurrency(selectedCustomer.totalSpent)}
                     </p>
@@ -358,7 +358,7 @@ const SalesCustomersPage = () => {
                   </div>
                 </div>
 
-                <button className="w-full mt-4 bg-[#0f5dd9] text-white py-2.5 rounded-xl font-medium hover:bg-[#0b4fc0] flex items-center justify-center gap-2 transition">
+                <button className="w-full mt-4 bg-[#d90f0f] text-white py-2.5 rounded-xl font-medium hover:bg-[#b00c0c] flex items-center justify-center gap-2 transition">
                   <MessageCircle className="w-4 h-4" /> Liên hệ khách
                 </button>
               </div>
@@ -376,3 +376,4 @@ const SalesCustomersPage = () => {
 };
 
 export default SalesCustomersPage;
+

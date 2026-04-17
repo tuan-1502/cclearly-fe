@@ -1,3 +1,4 @@
+﻿// Operations Dashboard Page
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { Clock, Box, Truck, RefreshCw } from 'lucide-react';
@@ -44,7 +45,7 @@ const OperationsDashboardPage = () => {
         label: 'Chờ xác nhận',
         class: 'bg-yellow-100 text-yellow-800',
       },
-      confirmed: { label: 'Đã xác nhận', class: 'bg-blue-100 text-blue-800' },
+      confirmed: { label: 'Đã xác nhận', class: 'bg-red-100 text-red-800' },
       processing: {
         label: 'Đang gia công',
         class: 'bg-purple-100 text-purple-800',
@@ -59,7 +60,7 @@ const OperationsDashboardPage = () => {
   const getReturnStatusBadge = (status) => {
     const map = {
       pending: { label: 'Chờ xử lý', class: 'bg-yellow-100 text-yellow-800' },
-      approved: { label: 'Đã duyệt', class: 'bg-blue-100 text-blue-800' },
+      approved: { label: 'Đã duyệt', class: 'bg-red-100 text-red-800' },
       completed: { label: 'Hoàn thành', class: 'bg-green-100 text-green-800' },
       rejected: { label: 'Từ chối', class: 'bg-red-100 text-red-800' },
     };
@@ -324,7 +325,7 @@ const OperationsDashboardPage = () => {
                         onClick={() =>
                           handleConfirmOrder(order.orderId || order.id)
                         }
-                        className="flex-1 bg-[#0f5dd9] text-white py-2 rounded-full text-sm font-medium hover:bg-[#0b4fc0]"
+                        className="flex-1 bg-[#d90f0f] text-white py-2 rounded-full text-sm font-medium hover:bg-[#b00c0c]"
                       >
                         Xác nhận
                       </button>
@@ -334,7 +335,7 @@ const OperationsDashboardPage = () => {
                         onClick={() =>
                           handleCompleteOrder(order.orderId || order.id)
                         }
-                        className="flex-1 bg-[#0f5dd9] text-white py-2 rounded-full text-sm font-medium hover:bg-[#0b4fc0]"
+                        className="flex-1 bg-[#d90f0f] text-white py-2 rounded-full text-sm font-medium hover:bg-[#b00c0c]"
                       >
                         Hoàn thành đóng gói
                       </button>
@@ -344,7 +345,7 @@ const OperationsDashboardPage = () => {
                         onClick={() =>
                           handleUpdateTracking(order.orderId || order.id)
                         }
-                        className="flex-1 bg-[#0f5dd9] text-white py-2 rounded-full text-sm font-medium hover:bg-[#0b4fc0]"
+                        className="flex-1 bg-[#d90f0f] text-white py-2 rounded-full text-sm font-medium hover:bg-[#b00c0c]"
                       >
                         Cập nhật tracking
                       </button>
@@ -391,3 +392,4 @@ const OperationsDashboardPage = () => {
 };
 
 export default OperationsDashboardPage;
+

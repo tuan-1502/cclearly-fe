@@ -1,4 +1,4 @@
-// Operations Board Page - Kanban điều phối đơn hàng
+﻿// Operations Board Page - Kanban điều phối đơn hàng
 import {
   Package,
   Truck,
@@ -79,7 +79,7 @@ const OperationsBoardPage = () => {
     const s = (status || '').toUpperCase();
     const map = {
       PENDING: { label: 'Chờ xác nhận', class: 'bg-yellow-100 text-yellow-800' },
-      CONFIRMED: { label: 'Đã xác nhận', class: 'bg-blue-100 text-blue-800' },
+      CONFIRMED: { label: 'Đã xác nhận', class: 'bg-red-100 text-red-800' },
       PROCESSING: { label: 'Đang xử lý', class: 'bg-purple-100 text-purple-800' },
       SHIPPED: { label: 'Đang giao', class: 'bg-orange-100 text-orange-800' },
       DELIVERED: { label: 'Hoàn thành', class: 'bg-green-100 text-green-800' },
@@ -259,7 +259,7 @@ const OperationsBoardPage = () => {
   const colorMap = {
     yellow: 'bg-yellow-100 border-yellow-200',
     purple: 'bg-purple-100 border-purple-200',
-    blue: 'bg-blue-100 border-blue-200',
+    blue: 'bg-red-100 border-red-200',
     orange: 'bg-orange-100 border-orange-200',
   };
 
@@ -344,6 +344,24 @@ const OperationsBoardPage = () => {
                     <p className="text-sm text-[#4f5562] mb-3 truncate">
                       {order.recipientName}
                     </p>
+                    {order.type === 'prescription' && (
+                      <span className="inline-block px-1.5 py-0.5 rounded text-xs bg-blue-50 text-red-600 mb-2">
+                        Có toa kính
+                      </span>
+                    )}
+
+                    <div className="text-xs text-[#4f5562] mb-3">
+                      {order.items?.slice(0, 2).map((item, idx) => (
+                        <p key={idx} className="truncate">
+                          {item.productName || item.name} x{item.quantity}
+                        </p>
+                      ))}
+                      {order.items?.length > 2 && (
+                        <p className="text-gray-400">
+                          +{order.items.length - 2} sản phẩm khác
+                        </p>
+                      )}
+                    </div>
 
                     <div className="flex justify-between items-center pt-2 border-t">
                       <span className="font-medium text-sm">
@@ -433,7 +451,7 @@ const OperationsBoardPage = () => {
               </button>
               <button
                 onClick={handleTrackingConfirm}
-                className="flex-1 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700"
+                className="flex-1 bg-red-600 text-white py-2 rounded-lg hover:bg-red-700"
               >
                 Xác nhận
               </button>
@@ -454,3 +472,4 @@ const OperationsBoardPage = () => {
 };
 
 export default OperationsBoardPage;
+

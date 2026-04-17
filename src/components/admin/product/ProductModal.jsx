@@ -1,4 +1,4 @@
-import {
+﻿import {
   Glasses,
   Scan,
   Palette,
@@ -149,7 +149,7 @@ const ProductModal = ({
                       setFormData({ ...formData, name: e.target.value })
                     }
                     required
-                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500/20 outline-none transition"
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-red-500/20 outline-none transition"
                     placeholder="VD: Gọng kính Ray-Ban Aviator"
                   />
                 </div>
@@ -170,7 +170,7 @@ const ProductModal = ({
                             price: Number(e.target.value),
                           })
                         }
-                        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500/20 outline-none"
+                        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-red-500/20 outline-none"
                       />
                     </div>
                   )}
@@ -261,7 +261,7 @@ const ProductModal = ({
             {/* Section 2: Thông số kỹ thuật - Bố cục ngang */}
             {(formData.type === 'frame' || formData.type === 'lens') && (
               <div
-                className={`p-4 rounded-xl border ${formData.type === 'frame' ? 'bg-blue-50/50 border-blue-100' : 'bg-green-50/50 border-green-100'}`}
+                className={`p-4 rounded-xl border ${formData.type === 'frame' ? 'bg-blue-50/50 border-red-100' : 'bg-green-50/50 border-green-100'}`}
               >
                 <div className="flex items-center gap-2 mb-3 font-bold text-gray-700 text-sm">
                   {formData.type === 'frame' ? (
@@ -477,7 +477,7 @@ const ProductModal = ({
                 <button
                   type="button"
                   onClick={handleAddVariant}
-                  className="px-3 py-1.5 text-xs bg-blue-50 text-blue-600 rounded-lg font-semibold hover:bg-blue-100 transition flex items-center gap-1"
+                  className="px-3 py-1.5 text-xs bg-blue-50 text-red-600 rounded-lg font-semibold hover:bg-red-100 transition flex items-center gap-1"
                 >
                   <Plus size={14} /> Thêm biến thể
                 </button>
@@ -621,7 +621,7 @@ const ProductModal = ({
             form="product-form"
             type="submit"
             disabled={isPending}
-            className="px-8 py-2 bg-[#141f36] text-white rounded-lg hover:bg-[#0d1322] disabled:bg-gray-400 transition font-bold text-sm flex items-center gap-2 shadow-lg shadow-blue-900/10"
+            className="px-8 py-2 bg-[#361414] text-white rounded-lg hover:bg-[#0d1322] disabled:bg-gray-400 transition font-bold text-sm flex items-center gap-2 shadow-lg shadow-red-900/10"
           >
             {isPending ? (
               'Đang xử lý...'
@@ -639,3 +639,4 @@ const ProductModal = ({
 };
 
 export default ProductModal;
+

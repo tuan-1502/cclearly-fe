@@ -4,7 +4,8 @@
 :root {
   --text-main: #131313;
   --bg-page: #ffffff;
-  --brand-blue: #0f5dd9;
+  --brand-primary: #d90f0f;
+  --brand-secondary: #b00c0c;
   --muted: #666666;
 
   font-family:

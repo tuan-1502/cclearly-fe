@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+﻿import { useQuery } from '@tanstack/react-query';
 import {
   Glasses,
   Tag,
@@ -348,7 +348,7 @@ const CheckoutPage = () => {
           </h2>
           <button
             onClick={() => navigate('/products')}
-            className="text-[#0f5dd9] hover:underline font-medium"
+            className="text-[#d90f0f] hover:underline font-medium"
           >
             Tiếp tục mua sắm
           </button>
@@ -368,10 +368,10 @@ const CheckoutPage = () => {
         </div>
 
         {hasPrescriptionItems && (
-          <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6">
+          <div className="bg-blue-50 border border-red-200 rounded-xl p-4 mb-6">
             <div className="flex items-center gap-2 mb-3">
-              <FileText className="w-5 h-5 text-blue-600" />
-              <span className="font-medium text-blue-800">Đơn kính đính kèm</span>
+              <FileText className="w-5 h-5 text-red-600" />
+              <span className="font-medium text-red-800">Đơn kính đính kèm</span>
             </div>
             <div className="flex flex-wrap gap-2">
               {items.filter((item) => hasPrescription(item)).map((item) => (
@@ -409,7 +409,7 @@ const CheckoutPage = () => {
                   className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition"
                 >
                   <div className="flex items-center gap-3">
-                    <Eye className="w-4 h-4 text-blue-600" />
+                    <Eye className="w-4 h-4 text-red-600" />
                     <span className="font-medium text-sm text-[#222]">
                       {item.productName}
                     </span>
@@ -460,7 +460,7 @@ const CheckoutPage = () => {
                                       [f]: e.target.value,
                                     }))
                                   }
-                                  className="border border-gray-200 rounded-lg px-2 py-1.5 text-xs focus:outline-none focus:border-[#0f5dd9]"
+                                  className="border border-gray-200 rounded-lg px-2 py-1.5 text-xs focus:outline-none focus:border-[#d90f0f]"
                                 >
                                   <option value="">0.00</option>
                                   {(f.includes('sph')
@@ -493,7 +493,7 @@ const CheckoutPage = () => {
                                       [f]: e.target.value,
                                     }))
                                   }
-                                  className="border border-gray-200 rounded-lg px-2 py-1.5 text-xs focus:outline-none focus:border-[#0f5dd9]"
+                                  className="border border-gray-200 rounded-lg px-2 py-1.5 text-xs focus:outline-none focus:border-[#d90f0f]"
                                 >
                                   <option value="">0.00</option>
                                   {(f.includes('sph')
@@ -526,7 +526,7 @@ const CheckoutPage = () => {
                                 pd: e.target.value,
                               }))
                             }
-                            className="border border-gray-200 rounded-lg px-3 py-1.5 text-sm w-28 focus:outline-none focus:border-[#0f5dd9]"
+                            className="border border-gray-200 rounded-lg px-3 py-1.5 text-sm w-28 focus:outline-none focus:border-[#d90f0f]"
                             placeholder="62"
                           />
                         </div>
@@ -544,7 +544,7 @@ const CheckoutPage = () => {
                                 note: e.target.value,
                               }))
                             }
-                            className="w-full border border-gray-200 rounded-lg px-3 py-1.5 text-sm resize-none focus:outline-none focus:border-[#0f5dd9]"
+                            className="w-full border border-gray-200 rounded-lg px-3 py-1.5 text-sm resize-none focus:outline-none focus:border-[#d90f0f]"
                             rows={2}
                             placeholder="Ghi chú thêm..."
                           />
@@ -585,7 +585,7 @@ const CheckoutPage = () => {
                             type="button"
                             onClick={() => handleSaveEdit(rxKey)}
                             disabled={reUploadLoading}
-                            className="bg-[#0f5dd9] text-white px-4 py-1.5 rounded-full text-sm font-medium hover:bg-[#0b4fc0] transition disabled:opacity-50 flex items-center gap-1.5"
+                            className="bg-[#d90f0f] text-white px-4 py-1.5 rounded-full text-sm font-medium hover:bg-[#b00c0c] transition disabled:opacity-50 flex items-center gap-1.5"
                           >
                             {reUploadLoading ? (
                               <>
@@ -680,7 +680,7 @@ const CheckoutPage = () => {
                         <button
                           type="button"
                           onClick={() => handleStartEdit(rxKey, rx)}
-                          className="text-[#0f5dd9] text-sm font-medium hover:underline flex items-center gap-1.5"
+                          className="text-[#d90f0f] text-sm font-medium hover:underline flex items-center gap-1.5"
                         >
                           <Pencil className="w-3.5 h-3.5" /> Chỉnh sửa
                         </button>
@@ -699,14 +699,14 @@ const CheckoutPage = () => {
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-semibold text-[#222] flex items-center gap-2">
-                    <MapPin className="w-4 h-4 text-[#0f5dd9]" />
+                    <MapPin className="w-4 h-4 text-[#d90f0f]" />
                     Địa chỉ giao hàng
                   </h3>
                   {addresses.length > 0 && (
                     <button
                       type="button"
                       onClick={() => setShowAddressForm(!showAddressForm)}
-                      className="text-sm text-[#0f5dd9] font-medium hover:underline flex items-center gap-1"
+                      className="text-sm text-[#d90f0f] font-medium hover:underline flex items-center gap-1"
                     >
                       <Plus className="w-3.5 h-3.5" />
                       Thêm mới
@@ -724,7 +724,7 @@ const CheckoutPage = () => {
                     <button
                       type="button"
                       onClick={() => setShowAddressForm(true)}
-                      className="bg-[#0f5dd9] text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-[#0b4fc0] transition"
+                      className="bg-[#d90f0f] text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-[#b00c0c] transition"
                     >
                       Thêm địa chỉ mới
                     </button>
@@ -732,7 +732,7 @@ const CheckoutPage = () => {
                       Hoặc{' '}
                       <Link
                         to="/profile"
-                        className="text-[#0f5dd9] hover:underline"
+                        className="text-[#d90f0f] hover:underline"
                       >
                         quản lý sổ địa chỉ
                       </Link>
@@ -748,7 +748,7 @@ const CheckoutPage = () => {
                           onClick={() =>
                             setShowAddressDropdown(!showAddressDropdown)
                           }
-                          className="w-full text-left border-2 border-[#e0e0e0] rounded-2xl p-4 hover:border-[#0f5dd9] transition flex items-start justify-between gap-3"
+                          className="w-full text-left border-2 border-[#e0e0e0] rounded-2xl p-4 hover:border-[#d90f0f] transition flex items-start justify-between gap-3"
                         >
                           {selectedAddress ? (
                             <div className="flex-1 min-w-0">
@@ -757,7 +757,7 @@ const CheckoutPage = () => {
                                   {selectedAddress.name}
                                 </span>
                                 {selectedAddress.isDefault && (
-                                  <span className="text-[9px] bg-blue-50 text-[#0f5dd9] px-1.5 py-0.5 rounded font-bold uppercase">
+                                  <span className="text-[9px] bg-blue-50 text-[#d90f0f] px-1.5 py-0.5 rounded font-bold uppercase">
                                     Mặc định
                                   </span>
                                 )}
@@ -796,12 +796,12 @@ const CheckoutPage = () => {
                                     {addr.name}
                                   </span>
                                   {addr.isDefault && (
-                                    <span className="text-[9px] bg-blue-50 text-[#0f5dd9] px-1.5 py-0.5 rounded font-bold uppercase">
+                                    <span className="text-[9px] bg-blue-50 text-[#d90f0f] px-1.5 py-0.5 rounded font-bold uppercase">
                                       Mặc định
                                     </span>
                                   )}
                                   {selectedAddressId === addr.addressId && (
-                                    <Check className="w-4 h-4 text-[#0f5dd9] ml-auto" />
+                                    <Check className="w-4 h-4 text-[#d90f0f] ml-auto" />
                                   )}
                                 </div>
                                 <p className="text-sm text-[#4f5562]">
@@ -834,7 +834,7 @@ const CheckoutPage = () => {
                                 name: e.target.value,
                               })
                             }
-                            className="px-4 py-2.5 border border-[#e0e0e0] rounded-xl focus:outline-none focus:border-[#0f5dd9] bg-white text-sm"
+                            className="px-4 py-2.5 border border-[#e0e0e0] rounded-xl focus:outline-none focus:border-[#d90f0f] bg-white text-sm"
                           />
                           <input
                             type="tel"
@@ -846,7 +846,7 @@ const CheckoutPage = () => {
                                 phone: e.target.value,
                               })
                             }
-                            className="px-4 py-2.5 border border-[#e0e0e0] rounded-xl focus:outline-none focus:border-[#0f5dd9] bg-white text-sm"
+                            className="px-4 py-2.5 border border-[#e0e0e0] rounded-xl focus:outline-none focus:border-[#d90f0f] bg-white text-sm"
                           />
                         </div>
                         <textarea
@@ -859,7 +859,7 @@ const CheckoutPage = () => {
                             })
                           }
                           rows={2}
-                          className="w-full px-4 py-2.5 border border-[#e0e0e0] rounded-xl focus:outline-none focus:border-[#0f5dd9] bg-white text-sm resize-none"
+                          className="w-full px-4 py-2.5 border border-[#e0e0e0] rounded-xl focus:outline-none focus:border-[#d90f0f] bg-white text-sm resize-none"
                         />
                         <div className="flex items-center justify-between">
                           <label className="flex items-center gap-2 text-sm text-[#4f5562]">
@@ -896,7 +896,7 @@ const CheckoutPage = () => {
                               type="button"
                               onClick={handleSaveNewAddress}
                               disabled={createAddress.isPending}
-                              className="bg-[#0f5dd9] text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-[#0b4fc0] transition disabled:opacity-50"
+                              className="bg-[#d90f0f] text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-[#b00c0c] transition disabled:opacity-50"
                             >
                               {createAddress.isPending
                                 ? 'Đang lưu...'
@@ -919,7 +919,7 @@ const CheckoutPage = () => {
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   rows={3}
-                  className="w-full px-5 py-3 border border-[#e0e0e0] rounded-2xl focus:outline-none focus:border-[#0f5dd9] bg-[#f9f9f9]"
+                  className="w-full px-5 py-3 border border-[#e0e0e0] rounded-2xl focus:outline-none focus:border-[#d90f0f] bg-[#f9f9f9]"
                   placeholder="Ghi chú thêm cho đơn hàng..."
                 />
               </div>
@@ -931,7 +931,7 @@ const CheckoutPage = () => {
                 </h3>
                 <div className="space-y-3">
                   <label
-                    className={`flex items-center gap-4 p-4 border-2 rounded-2xl cursor-pointer transition ${paymentMethod === 'cod' ? 'border-[#0f5dd9] bg-[#f0f7ff]' : 'border-[#e0e0e0] hover:border-[#bbb]'}`}
+                    className={`flex items-center gap-4 p-4 border-2 rounded-2xl cursor-pointer transition ${paymentMethod === 'cod' ? 'border-[#d90f0f] bg-[#f0f7ff]' : 'border-[#e0e0e0] hover:border-[#bbb]'}`}
                   >
                     <input
                       type="radio"
@@ -939,7 +939,7 @@ const CheckoutPage = () => {
                       value="cod"
                       checked={paymentMethod === 'cod'}
                       onChange={(e) => setPaymentMethod(e.target.value)}
-                      className="w-5 h-5 text-[#0f5dd9]"
+                      className="w-5 h-5 text-[#d90f0f]"
                     />
                     <div>
                       <span className="font-medium text-[#222]">
@@ -978,7 +978,7 @@ const CheckoutPage = () => {
                 disabled={
                   createOrder.isPending || !selectedAddress
                 }
-                className="w-full py-4 rounded-full font-medium transition disabled:bg-gray-300 disabled:text-gray-500 bg-[#141f36] text-white hover:bg-[#0d1322]"
+                className="w-full py-4 rounded-full font-medium transition disabled:bg-gray-300 disabled:text-gray-500 bg-[#361414] text-white hover:bg-[#0d1322]"
               >
                 {createOrder.isPending
                   ? 'Đang xử lý...'
@@ -1095,13 +1095,13 @@ const CheckoutPage = () => {
                         e.key === 'Enter' &&
                         (e.preventDefault(), handleApplyVoucher())
                       }
-                      className="flex-1 bg-[#f9f9f9] border border-[#e0e0e0] rounded-full px-4 py-2 text-sm focus:outline-none focus:border-[#0f5dd9]"
+                      className="flex-1 bg-[#f9f9f9] border border-[#e0e0e0] rounded-full px-4 py-2 text-sm focus:outline-none focus:border-[#d90f0f]"
                     />
                     <button
                       type="button"
                       onClick={handleApplyVoucher}
                       disabled={voucherLoading}
-                      className="bg-[#141f36] text-white px-5 py-2 rounded-full text-sm font-bold hover:bg-[#0d1322] transition disabled:opacity-50 flex items-center gap-2"
+                      className="bg-[#361414] text-white px-5 py-2 rounded-full text-sm font-bold hover:bg-[#0d1322] transition disabled:opacity-50 flex items-center gap-2"
                     >
                       {voucherLoading ? (
                         <>
@@ -1141,7 +1141,7 @@ const CheckoutPage = () => {
                 )}
                 <div className="flex justify-between font-bold text-xl pt-3 border-t">
                   <span className="text-[#222]">Tổng cộng:</span>
-                  <span className="text-[#0f5dd9]">
+                  <span className="text-[#d90f0f]">
                     {formatCurrency(totalAmount)}
                   </span>
                 </div>
@@ -1155,3 +1155,4 @@ const CheckoutPage = () => {
 };
 
 export default CheckoutPage;
+

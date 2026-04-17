@@ -1,4 +1,4 @@
-// Notification Settings Page
+﻿// Notification Settings Page
 import { Lock } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -47,7 +47,7 @@ const NotificationPage = () => {
             </div>
             <button
               onClick={() => handleToggle('emailOrder')}
-              className={`w-12 h-6 rounded-full transition ${settings.emailOrder ? 'bg-[#0f5dd9]' : 'bg-gray-300'}`}
+              className={`w-12 h-6 rounded-full transition ${settings.emailOrder ? 'bg-[#d90f0f]' : 'bg-gray-300'}`}
             >
               <div
                 className={`w-5 h-5 bg-white rounded-full shadow transform transition ${settings.emailOrder ? 'translate-x-6' : 'translate-x-0.5'}`}
@@ -64,7 +64,7 @@ const NotificationPage = () => {
             </div>
             <button
               onClick={() => handleToggle('emailPromotion')}
-              className={`w-12 h-6 rounded-full transition ${settings.emailPromotion ? 'bg-[#0f5dd9]' : 'bg-gray-300'}`}
+              className={`w-12 h-6 rounded-full transition ${settings.emailPromotion ? 'bg-[#d90f0f]' : 'bg-gray-300'}`}
             >
               <div
                 className={`w-5 h-5 bg-white rounded-full shadow transform transition ${settings.emailPromotion ? 'translate-x-6' : 'translate-x-0.5'}`}
@@ -83,7 +83,7 @@ const NotificationPage = () => {
             </div>
             <button
               onClick={() => handleToggle('smsOrder')}
-              className={`w-12 h-6 rounded-full transition ${settings.smsOrder ? 'bg-[#0f5dd9]' : 'bg-gray-300'}`}
+              className={`w-12 h-6 rounded-full transition ${settings.smsOrder ? 'bg-[#d90f0f]' : 'bg-gray-300'}`}
             >
               <div
                 className={`w-5 h-5 bg-white rounded-full shadow transform transition ${settings.smsOrder ? 'translate-x-6' : 'translate-x-0.5'}`}
@@ -98,7 +98,7 @@ const NotificationPage = () => {
             </div>
             <button
               onClick={() => handleToggle('smsPromotion')}
-              className={`w-12 h-6 rounded-full transition ${settings.smsPromotion ? 'bg-[#0f5dd9]' : 'bg-gray-300'}`}
+              className={`w-12 h-6 rounded-full transition ${settings.smsPromotion ? 'bg-[#d90f0f]' : 'bg-gray-300'}`}
             >
               <div
                 className={`w-5 h-5 bg-white rounded-full shadow transform transition ${settings.smsPromotion ? 'translate-x-6' : 'translate-x-0.5'}`}
@@ -117,7 +117,7 @@ const NotificationPage = () => {
             </div>
             <button
               onClick={() => handleToggle('inAppOrder')}
-              className={`w-12 h-6 rounded-full transition ${settings.inAppOrder ? 'bg-[#0f5dd9]' : 'bg-gray-300'}`}
+              className={`w-12 h-6 rounded-full transition ${settings.inAppOrder ? 'bg-[#d90f0f]' : 'bg-gray-300'}`}
             >
               <div
                 className={`w-5 h-5 bg-white rounded-full shadow transform transition ${settings.inAppOrder ? 'translate-x-6' : 'translate-x-0.5'}`}
@@ -134,7 +134,7 @@ const NotificationPage = () => {
             </div>
             <button
               onClick={() => handleToggle('inAppPromotion')}
-              className={`w-12 h-6 rounded-full transition ${settings.inAppPromotion ? 'bg-[#0f5dd9]' : 'bg-gray-300'}`}
+              className={`w-12 h-6 rounded-full transition ${settings.inAppPromotion ? 'bg-[#d90f0f]' : 'bg-gray-300'}`}
             >
               <div
                 className={`w-5 h-5 bg-white rounded-full shadow transform transition ${settings.inAppPromotion ? 'translate-x-6' : 'translate-x-0.5'}`}
@@ -148,3 +148,4 @@ const NotificationPage = () => {
 };
 
 export default NotificationPage;
+

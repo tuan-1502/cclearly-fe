@@ -1,4 +1,4 @@
-// Admin Reports Page - Báo cáo cho System Admin
+﻿// Admin Reports Page - Báo cáo cho System Admin
 import {
   TrendingUp,
   TrendingDown,
@@ -73,7 +73,7 @@ const AdminReportsPage = () => {
     }).format(amount);
 
   const COLORS = [
-    '#0f5dd9',
+    '#d90f0f',
     '#22c55e',
     '#f59e0b',
     '#8b5cf6',
@@ -102,7 +102,7 @@ const AdminReportsPage = () => {
   if (loadingStats || loadingRevenue) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+        <Loader2 className="w-8 h-8 animate-spin text-red-600" />
       </div>
     );
   }
@@ -124,7 +124,7 @@ const AdminReportsPage = () => {
             onClick={() => setShowFilter(!showFilter)}
             className="flex items-center gap-2 px-4 py-2.5 bg-white border border-[#e0e0e0] rounded-xl text-sm font-medium hover:bg-gray-50 transition"
           >
-            <Calendar size={16} className="text-[#0f5dd9]" />
+            <Calendar size={16} className="text-[#d90f0f]" />
             {selectedLabel}
             <ChevronDown
               size={14}
@@ -142,7 +142,7 @@ const AdminReportsPage = () => {
                   }}
                   className={`w-full text-left px-4 py-2.5 text-sm hover:bg-blue-50 transition ${
                     filterDays === opt.value
-                      ? 'bg-blue-50 text-[#0f5dd9] font-semibold'
+                      ? 'bg-blue-50 text-[#d90f0f] font-semibold'
                       : 'text-[#222]'
                   }`}
                 >
@@ -165,7 +165,7 @@ const AdminReportsPage = () => {
           bgColor="bg-green-50"
         />
         <KPICard
-          icon={<ShoppingCart className="text-blue-600" />}
+          icon={<ShoppingCart className="text-red-600" />}
           title="Tổng đơn hàng"
           value={stats?.totalOrders ?? 0}
           trend=""
@@ -196,7 +196,7 @@ const AdminReportsPage = () => {
         <div className="bg-white rounded-2xl p-6 shadow-[0_10px_30px_rgba(13,22,39,0.06)] border border-[#f0f0f0]">
           <div className="flex items-center justify-between mb-8">
             <h3 className="text-lg font-bold text-[#222] flex items-center gap-2">
-              <Calendar size={20} className="text-[#0f5dd9]" />
+              <Calendar size={20} className="text-[#d90f0f]" />
               Doanh thu {selectedLabel?.toLowerCase()}
             </h3>
             <div className="text-sm font-medium text-green-600 bg-green-50 px-3 py-1 rounded-full">
@@ -235,11 +235,11 @@ const AdminReportsPage = () => {
                 <Line
                   type="monotone"
                   dataKey="revenue"
-                  stroke="#0f5dd9"
+                  stroke="#d90f0f"
                   strokeWidth={3}
                   dot={{
                     r: 4,
-                    fill: '#0f5dd9',
+                    fill: '#d90f0f',
                     strokeWidth: 2,
                     stroke: '#fff',
                   }}
@@ -260,7 +260,7 @@ const AdminReportsPage = () => {
             </h3>
             <div className="flex items-center gap-4 text-sm">
               <div className="flex items-center gap-1.5">
-                <span className="w-3 h-3 bg-[#0f5dd9] rounded-full"></span>
+                <span className="w-3 h-3 bg-[#d90f0f] rounded-full"></span>
                 <span className="text-[#4f5562]">Doanh thu</span>
               </div>
             </div>
@@ -270,8 +270,8 @@ const AdminReportsPage = () => {
               <AreaChart data={stats?.revenueByMonth || []}>
                 <defs>
                   <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#0f5dd9" stopOpacity={0.1} />
-                    <stop offset="95%" stopColor="#0f5dd9" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#d90f0f" stopOpacity={0.1} />
+                    <stop offset="95%" stopColor="#d90f0f" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid
@@ -305,7 +305,7 @@ const AdminReportsPage = () => {
                 <Area
                   type="monotone"
                   dataKey="revenue"
-                  stroke="#0f5dd9"
+                  stroke="#d90f0f"
                   strokeWidth={3}
                   fillOpacity={1}
                   fill="url(#colorRevenue)"
@@ -375,16 +375,16 @@ const AdminReportsPage = () => {
                 key={i}
                 className="flex items-center gap-4 group cursor-pointer hover:bg-gray-50 p-2 rounded-xl transition"
               >
-                <div className="w-10 h-10 bg-[#f3f3f3] rounded-lg flex items-center justify-center font-bold text-[#0f5dd9]">
+                <div className="w-10 h-10 bg-[#f3f3f3] rounded-lg flex items-center justify-center font-bold text-[#d90f0f]">
                   {i + 1}
                 </div>
                 <div className="flex-1">
-                  <p className="font-medium text-[#222] group-hover:text-[#0f5dd9] transition">
+                  <p className="font-medium text-[#222] group-hover:text-[#d90f0f] transition">
                     {item.name}
                   </p>
                   <div className="w-full bg-gray-100 h-1.5 rounded-full mt-1.5">
                     <div
-                      className="h-full bg-[#0f5dd9] rounded-full transition-all duration-1000"
+                      className="h-full bg-[#d90f0f] rounded-full transition-all duration-1000"
                       style={{
                         width: `${stats?.topProducts?.[0]?.sold ? (item.sold / stats.topProducts[0].sold) * 100 : 0}%`,
                       }}
@@ -422,11 +422,11 @@ const AdminReportsPage = () => {
             <div className="flex items-center justify-between p-4 bg-blue-50 rounded-xl">
               <div>
                 <p className="text-sm text-[#4f5562]">Tháng này</p>
-                <p className="text-xl font-bold text-blue-700">
+                <p className="text-xl font-bold text-red-700">
                   {formatCurrency(Number(revenueData?.thisMonthRevenue ?? 0))}
                 </p>
               </div>
-              <TrendingUp className="text-blue-600" size={28} />
+              <TrendingUp className="text-red-600" size={28} />
             </div>
             <div className="flex items-center justify-between p-4 bg-purple-50 rounded-xl">
               <div>
@@ -481,3 +481,4 @@ const KPICard = ({ icon, title, value, trend, isUp, bgColor }) => (
 );
 
 export default AdminReportsPage;
+

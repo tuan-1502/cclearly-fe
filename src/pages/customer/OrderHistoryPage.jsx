@@ -1,4 +1,4 @@
-import { Lock, Package, X, MapPin, Phone, User } from 'lucide-react';
+﻿import { Lock, Package, X, MapPin, Phone, User } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -34,7 +34,7 @@ const OrderHistoryPage = () => {
           </p>
           <button
             onClick={() => navigate('/login', { state: { from: location.pathname } })}
-            className="bg-[#141f36] text-white px-10 py-4 rounded-full font-medium hover:bg-[#0d1322] transition"
+            className="bg-[#361414] text-white px-10 py-4 rounded-full font-medium hover:bg-[#0d1322] transition"
           >
             Đăng nhập
           </button>
@@ -52,7 +52,7 @@ const OrderHistoryPage = () => {
         label: 'Chờ xác nhận',
         class: 'bg-yellow-100 text-yellow-800',
       },
-      CONFIRMED: { label: 'Đã xác nhận', class: 'bg-blue-100 text-blue-800' },
+      CONFIRMED: { label: 'Đã xác nhận', class: 'bg-red-100 text-red-800' },
       PROCESSING: {
         label: 'Đang xử lý',
         class: 'bg-purple-100 text-purple-800',
@@ -130,8 +130,8 @@ const OrderHistoryPage = () => {
 
         {orders.length === 0 ? (
           <div className="text-center py-20 bg-white rounded-2xl shadow-[0_10px_30px_rgba(13,22,39,0.06)]">
-            <div className="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Package className="w-12 h-12 text-blue-500" />
+            <div className="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Package className="w-12 h-12 text-red-500" />
             </div>
             <h2 className="text-2xl font-bold text-[#222] mb-4">
               Bạn chưa có đơn hàng nào
@@ -141,7 +141,7 @@ const OrderHistoryPage = () => {
             </p>
             <Link
               to="/products"
-              className="inline-block bg-[#141f36] text-white px-10 py-4 rounded-full font-medium hover:bg-[#0d1322] transition"
+              className="inline-block bg-[#361414] text-white px-10 py-4 rounded-full font-medium hover:bg-[#0d1322] transition"
             >
               Mua sắm ngay
             </Link>
@@ -188,11 +188,11 @@ const OrderHistoryPage = () => {
                               className="flex items-center flex-shrink-0"
                             >
                               <div
-                                className={`w-3 h-3 rounded-full ${isCompleted ? 'bg-[#0f5dd9]' : 'bg-gray-300'}`}
+                                className={`w-3 h-3 rounded-full ${isCompleted ? 'bg-[#d90f0f]' : 'bg-gray-300'}`}
                               ></div>
                               {index < 4 && (
                                 <div
-                                  className={`w-8 h-0.5 ${isCompleted ? 'bg-[#0f5dd9]' : 'bg-gray-300'}`}
+                                  className={`w-8 h-0.5 ${isCompleted ? 'bg-[#d90f0f]' : 'bg-gray-300'}`}
                                 ></div>
                               )}
                             </div>
@@ -245,7 +245,7 @@ const OrderHistoryPage = () => {
                       )}
                       <button
                         onClick={() => setSelectedOrder(order)}
-                        className="px-5 py-2.5 text-[#0f5dd9] border-2 border-[#0f5dd9] rounded-full hover:bg-[#f0f7ff] transition font-medium"
+                        className="px-5 py-2.5 text-[#d90f0f] border-2 border-[#d90f0f] rounded-full hover:bg-[#f0f7ff] transition font-medium"
                       >
                         Xem chi tiết
                       </button>
@@ -380,3 +380,4 @@ const OrderHistoryPage = () => {
 };
 
 export default OrderHistoryPage;
+

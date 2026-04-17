@@ -1,4 +1,4 @@
-import { Scan, Upload, ArrowRight, Info, Loader2 } from 'lucide-react';
+﻿import { Scan, Upload, ArrowRight, Info, Loader2 } from 'lucide-react';
 import { useState, useMemo } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -122,7 +122,7 @@ const PrescriptionFormPage = () => {
           </div>
 
           <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow">
-            <Scan className="w-6 h-6 text-[#0f5dd9]" />
+            <Scan className="w-6 h-6 text-[#d90f0f]" />
           </div>
         </div>
 
@@ -132,8 +132,8 @@ const PrescriptionFormPage = () => {
             {/* LEFT SIDE - RX INPUT */}
             <div className="bg-white rounded-3xl shadow p-8">
               <div className="flex items-center gap-3 mb-8">
-                <Info className="w-4 h-4 text-[#0f5dd9]" />
-                <p className="text-xs text-[#0f5dd9] font-semibold uppercase">
+                <Info className="w-4 h-4 text-[#d90f0f]" />
+                <p className="text-xs text-[#d90f0f] font-semibold uppercase">
                   Thông số kỹ thuật
                 </p>
               </div>
@@ -287,7 +287,7 @@ const PrescriptionFormPage = () => {
             <button
               type="submit"
               disabled={addToCart.isPending}
-              className="px-8 py-3 bg-[#141f36] text-white rounded-full flex items-center gap-2 disabled:opacity-50"
+              className="px-8 py-3 bg-[#361414] text-white rounded-full flex items-center gap-2 disabled:opacity-50"
             >
               {addToCart.isPending ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -304,3 +304,4 @@ const PrescriptionFormPage = () => {
 };
 
 export default PrescriptionFormPage;
+

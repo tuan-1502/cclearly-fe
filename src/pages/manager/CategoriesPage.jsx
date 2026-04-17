@@ -1,4 +1,4 @@
-// Manager Categories Page - Quản lý danh mục & biến thể
+﻿// Manager Categories Page - Quản lý danh mục & biến thể
 import { useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { categories as initialCategories } from '@/mocks/data'
@@ -78,21 +78,21 @@ const ManagerCategoriesPage = () => {
       <div className="flex gap-2 border-b">
         <button
           onClick={() => setActiveTab('products')}
-          className={`px-4 py-2 font-medium ${activeTab === 'products' ? 'border-b-2 border-[#0f5dd9] text-[#0f5dd9]' : 'text-gray-500 hover:text-gray-700'}`}
+          className={`px-4 py-2 font-medium ${activeTab === 'products' ? 'border-b-2 border-[#d90f0f] text-[#d90f0f]' : 'text-gray-500 hover:text-gray-700'}`}
         >
           <Package className="w-4 h-4 inline mr-2" />
           Danh mục sản phẩm
         </button>
         <button
           onClick={() => setActiveTab('frame')}
-          className={`px-4 py-2 font-medium ${activeTab === 'frame' ? 'border-b-2 border-[#0f5dd9] text-[#0f5dd9]' : 'text-gray-500 hover:text-gray-700'}`}
+          className={`px-4 py-2 font-medium ${activeTab === 'frame' ? 'border-b-2 border-[#d90f0f] text-[#d90f0f]' : 'text-gray-500 hover:text-gray-700'}`}
         >
           <Palette className="w-4 h-4 inline mr-2" />
           Biến thể gọng kính
         </button>
         <button
           onClick={() => setActiveTab('lens')}
-          className={`px-4 py-2 font-medium ${activeTab === 'lens' ? 'border-b-2 border-[#0f5dd9] text-[#0f5dd9]' : 'text-gray-500 hover:text-gray-700'}`}
+          className={`px-4 py-2 font-medium ${activeTab === 'lens' ? 'border-b-2 border-[#d90f0f] text-[#d90f0f]' : 'text-gray-500 hover:text-gray-700'}`}
         >
           <Eye className="w-4 h-4 inline mr-2" />
           Biến thể tròng kính
@@ -108,13 +108,13 @@ const ManagerCategoriesPage = () => {
             placeholder="Tìm kiếm..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0f5dd9]"
+            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d90f0f]"
           />
         </div>
         {activeTab === 'products' && (
           <button
             onClick={() => { setEditingCategory(null); setCategoryForm({ name: '', slug: '', description: '' }); setShowCategoryModal(true) }}
-            className="flex items-center gap-2 px-4 py-2 bg-[#0f5dd9] text-white rounded-xl hover:bg-[#0b4fc0]"
+            className="flex items-center gap-2 px-4 py-2 bg-[#d90f0f] text-white rounded-xl hover:bg-[#b00c0c]"
           >
             <Plus className="w-5 h-5" />
             Thêm danh mục
@@ -123,7 +123,7 @@ const ManagerCategoriesPage = () => {
         {activeTab === 'frame' && (
           <button
             onClick={() => { setEditingVariantType('frame'); setShowVariantModal(true) }}
-            className="flex items-center gap-2 px-4 py-2 bg-[#0f5dd9] text-white rounded-xl hover:bg-[#0b4fc0]"
+            className="flex items-center gap-2 px-4 py-2 bg-[#d90f0f] text-white rounded-xl hover:bg-[#b00c0c]"
           >
             <Plus className="w-5 h-5" />
             Thêm biến thể
@@ -132,7 +132,7 @@ const ManagerCategoriesPage = () => {
         {activeTab === 'lens' && (
           <button
             onClick={() => { setEditingVariantType('lens'); setShowVariantModal(true) }}
-            className="flex items-center gap-2 px-4 py-2 bg-[#0f5dd9] text-white rounded-xl hover:bg-[#0b4fc0]"
+            className="flex items-center gap-2 px-4 py-2 bg-[#d90f0f] text-white rounded-xl hover:bg-[#b00c0c]"
           >
             <Plus className="w-5 h-5" />
             Thêm biến thể
@@ -160,7 +160,7 @@ const ManagerCategoriesPage = () => {
                   <td className="px-6 py-4 text-gray-500 text-sm">{cat.description}</td>
                   <td className="px-6 py-4 text-right">
                     <div className="flex justify-end gap-2">
-                      <button onClick={() => { setEditingCategory(cat); setCategoryForm({ name: cat.name, slug: cat.slug, description: cat.description }); setShowCategoryModal(true) }} className="p-2 text-gray-400 hover:text-blue-600">
+                      <button onClick={() => { setEditingCategory(cat); setCategoryForm({ name: cat.name, slug: cat.slug, description: cat.description }); setShowCategoryModal(true) }} className="p-2 text-gray-400 hover:text-red-600">
                         <Edit2 className="w-4 h-4" />
                       </button>
                       <button onClick={() => handleDeleteCategory(cat.id)} className="p-2 text-gray-400 hover:text-red-600">
@@ -181,7 +181,7 @@ const ManagerCategoriesPage = () => {
             <div key={variant.id} className="bg-white rounded-xl p-6 shadow-sm">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-semibold text-lg">{variant.name}</h3>
-                <button onClick={() => { setEditingVariantType('frame'); setShowVariantModal(true) }} className="text-[#0f5dd9] text-sm hover:underline">
+                <button onClick={() => { setEditingVariantType('frame'); setShowVariantModal(true) }} className="text-[#d90f0f] text-sm hover:underline">
                   + Thêm giá trị
                 </button>
               </div>
@@ -201,7 +201,7 @@ const ManagerCategoriesPage = () => {
             <div key={variant.id} className="bg-white rounded-xl p-6 shadow-sm">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-semibold text-lg">{variant.name}</h3>
-                <button onClick={() => { setEditingVariantType('lens'); setShowVariantModal(true) }} className="text-[#0f5dd9] text-sm hover:underline">
+                <button onClick={() => { setEditingVariantType('lens'); setShowVariantModal(true) }} className="text-[#d90f0f] text-sm hover:underline">
                   + Thêm giá trị
                 </button>
               </div>
@@ -255,7 +255,7 @@ const ManagerCategoriesPage = () => {
               </div>
               <div className="flex gap-2 pt-4">
                 <button onClick={() => setShowCategoryModal(false)} className="flex-1 py-2 border rounded-xl hover:bg-gray-50">Hủy</button>
-                <button onClick={handleSaveCategory} className="flex-1 bg-[#0f5dd9] text-white py-2 rounded-xl hover:bg-[#0b4fc0]">
+                <button onClick={handleSaveCategory} className="flex-1 bg-[#d90f0f] text-white py-2 rounded-xl hover:bg-[#b00c0c]">
                   <Save className="w-4 h-4 inline mr-2" />
                   Lưu
                 </button>
@@ -284,7 +284,7 @@ const ManagerCategoriesPage = () => {
             </div>
             <div className="flex gap-2 pt-4">
               <button onClick={() => setShowVariantModal(false)} className="flex-1 py-2 border rounded-xl hover:bg-gray-50">Hủy</button>
-              <button onClick={() => handleSaveVariant(activeTab)} className="flex-1 bg-[#0f5dd9] text-white py-2 rounded-xl hover:bg-[#0b4fc0]">Lưu</button>
+              <button onClick={() => handleSaveVariant(activeTab)} className="flex-1 bg-[#d90f0f] text-white py-2 rounded-xl hover:bg-[#b00c0c]">Lưu</button>
             </div>
           </div>
         </div>
@@ -294,3 +294,4 @@ const ManagerCategoriesPage = () => {
 }
 
 export default ManagerCategoriesPage
+

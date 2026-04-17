@@ -1,4 +1,4 @@
-import { MapPin, Phone, Clock, Navigation } from 'lucide-react';
+﻿import { MapPin, Phone, Clock, Navigation } from 'lucide-react';
 import { useState } from 'react';
 
 const stores = [
@@ -68,7 +68,7 @@ const StoresPage = () => {
                   className={`p-5 rounded-xl border cursor-pointer transition
                   ${
                     active
-                      ? 'border-[#0f5dd9] bg-blue-50'
+                      ? 'border-[#d90f0f] bg-blue-50'
                       : 'border-gray-200 hover:border-gray-300'
                   }`}
                 >
@@ -76,17 +76,17 @@ const StoresPage = () => {
 
                   <div className="space-y-2 text-sm text-[#555]">
                     <div className="flex gap-2 items-start">
-                      <MapPin size={16} className="text-[#0f5dd9] mt-1" />
+                      <MapPin size={16} className="text-[#d90f0f] mt-1" />
                       {store.address}
                     </div>
 
                     <div className="flex gap-2 items-center">
-                      <Phone size={16} className="text-[#0f5dd9]" />
+                      <Phone size={16} className="text-[#d90f0f]" />
                       {store.phone}
                     </div>
 
                     <div className="flex gap-2 items-center">
-                      <Clock size={16} className="text-[#0f5dd9]" />
+                      <Clock size={16} className="text-[#d90f0f]" />
                       {store.hours}
                     </div>
                   </div>
@@ -95,7 +95,7 @@ const StoresPage = () => {
                     href={`https://www.google.com/maps/dir/?api=1&destination=${store.lat},${store.lng}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="mt-4 flex items-center gap-2 text-sm font-medium text-[#0f5dd9]"
+                    className="mt-4 flex items-center gap-2 text-sm font-medium text-[#d90f0f]"
                   >
                     <Navigation size={16} />
                     Chỉ đường
@@ -120,7 +120,7 @@ const StoresPage = () => {
 
       {/* CTA */}
 
-      <section className="py-20 bg-[#0f5dd9] text-white text-center">
+      <section className="py-20 bg-[#d90f0f] text-white text-center">
         <div className="max-w-[700px] mx-auto px-4">
           <h2 className="text-3xl font-bold mb-4">
             Không có cửa hàng gần bạn?
@@ -132,7 +132,7 @@ const StoresPage = () => {
 
           <a
             href="tel:02812345678"
-            className="bg-white text-[#0f5dd9] px-8 py-4 rounded-lg font-bold hover:bg-gray-100 transition"
+            className="bg-white text-[#d90f0f] px-8 py-4 rounded-lg font-bold hover:bg-gray-100 transition"
           >
             Gọi ngay: 028 1234 5678
           </a>
@@ -143,3 +143,4 @@ const StoresPage = () => {
 };
 
 export default StoresPage;
+

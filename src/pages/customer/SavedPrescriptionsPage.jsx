@@ -1,4 +1,4 @@
-import {
+﻿import {
   FileText,
   Calendar,
   User,
@@ -69,7 +69,7 @@ const SavedPrescriptionsPage = () => {
               Lưu trữ và tái sử dụng các đơn kính của bạn
             </p>
           </div>
-          <button className="bg-[#141f36] text-white px-6 py-3 rounded-full font-bold hover:bg-black transition flex items-center gap-2">
+          <button className="bg-[#361414] text-white px-6 py-3 rounded-full font-bold hover:bg-black transition flex items-center gap-2">
             <Plus className="w-5 h-5" /> Thêm đơn kính mới
           </button>
         </div>
@@ -83,7 +83,7 @@ const SavedPrescriptionsPage = () => {
               <div className="p-6">
                 <div className="flex justify-between items-start mb-6">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-blue-50 text-[#0f5dd9] rounded-xl flex items-center justify-center">
+                    <div className="w-12 h-12 bg-blue-50 text-[#d90f0f] rounded-xl flex items-center justify-center">
                       <FileText className="w-6 h-6" />
                     </div>
                     <div>
@@ -96,7 +96,7 @@ const SavedPrescriptionsPage = () => {
                   </div>
                   <div className="flex gap-2">
                     <button
-                      className="p-2 text-gray-400 hover:text-[#0f5dd9] transition"
+                      className="p-2 text-gray-400 hover:text-[#d90f0f] transition"
                       title="Xem chi tiết"
                     >
                       <Eye className="w-5 h-5" />
@@ -171,7 +171,7 @@ const SavedPrescriptionsPage = () => {
                       {px.patientName}
                     </p>
                   </div>
-                  <button className="text-[11px] font-bold text-[#0f5dd9] flex items-center gap-1 hover:underline uppercase tracking-wider">
+                  <button className="text-[11px] font-bold text-[#d90f0f] flex items-center gap-1 hover:underline uppercase tracking-wider">
                     <Download className="w-3 h-3" /> Tải về PDF
                   </button>
                 </div>
@@ -203,3 +203,4 @@ const SavedPrescriptionsPage = () => {
 };
 
 export default SavedPrescriptionsPage;
+

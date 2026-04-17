@@ -143,7 +143,8 @@ export const useAdminOrders = (params) => {
   return useQuery({
     queryKey: [...QUERY_KEYS.ADMIN_ORDERS, params],
     queryFn: () => orderRequest.getAdminOrders(params),
-    staleTime: 1 * 60 * 1000,
+    staleTime: 5000,
+    refetchInterval: 15000, // Refetch every 15 seconds
   });
 };
 

@@ -1,4 +1,4 @@
-import { Shield, User, Lock, Settings, Loader2 } from 'lucide-react';
+﻿import { Shield, User, Lock, Settings, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import {
@@ -58,7 +58,7 @@ const RolePermissionPage = () => {
             Quản lý nhân sự và lịch sử thao tác hệ thống
           </p>
         </div>
-        <button className="bg-[#141f36] text-white px-6 py-3 rounded-full font-bold hover:bg-black transition flex items-center gap-2">
+        <button className="bg-[#361414] text-white px-6 py-3 rounded-full font-bold hover:bg-black transition flex items-center gap-2">
           <User className="w-5 h-5" /> Thêm nhân sự mới
         </button>
       </div>
@@ -77,7 +77,7 @@ const RolePermissionPage = () => {
             title: 'Manager',
             desc: 'Quản lý kho và báo cáo',
             count: roleCounts.manager,
-            color: 'bg-blue-50 text-blue-600',
+            color: 'bg-blue-50 text-red-600',
           },
           {
             icon: Settings,
@@ -102,7 +102,7 @@ const RolePermissionPage = () => {
               <span className="text-sm font-medium text-[#222]">
                 {item.count} nhân viên
               </span>
-              <button className="text-[#0f5dd9] text-xs font-bold hover:underline">
+              <button className="text-[#d90f0f] text-xs font-bold hover:underline">
                 Phân quyền
               </button>
             </div>
@@ -115,13 +115,13 @@ const RolePermissionPage = () => {
           <div className="px-8 flex">
             <button
               onClick={() => setActiveTab('accounts')}
-              className={`py-5 px-6 font-bold text-sm border-b-2 transition ${activeTab === 'accounts' ? 'border-[#0f5dd9] text-[#0f5dd9]' : 'border-transparent text-[#666] hover:text-[#222]'}`}
+              className={`py-5 px-6 font-bold text-sm border-b-2 transition ${activeTab === 'accounts' ? 'border-[#d90f0f] text-[#d90f0f]' : 'border-transparent text-[#666] hover:text-[#222]'}`}
             >
               Tài khoản nhân viên
             </button>
             <button
               onClick={() => setActiveTab('audit')}
-              className={`py-5 px-6 font-bold text-sm border-b-2 transition ${activeTab === 'audit' ? 'border-[#0f5dd9] text-[#0f5dd9]' : 'border-transparent text-[#666] hover:text-[#222]'}`}
+              className={`py-5 px-6 font-bold text-sm border-b-2 transition ${activeTab === 'audit' ? 'border-[#d90f0f] text-[#d90f0f]' : 'border-transparent text-[#666] hover:text-[#222]'}`}
             >
               Audit Log (Lịch sử thao tác)
             </button>
@@ -175,7 +175,7 @@ const RolePermissionPage = () => {
                         <td className="px-4 py-4 text-right space-x-2">
                           <button
                             onClick={() => setEditingUser(emp)}
-                            className="text-[#0f5dd9] font-bold hover:underline"
+                            className="text-[#d90f0f] font-bold hover:underline"
                           >
                             Sửa
                           </button>
@@ -236,3 +236,4 @@ const RolePermissionPage = () => {
 };
 
 export default RolePermissionPage;
+

@@ -1,4 +1,4 @@
-// Return & Complaint Page
+﻿// Return & Complaint Page
 import { Lock, CheckCircle, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -65,7 +65,7 @@ const ReturnPage = () => {
             </p>
             <button
               onClick={() => setSubmitted(false)}
-              className="text-[#0f5dd9] font-medium"
+              className="text-[#d90f0f] font-medium"
             >
               Gửi yêu cầu khác
             </button>
@@ -95,7 +95,7 @@ const ReturnPage = () => {
               onChange={(e) =>
                 setFormData({ ...formData, orderId: e.target.value })
               }
-              className="w-full px-5 py-3 border border-[#e0e0e0] rounded-full focus:outline-none focus:border-[#0f5dd9] bg-[#f9f9f9]"
+              className="w-full px-5 py-3 border border-[#e0e0e0] rounded-full focus:outline-none focus:border-[#d90f0f] bg-[#f9f9f9]"
               required
             >
               <option value="">Chọn đơn hàng...</option>
@@ -155,7 +155,7 @@ const ReturnPage = () => {
               onChange={(e) =>
                 setFormData({ ...formData, reason: e.target.value })
               }
-              className="w-full px-5 py-3 border border-[#e0e0e0] rounded-full focus:outline-none focus:border-[#0f5dd9] bg-[#f9f9f9]"
+              className="w-full px-5 py-3 border border-[#e0e0e0] rounded-full focus:outline-none focus:border-[#d90f0f] bg-[#f9f9f9]"
               required
             >
               <option value="">Chọn lý do...</option>
@@ -176,7 +176,7 @@ const ReturnPage = () => {
                 setFormData({ ...formData, description: e.target.value })
               }
               rows={4}
-              className="w-full px-5 py-3 border border-[#e0e0e0] rounded-2xl focus:outline-none focus:border-[#0f5dd9] bg-[#f9f9f9]"
+              className="w-full px-5 py-3 border border-[#e0e0e0] rounded-2xl focus:outline-none focus:border-[#d90f0f] bg-[#f9f9f9]"
               placeholder="Mô tả chi tiết vấn đề..."
               required
             />
@@ -184,7 +184,7 @@ const ReturnPage = () => {
 
           <button
             type="submit"
-            className="w-full bg-[#141f36] text-white py-4 rounded-full font-medium hover:bg-[#0d1322]"
+            className="w-full bg-[#361414] text-white py-4 rounded-full font-medium hover:bg-[#0d1322]"
           >
             Gửi yêu cầu
           </button>
@@ -195,3 +195,4 @@ const ReturnPage = () => {
 };
 
 export default ReturnPage;
+

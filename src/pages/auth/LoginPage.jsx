@@ -1,4 +1,4 @@
-import { GoogleLogin } from '@react-oauth/google';
+﻿import { GoogleLogin } from '@react-oauth/google';
 import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -128,7 +128,7 @@ const LoginPage = () => {
             value={formData.email}
             onChange={handleChange}
             required
-            className="w-full px-5 py-3 border border-[#e0e0e0] rounded-full focus:outline-none focus:border-[#0f5dd9] bg-[#f9f9f9]"
+            className="w-full px-5 py-3 border border-[#e0e0e0] rounded-full focus:outline-none focus:border-[#d90f0f] bg-[#f9f9f9]"
             placeholder="email@example.com"
           />
         </div>
@@ -143,7 +143,7 @@ const LoginPage = () => {
             value={formData.password}
             onChange={handleChange}
             required
-            className="w-full px-5 py-3 border border-[#e0e0e0] rounded-full focus:outline-none focus:border-[#0f5dd9] bg-[#f9f9f9]"
+            className="w-full px-5 py-3 border border-[#e0e0e0] rounded-full focus:outline-none focus:border-[#d90f0f] bg-[#f9f9f9]"
             placeholder="••••••••"
           />
         </div>
@@ -151,7 +151,7 @@ const LoginPage = () => {
         <div className="flex justify-end">
           <Link
             to="/forgot-password"
-            className="text-sm text-[#0f5dd9] hover:underline"
+            className="text-sm text-[#d90f0f] hover:underline"
           >
             Quên mật khẩu?
           </Link>
@@ -160,7 +160,7 @@ const LoginPage = () => {
         <button
           type="submit"
           disabled={login.isPending}
-          className="w-full bg-[#141f36] text-white py-4 rounded-full font-medium hover:bg-[#0d1322] disabled:bg-gray-300 transition"
+          className="w-full bg-[#361414] text-white py-4 rounded-full font-medium hover:bg-[#0d1322] disabled:bg-gray-300 transition"
         >
           {login.isPending ? 'Đang đăng nhập...' : 'Đăng nhập'}
         </button>
@@ -189,7 +189,7 @@ const LoginPage = () => {
         <Link
           to="/register"
           state={{ from: location.state?.from?.pathname || location.state?.from }}
-          className="text-[#0f5dd9] hover:underline font-medium"
+          className="text-[#d90f0f] hover:underline font-medium"
         >
           Đăng ký ngay
         </Link>
@@ -228,3 +228,4 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
+

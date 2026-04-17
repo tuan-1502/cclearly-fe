@@ -1,4 +1,4 @@
-// ConfirmModal Component for confirmations
+﻿// ConfirmModal Component for confirmations
 import { X } from 'lucide-react';
 
 const ConfirmModal = ({
@@ -58,9 +58,9 @@ const ConfirmModal = ({
     },
     info: {
       bg: 'bg-blue-50',
-      border: 'border-blue-200',
-      iconText: 'text-blue-500',
-      button: 'bg-blue-500 hover:bg-blue-600',
+      border: 'border-red-200',
+      iconText: 'text-red-500',
+      button: 'bg-red-500 hover:bg-red-600',
       icon: (
         <svg
           className="w-6 h-6"
@@ -154,3 +154,4 @@ const ConfirmModal = ({
 };
 
 export default ConfirmModal;
+

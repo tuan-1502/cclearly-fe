@@ -1,4 +1,4 @@
-// Nhận hàng Pre-order — Operations Staff
+﻿// Nhận hàng Pre-order — Operations Staff
 import {
   Package,
   Truck,
@@ -164,7 +164,7 @@ const PreorderReceivePage = () => {
     const s = (status || '').toUpperCase();
     const map = {
       PENDING: { label: 'Chờ xác nhận', cls: 'bg-yellow-100 text-yellow-700' },
-      CONFIRMED: { label: 'Chờ hàng về', cls: 'bg-blue-100 text-blue-700' },
+      CONFIRMED: { label: 'Chờ hàng về', cls: 'bg-red-100 text-red-700' },
       PROCESSING: { label: 'Đang xử lý', cls: 'bg-purple-100 text-purple-700' },
       SHIPPED: { label: 'Đã giao', cls: 'bg-orange-100 text-orange-700' },
       DELIVERED: { label: 'Hoàn thành', cls: 'bg-green-100 text-green-700' },
@@ -181,7 +181,7 @@ const PreorderReceivePage = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#0f5dd9]"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#d90f0f]"></div>
       </div>
     );
   }
@@ -201,16 +201,16 @@ const PreorderReceivePage = () => {
         <div
           onClick={() => { setStatusFilter('waiting'); setPage(1); }}
           className={`bg-white p-6 rounded-2xl shadow-sm border cursor-pointer transition ${
-            statusFilter === 'waiting' ? 'border-blue-300 ring-2 ring-blue-100' : 'border-gray-100 hover:border-blue-200'
+            statusFilter === 'waiting' ? 'border-red-300 ring-2 ring-red-100' : 'border-gray-100 hover:border-red-200'
           }`}
         >
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-2xl font-bold text-[#0f5dd9]">{stats.waiting}</p>
+              <p className="text-2xl font-bold text-[#d90f0f]">{stats.waiting}</p>
               <p className="text-sm text-[#4f5562] font-medium">Đang chờ hàng về</p>
             </div>
             <div className="p-3 bg-blue-50 rounded-xl">
-              <Clock className="w-6 h-6 text-[#0f5dd9]" />
+              <Clock className="w-6 h-6 text-[#d90f0f]" />
             </div>
           </div>
         </div>
@@ -424,7 +424,7 @@ const PreorderReceivePage = () => {
                         {isWaiting && (
                           <button
                             onClick={() => handleReceiveStock(order)}
-                            className="bg-[#0f5dd9] text-white px-4 py-1.5 rounded-full text-[11px] font-bold hover:bg-[#0d4fb8] flex items-center gap-1"
+                            className="bg-[#d90f0f] text-white px-4 py-1.5 rounded-full text-[11px] font-bold hover:bg-[#0d4fb8] flex items-center gap-1"
                           >
                             <Check className="w-3 h-3" /> Nhập kho
                           </button>
@@ -510,3 +510,4 @@ const PreorderReceivePage = () => {
 };
 
 export default PreorderReceivePage;
+

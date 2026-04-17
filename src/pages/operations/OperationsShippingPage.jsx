@@ -1,4 +1,4 @@
-// Operations Shipping Page - Giao vận & Tracking
+﻿// Operations Shipping Page - Giao vận & Tracking
 import {
   Search,
   Truck,
@@ -206,13 +206,13 @@ const OperationsShippingPage = () => {
         >
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-2xl font-bold text-[#0f5dd9]">
+              <p className="text-2xl font-bold text-[#d90f0f]">
                 {shippingOrders.length}
               </p>
               <p className="text-sm text-[#4f5562] font-medium">Tổng vận đơn</p>
             </div>
             <div className="p-3 bg-blue-50 rounded-xl">
-              <MapPin className="w-6 h-6 text-[#0f5dd9]" />
+              <MapPin className="w-6 h-6 text-[#d90f0f]" />
             </div>
           </div>
         </div>
@@ -318,7 +318,7 @@ const OperationsShippingPage = () => {
               <div className="lg:col-span-2">
                 <div className="bg-[#fcfcfc] rounded-xl p-4 border border-gray-50 h-full">
                   <div className="flex items-center gap-2 mb-4">
-                    <MapPin className="w-4 h-4 text-[#0f5dd9]" />
+                    <MapPin className="w-4 h-4 text-[#d90f0f]" />
                     <p className="text-sm font-bold text-[#222]">
                       Hành trình vận chuyển
                     </p>
@@ -337,7 +337,7 @@ const OperationsShippingPage = () => {
                     </div>
                     <div className="relative">
                       <div
-                        className={`absolute -left-5 top-1 w-2.5 h-2.5 rounded-full border-2 border-white ${(order.status || '').toUpperCase() === 'DELIVERED' ? 'bg-green-500' : 'bg-blue-500 animate-pulse'}`}
+                        className={`absolute -left-5 top-1 w-2.5 h-2.5 rounded-full border-2 border-white ${(order.status || '').toUpperCase() === 'DELIVERED' ? 'bg-green-500' : 'bg-red-500 animate-pulse'}`}
                       ></div>
                       <p className="text-xs font-bold text-[#222]">
                         {(order.status || '').toUpperCase() === 'DELIVERED'
@@ -356,7 +356,7 @@ const OperationsShippingPage = () => {
               <div>
                 <div className="bg-[#fcfcfc] rounded-xl p-4 border border-gray-50 h-full flex flex-col">
                   <div className="flex items-center gap-2 mb-4">
-                    <Truck className="w-4 h-4 text-[#0f5dd9]" />
+                    <Truck className="w-4 h-4 text-[#d90f0f]" />
                     <p className="text-sm font-bold text-[#222]">
                       Thông tin vận đơn
                     </p>
@@ -379,7 +379,7 @@ const OperationsShippingPage = () => {
                         Mã vận đơn
                       </p>
                       {order.trackingNumber ? (
-                        <p className="text-sm font-mono font-bold text-[#0f5dd9] bg-blue-50 px-2 py-1 rounded inline-block mt-1">
+                        <p className="text-sm font-mono font-bold text-[#d90f0f] bg-blue-50 px-2 py-1 rounded inline-block mt-1">
                           {order.trackingNumber.replace(/^\[.+?\]\s*/, '')}
                         </p>
                       ) : (
@@ -390,7 +390,7 @@ const OperationsShippingPage = () => {
                     </div>
                   </div>
                   {order.trackingNumber && (
-                    <button className="mt-4 w-full text-[11px] font-bold text-[#0f5dd9] flex items-center justify-center gap-1 hover:underline">
+                    <button className="mt-4 w-full text-[11px] font-bold text-[#d90f0f] flex items-center justify-center gap-1 hover:underline">
                       Xem hành trình thực tế
                     </button>
                   )}
@@ -401,7 +401,7 @@ const OperationsShippingPage = () => {
               <div>
                 <div className="bg-[#fcfcfc] rounded-xl p-4 border border-gray-50 h-full flex flex-col">
                   <div className="flex items-center gap-2 mb-4">
-                    <CreditCard className="w-4 h-4 text-[#0f5dd9]" />
+                    <CreditCard className="w-4 h-4 text-[#d90f0f]" />
                     <p className="text-sm font-bold text-[#222]">Thanh toán</p>
                   </div>
                   <div className="space-y-2 flex-1">
@@ -457,7 +457,7 @@ const OperationsShippingPage = () => {
                     )}
                     {order.isPreorder && (
                       <div className="mt-1 px-2 py-1 bg-blue-50 rounded-lg">
-                        <p className="text-[10px] font-bold text-blue-700">
+                        <p className="text-[10px] font-bold text-red-700">
                           <Banknote className="w-3 h-3 inline mr-1" />
                           Đơn Pre-order — Đặt cọc 50%
                         </p>
@@ -473,7 +473,7 @@ const OperationsShippingPage = () => {
               {!order.trackingNumber ? (
                 <button
                   onClick={() => handleGenerateLabel(order.orderId || order.id)}
-                  className="bg-[#141f36] text-white px-6 py-3 rounded-full text-sm hover:bg-black transition flex items-center gap-2"
+                  className="bg-[#361414] text-white px-6 py-3 rounded-full text-sm hover:bg-black transition flex items-center gap-2"
                 >
                   <Package className="w-4 h-4" /> Lấy mã vận đơn (GHN/GHTK)
                 </button>
@@ -489,7 +489,7 @@ const OperationsShippingPage = () => {
               {(order.status || '').toUpperCase() !== 'DELIVERED' && (
                 <button
                   onClick={() => handleUpdateStatus(order.orderId || order.id)}
-                  className="bg-[#0f5dd9] text-white px-6 py-3 rounded-full text-sm hover:bg-[#0b4fc0] transition"
+                  className="bg-[#d90f0f] text-white px-6 py-3 rounded-full text-sm hover:bg-[#b00c0c] transition"
                 >
                   Xác nhận giao thành công
                 </button>
@@ -567,3 +567,4 @@ const OperationsShippingPage = () => {
 };
 
 export default OperationsShippingPage;
+

@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import './index.css';
 import App from './App.jsx';
 import { AuthProvider } from './contexts/AuthContext';
+import { SocketProvider } from './contexts/SocketContext';
 
 // Google OAuth Client ID - match with backend configuration
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
@@ -37,7 +38,9 @@ enableMocking().then(() => {
       <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
-            <App />
+            <SocketProvider>
+              <App />
+            </SocketProvider>
             <ToastContainer
               position="top-right"
               autoClose={3000}
@@ -55,3 +58,4 @@ enableMocking().then(() => {
     </StrictMode>
   );
 });
+

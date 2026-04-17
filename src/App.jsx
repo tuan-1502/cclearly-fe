@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+﻿import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { AdminLayout } from './components/layout/AdminLayout';
@@ -247,3 +247,4 @@ function AppRoutes() {
 }
 
 export default App;
+

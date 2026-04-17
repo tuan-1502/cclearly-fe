@@ -1,4 +1,4 @@
-import {
+﻿import {
   Globe,
   CreditCard,
   Truck,
@@ -157,7 +157,7 @@ const AdminSettingsPage = () => {
               />
             </div>
 
-            <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 text-sm text-blue-700">
+            <div className="bg-blue-50 border border-red-100 rounded-xl p-4 text-sm text-red-700">
               <p className="font-medium mb-1">Lưu ý:</p>
               <p>
                 Đơn hàng có tổng giá trị lớn hơn hoặc bằng mức "Miễn phí ship
@@ -277,7 +277,7 @@ const AdminSettingsPage = () => {
                   }
                   rows={2}
                   placeholder="VD: © 2024 CClearly. All rights reserved."
-                  className="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-200 outline-none resize-none"
+                  className="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-200 outline-none resize-none"
                 />
                 <p className="text-xs text-gray-400 mt-1">
                   Hiển thị ở cuối mỗi email. Có thể ghi bản quyền, địa chỉ,
@@ -419,7 +419,7 @@ const AdminSettingsPage = () => {
               <tab.icon
                 size={18}
                 className={
-                  activeTab === tab.key ? 'text-blue-600' : 'text-gray-400'
+                  activeTab === tab.key ? 'text-red-600' : 'text-gray-400'
                 }
               />
               <div className="flex-1 text-left">
@@ -443,3 +443,4 @@ const AdminSettingsPage = () => {
 };
 
 export default AdminSettingsPage;
+
