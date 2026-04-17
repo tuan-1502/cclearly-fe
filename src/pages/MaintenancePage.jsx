@@ -1,4 +1,4 @@
-import { Wrench } from 'lucide-react';
+﻿import { Wrench } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const MaintenancePage = () => {
@@ -54,3 +54,4 @@ const MaintenancePage = () => {
 };
 
 export default MaintenancePage;
+

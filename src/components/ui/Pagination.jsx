@@ -1,4 +1,4 @@
-const Pagination = ({
+﻿const Pagination = ({
   currentPage,
   totalPages,
   onPageChange,
@@ -49,7 +49,7 @@ const Pagination = ({
           onClick={() => onPageChange(page)}
           className={`px-3 py-1 rounded border ${
             page === currentPage
-              ? 'bg-blue-600 text-white border-blue-600'
+              ? 'bg-red-600 text-white border-red-600'
               : 'hover:bg-gray-50'
           }`}
         >
@@ -83,3 +83,4 @@ const Pagination = ({
 };
 
 export default Pagination;
+

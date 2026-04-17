@@ -1,4 +1,4 @@
-import { X, Image as ImageIcon, Upload, Save, Loader2 } from 'lucide-react';
+﻿import { X, Image as ImageIcon, Upload, Save, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { uploadRequest } from '@/api/upload';
 
@@ -78,7 +78,7 @@ const BannerModal = ({
                 setFormData({ ...formData, title: e.target.value })
               }
               required
-              className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0f5dd9]/20 outline-none"
+              className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#d90f0f]/20 outline-none"
               placeholder="Ví dụ: Khuyến mãi mùa hè"
             />
           </div>
@@ -96,7 +96,7 @@ const BannerModal = ({
               />
               {uploading ? (
                 <div className="flex flex-col items-center py-6">
-                  <Loader2 className="w-8 h-8 animate-spin text-[#0f5dd9] mb-2" />
+                  <Loader2 className="w-8 h-8 animate-spin text-[#d90f0f] mb-2" />
                   <p className="text-sm text-gray-500">
                     Đang tải ảnh lên Cloudinary...
                   </p>
@@ -115,7 +115,7 @@ const BannerModal = ({
               ) : (
                 <div className="flex flex-col items-center py-4">
                   <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center mb-2">
-                    <ImageIcon className="w-6 h-6 text-[#0f5dd9]" />
+                    <ImageIcon className="w-6 h-6 text-[#d90f0f]" />
                   </div>
                   <p className="text-sm text-gray-500">
                     Nhấn để chọn ảnh từ máy tính (tự động upload lên Cloudinary)
@@ -178,7 +178,7 @@ const BannerModal = ({
                 }
                 className="sr-only peer"
               />
-              <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#0f5dd9]"></div>
+              <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#d90f0f]"></div>
             </label>
             <span className="text-sm font-medium text-[#222]">
               {formData.isActive ? 'Đang hiển thị' : 'Đã ẩn'}
@@ -196,7 +196,7 @@ const BannerModal = ({
             <button
               type="submit"
               disabled={uploading || isSaving || !formData.imageUrl}
-              className="flex-1 px-5 py-2.5 bg-[#0f5dd9] text-white rounded-xl font-medium hover:bg-[#0b4fc0] flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 px-5 py-2.5 bg-[#d90f0f] text-white rounded-xl font-medium hover:bg-[#b00c0c] flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSaving ? (
                 <Loader2 size={18} className="animate-spin" />
@@ -213,3 +213,4 @@ const BannerModal = ({
 };
 
 export default BannerModal;
+

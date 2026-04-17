@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 
 export const SectionHeader = ({ title, description }) => (
   <div className="mb-6 text-left">
@@ -26,7 +26,7 @@ export const FormField = ({
       {...(value !== undefined ? { value } : { defaultValue })}
       placeholder={placeholder}
       onChange={onChange}
-      className={`border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 transition-all ${className}`}
+      className={`border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-red-500 transition-all ${className}`}
       {...rest}
     />
   </div>
@@ -35,10 +35,11 @@ export const FormField = ({
 export const SelectField = ({ label, options }) => (
   <div className="flex flex-col gap-1">
     <label className="text-sm font-medium text-gray-700">{label}</label>
-    <select className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 bg-white">
+    <select className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-red-500 bg-white">
       {options.map((o) => (
         <option key={o}>{o}</option>
       ))}
     </select>
   </div>
 );
+

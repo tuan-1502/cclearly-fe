@@ -7,12 +7,43 @@ import {
   Loader2,
 } from 'lucide-react';
 import { ResponsiveContainer, BarChart, Bar, XAxis, Tooltip } from 'recharts';
+import { useEffect } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { useAuth, ROLES } from '@/contexts/AuthContext';
+import { useSocket } from '@/contexts/SocketContext';
 import { useAdminDashboard } from '@/hooks/useAdmin';
 import { useAdminOrders } from '@/hooks/useOrder';
+import { QUERY_KEYS } from '@/utils/endpoints';
 
 const AdminDashboard = () => {
   const { user, hasRole } = useAuth();
+  const { socket } = useSocket();
+  const queryClient = useQueryClient();
+
+  // Listen for real-time updates
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleDashboardUpdate = () => {
+      console.log('Real-time dashboard update received');
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.ADMIN_DASHBOARD });
+    };
+
+    const handleOrdersUpdate = () => {
+      console.log('Real-time orders update received');
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.ADMIN_ORDERS });
+    };
+
+    socket.on('dashboard_stats_updated', handleDashboardUpdate);
+    socket.on('order_status_updated', handleOrdersUpdate);
+    socket.on('new_order_placed', handleOrdersUpdate);
+
+    return () => {
+      socket.off('dashboard_stats_updated', handleDashboardUpdate);
+      socket.off('order_status_updated', handleOrdersUpdate);
+      socket.off('new_order_placed', handleOrdersUpdate);
+    };
+  }, [socket, queryClient]);
 
   const { data: stats, isLoading: loadingStats } = useAdminDashboard();
   const { data: ordersData, isLoading: loadingOrders } = useAdminOrders({
@@ -32,7 +63,7 @@ const AdminDashboard = () => {
     const s = status?.toUpperCase();
     const map = {
       PENDING: 'bg-yellow-100 text-yellow-800',
-      CONFIRMED: 'bg-blue-100 text-blue-800',
+      CONFIRMED: 'bg-red-100 text-red-800',
       PROCESSING: 'bg-purple-100 text-purple-800',
       SHIPPED: 'bg-orange-100 text-orange-800',
       DELIVERED: 'bg-green-100 text-green-800',
@@ -62,7 +93,7 @@ const AdminDashboard = () => {
   if (loadingStats) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+        <Loader2 className="w-8 h-8 animate-spin text-red-600" />
       </div>
     );
   }
@@ -78,7 +109,7 @@ const AdminDashboard = () => {
       {/* STATS */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
         <StatCard
-          icon={<Package className="text-blue-600" />}
+          icon={<Package className="text-red-600" />}
           title="Đơn hàng mới"
           value={stats?.pendingOrders ?? 0}
         />
@@ -118,7 +149,7 @@ const AdminDashboard = () => {
             <BarChart data={stats?.revenueByMonth || []}>
               <XAxis dataKey="month" />
               <Tooltip formatter={(v) => formatCurrency(v)} />
-              <Bar dataKey="revenue" fill="#0f5dd9" radius={[6, 6, 0, 0]} />
+              <Bar dataKey="revenue" fill="#d90f0f" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -142,7 +173,7 @@ const AdminDashboard = () => {
                     <p className="text-xs text-gray-500">{p.type}</p>
                   </div>
 
-                  <span className="text-blue-600 font-semibold">
+                  <span className="text-red-600 font-semibold">
                     {p.sold} đã bán
                   </span>
                 </div>
@@ -221,3 +252,4 @@ function StatCard({ icon, title, value }) {
     </div>
   );
 }
+

@@ -1,4 +1,4 @@
-// Sales Returns Page - Xử lý đổi trả & khiếu nại
+﻿// Sales Returns Page - Xử lý đổi trả & khiếu nại
 import {
   Search,
   CheckCircle,
@@ -31,7 +31,7 @@ const STATUS_MAP = {
   },
   APPROVED: {
     label: 'Đã duyệt',
-    css: 'bg-blue-100 text-blue-700 border-blue-200',
+    css: 'bg-red-100 text-red-700 border-red-200',
     icon: CheckCircle,
   },
   COMPLETED: {
@@ -104,7 +104,7 @@ const SalesReturnsPage = () => {
       label: 'Đã duyệt',
       val: returns.filter((r) => r.status === 'APPROVED').length,
       icon: CheckCircle,
-      color: 'text-blue-600',
+      color: 'text-red-600',
       bg: 'bg-blue-50',
     },
     {
@@ -221,7 +221,7 @@ const SalesReturnsPage = () => {
             placeholder="Tìm kiếm: mã yêu cầu, mã đơn, tên khách..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#0f5dd9]"
+            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#d90f0f]"
           />
         </div>
         <div className="flex items-center gap-2 border rounded-lg px-3 py-2 text-sm">
@@ -412,7 +412,7 @@ const SalesReturnsPage = () => {
                     <button
                       onClick={() => handleComplete(ret.refundId || ret.id)}
                       disabled={completeReturnMutation.isPending}
-                      className="w-full bg-[#0f5dd9] text-white py-2.5 rounded-xl font-medium hover:bg-[#0b4fc0] disabled:opacity-50 flex items-center justify-center gap-2 transition-colors"
+                      className="w-full bg-[#d90f0f] text-white py-2.5 rounded-xl font-medium hover:bg-[#b00c0c] disabled:opacity-50 flex items-center justify-center gap-2 transition-colors"
                     >
                       <DollarSign className="w-4 h-4" /> Hoàn thành xử lý
                     </button>
@@ -450,3 +450,4 @@ const SalesReturnsPage = () => {
 };
 
 export default SalesReturnsPage;
+

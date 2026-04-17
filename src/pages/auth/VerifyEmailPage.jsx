@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+﻿import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useVerifyEmail, useResendVerification } from '@/hooks/useAuth';
 
@@ -133,7 +133,7 @@ const VerifyEmailPage = () => {
       <div className="text-center">
         <div className="w-16 h-16 bg-[#ececec] rounded-full flex items-center justify-center mx-auto mb-5">
           <svg
-            className="w-8 h-8 text-[#0f5dd9]"
+            className="w-8 h-8 text-[#d90f0f]"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -175,7 +175,7 @@ const VerifyEmailPage = () => {
               onKeyDown={(e) => handleKeyDown(index, e)}
               onPaste={index === 0 ? handlePaste : undefined}
               className="w-12 h-14 text-center text-xl font-bold border-2 border-[#e0e0e0] rounded-xl 
-                         focus:outline-none focus:border-[#0f5dd9] focus:ring-2 focus:ring-[#0f5dd9]/10 
+                         focus:outline-none focus:border-[#d90f0f] focus:ring-2 focus:ring-[#d90f0f]/10 
                          bg-white transition-colors"
             />
           ))}
@@ -184,7 +184,7 @@ const VerifyEmailPage = () => {
         <button
           type="submit"
           disabled={verifyEmail.isPending || otp.join('').length !== 6}
-          className="w-full bg-[#141f36] text-white py-4 rounded-full font-medium hover:bg-[#0d1322] 
+          className="w-full bg-[#361414] text-white py-4 rounded-full font-medium hover:bg-[#0d1322] 
                      disabled:bg-gray-300 disabled:cursor-not-allowed transition"
         >
           {verifyEmail.isPending ? 'Đang xác thực...' : 'Xác thực'}
@@ -198,7 +198,7 @@ const VerifyEmailPage = () => {
             <button
               onClick={handleResend}
               disabled={resendVerification.isPending}
-              className="text-[#0f5dd9] hover:underline font-medium"
+              className="text-[#d90f0f] hover:underline font-medium"
             >
               {resendVerification.isPending ? 'Đang gửi...' : 'Gửi lại mã'}
             </button>
@@ -211,7 +211,7 @@ const VerifyEmailPage = () => {
       <p className="mt-8 text-center text-[#4f5562]">
         <Link
           to="/login"
-          className="text-[#0f5dd9] hover:underline font-medium"
+          className="text-[#d90f0f] hover:underline font-medium"
         >
           ← Quay lại đăng nhập
         </Link>
@@ -221,3 +221,4 @@ const VerifyEmailPage = () => {
 };
 
 export default VerifyEmailPage;
+

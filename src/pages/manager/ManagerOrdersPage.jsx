@@ -1,4 +1,4 @@
-// Manager Orders Page
+﻿// Manager Orders Page
 import { Search, Filter, Eye } from 'lucide-react';
 import { useState } from 'react';
 import Pagination from '@/components/ui/Pagination';
@@ -62,7 +62,7 @@ const ManagerOrdersPage = () => {
         label: 'Chờ xác nhận',
         class: 'bg-yellow-100 text-yellow-800',
       },
-      CONFIRMED: { label: 'Đã xác nhận', class: 'bg-blue-100 text-blue-800' },
+      CONFIRMED: { label: 'Đã xác nhận', class: 'bg-red-100 text-red-800' },
       PROCESSING: {
         label: 'Đang xử lý',
         class: 'bg-purple-100 text-purple-800',
@@ -93,7 +93,7 @@ const ManagerOrdersPage = () => {
                 setSearchTerm(e.target.value);
                 setCurrentPage(1);
               }}
-              className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0f5dd9]"
+              className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d90f0f]"
             />
           </div>
           <select
@@ -102,7 +102,7 @@ const ManagerOrdersPage = () => {
               setStatusFilter(e.target.value);
               setCurrentPage(1);
             }}
-            className="px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0f5dd9]"
+            className="px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d90f0f]"
           >
             <option value="all">Tất cả trạng thái</option>
             <option value="pending">Chờ xác nhận</option>
@@ -172,7 +172,7 @@ const ManagerOrdersPage = () => {
                     {new Date(order.createdAt).toLocaleDateString('vi-VN')}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <button className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg">
+                    <button className="p-2 text-red-600 hover:bg-blue-50 rounded-lg">
                       <Eye className="w-4 h-4" />
                     </button>
                   </td>
@@ -196,7 +196,7 @@ const ManagerOrdersPage = () => {
             <select
               value={pageSize}
               onChange={handlePageSizeChange}
-              className="px-3 py-1.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#0f5dd9]"
+              className="px-3 py-1.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#d90f0f]"
             >
               {PAGE_SIZES.map((size) => (
                 <option key={size} value={size}>
@@ -224,3 +224,4 @@ const ManagerOrdersPage = () => {
 };
 
 export default ManagerOrdersPage;
+

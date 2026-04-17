@@ -1,4 +1,4 @@
-import {
+﻿import {
   Plus,
   Trash2,
   Edit2,
@@ -95,7 +95,7 @@ const BannerPage = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+        <Loader2 className="w-8 h-8 animate-spin text-red-600" />
       </div>
     );
   }
@@ -111,7 +111,7 @@ const BannerPage = () => {
         </div>
         <button
           onClick={() => handleOpenModal()}
-          className="flex items-center gap-2 px-5 py-2.5 bg-[#0f5dd9] text-white rounded-xl font-medium hover:bg-[#0b4fc0]"
+          className="flex items-center gap-2 px-5 py-2.5 bg-[#d90f0f] text-white rounded-xl font-medium hover:bg-[#b00c0c]"
         >
           <Plus size={18} /> Thêm banner
         </button>
@@ -123,7 +123,7 @@ const BannerPage = () => {
           <p className="text-sm text-gray-500">Tổng banner</p>
         </div>
         <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-          <p className="text-2xl font-bold text-blue-600">{activeCount}</p>
+          <p className="text-2xl font-bold text-red-600">{activeCount}</p>
           <p className="text-sm text-gray-500">Đang hiển thị</p>
         </div>
         {POSITIONS.map((pos) => {
@@ -134,7 +134,7 @@ const BannerPage = () => {
               key={pos.value}
               className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100"
             >
-              <p className="text-2xl font-bold text-blue-600">{count}</p>
+              <p className="text-2xl font-bold text-red-600">{count}</p>
               <p className="text-sm text-gray-500">
                 {pos.label.split(' - ').pop() || pos.label}
               </p>
@@ -216,7 +216,7 @@ const BannerPage = () => {
                         <div className="flex justify-end gap-2">
                           <button
                             onClick={() => handleOpenModal(banner)}
-                            className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all"
+                            className="p-2 text-gray-400 hover:text-red-600 hover:bg-blue-50 rounded-xl transition-all"
                           >
                             <Edit2 size={16} />
                           </button>
@@ -253,3 +253,4 @@ const BannerPage = () => {
 };
 
 export default BannerPage;
+

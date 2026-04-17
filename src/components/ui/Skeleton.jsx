@@ -1,4 +1,4 @@
-const Skeleton = ({ className = '', ...props }) => {
+﻿const Skeleton = ({ className = '', ...props }) => {
   return (
     <div
       className={`animate-pulse bg-gray-200 rounded ${className}`}
@@ -51,3 +51,4 @@ Skeleton.Card = SkeletonCard;
 Skeleton.Table = SkeletonTable;
 
 export default Skeleton;
+

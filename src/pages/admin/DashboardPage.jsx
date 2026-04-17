@@ -1,4 +1,4 @@
-// Dashboard theo Flup style
+﻿// Dashboard theo Flup style
 import {
   Users,
   DollarSign,
@@ -27,7 +27,7 @@ const DashboardPage = () => {
             Welcome back, {user?.name || 'Admin'}!
           </p>
         </div>
-        <button className="bg-[#0f5dd9] text-white px-5 py-2.5 rounded-full font-medium hover:bg-[#0b4fc0] transition flex items-center gap-2">
+        <button className="bg-[#d90f0f] text-white px-5 py-2.5 rounded-full font-medium hover:bg-[#b00c0c] transition flex items-center gap-2">
           <Plus className="w-4 h-4" />
           Add Data
         </button>
@@ -67,8 +67,8 @@ const DashboardPage = () => {
 
         <div className="bg-white rounded-2xl p-6 shadow-[0_10px_30px_rgba(13,22,39,0.06)]">
           <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-              <Package className="w-6 h-6 text-blue-600" />
+            <div className="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
+              <Package className="w-6 h-6 text-red-600" />
             </div>
             <span className="text-red-500 text-sm font-medium flex items-center gap-1">
               <TrendingDown className="w-3 h-3" /> 0.2%
@@ -109,7 +109,7 @@ const DashboardPage = () => {
                   className="flex-1 flex flex-col items-center gap-2"
                 >
                   <div
-                    className="w-full bg-[#0f5dd9] rounded-t-lg"
+                    className="w-full bg-[#d90f0f] rounded-t-lg"
                     style={{ height: `${height}%` }}
                   ></div>
                   <span className="text-xs text-[#4f5562]">{i + 1}th</span>
@@ -126,7 +126,7 @@ const DashboardPage = () => {
           </h3>
           <div className="space-y-3">
             {[
-              { name: 'Gọng kính cận', value: 25, color: '#0f5dd9' },
+              { name: 'Gọng kính cận', value: 25, color: '#d90f0f' },
               { name: 'Gọng kính râm', value: 17, color: '#22c55e' },
               { name: 'Tròng cận', value: 20, color: '#f59e0b' },
               { name: 'Tròng râm', value: 15, color: '#8b5cf6' },
@@ -158,7 +158,7 @@ const DashboardPage = () => {
           <h3 className="text-lg font-semibold text-[#222]">Recent Orders</h3>
           <Link
             to="/admin/orders"
-            className="text-[#0f5dd9] text-sm font-medium hover:underline"
+            className="text-[#d90f0f] text-sm font-medium hover:underline"
           >
             View All
           </Link>
@@ -224,7 +224,7 @@ const DashboardPage = () => {
                         order.status === 'pending'
                           ? 'bg-yellow-100 text-yellow-800'
                           : order.status === 'processing'
-                            ? 'bg-blue-100 text-blue-800'
+                            ? 'bg-red-100 text-red-800'
                             : order.status === 'shipped'
                               ? 'bg-orange-100 text-orange-800'
                               : 'bg-green-100 text-green-800'
@@ -251,3 +251,4 @@ const DashboardPage = () => {
 };
 
 export default DashboardPage;
+

@@ -1,4 +1,4 @@
-// Manager Products Page - Quản lý sản phẩm
+﻿// Manager Products Page - Quản lý sản phẩm
 import { Search, Plus, Edit2, Trash2, Glasses, Scan } from 'lucide-react';
 import { useState } from 'react';
 import ProductModal from '@/components/admin/product/ProductModal';
@@ -234,7 +234,7 @@ const ManagerProductsPage = () => {
             onChange={(e) =>
               setFilters({ ...filters, search: e.target.value, page: 1 })
             }
-            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0f5dd9]"
+            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d90f0f]"
           />
         </div>
         <select
@@ -242,7 +242,7 @@ const ManagerProductsPage = () => {
           onChange={(e) =>
             setFilters({ ...filters, type: e.target.value, page: 1 })
           }
-          className="px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0f5dd9] bg-white"
+          className="px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d90f0f] bg-white"
         >
           <option value="">Tất cả loại</option>
           <option value="frame">Gọng kính</option>
@@ -251,7 +251,7 @@ const ManagerProductsPage = () => {
         </select>
         <button
           onClick={() => handleOpenModal()}
-          className="bg-[#0f5dd9] text-white px-6 py-2 rounded-xl font-medium hover:bg-[#0b4fc0] flex items-center gap-2"
+          className="bg-[#d90f0f] text-white px-6 py-2 rounded-xl font-medium hover:bg-[#b00c0c] flex items-center gap-2"
         >
           <Plus className="w-5 h-5" /> Thêm sản phẩm
         </button>
@@ -317,14 +317,14 @@ const ManagerProductsPage = () => {
                             )}
                           </div>
                           <div className="min-w-0">
-                            <p className="text-sm font-semibold text-[#222] truncate group-hover:text-[#0f5dd9] transition-colors">
+                            <p className="text-sm font-semibold text-[#222] truncate group-hover:text-[#d90f0f] transition-colors">
                               {product.name}
                             </p>
                             <p className="text-[10px] text-gray-400 font-medium uppercase tracking-tighter">
                               {product.sku}
                             </p>
                             {product.variants?.length > 0 && (
-                              <p className="text-[10px] text-blue-500">
+                              <p className="text-[10px] text-red-500">
                                 {product.variants.length} biến thể
                               </p>
                             )}
@@ -365,7 +365,7 @@ const ManagerProductsPage = () => {
                         <div className="flex justify-end gap-1.5">
                           <button
                             onClick={() => handleOpenModal(product)}
-                            className="p-2 text-gray-400 hover:text-[#0f5dd9] hover:bg-blue-50 rounded-lg transition"
+                            className="p-2 text-gray-400 hover:text-[#d90f0f] hover:bg-blue-50 rounded-lg transition"
                           >
                             <Edit2 className="w-4 h-4" />
                           </button>
@@ -399,7 +399,7 @@ const ManagerProductsPage = () => {
                       page: 1,
                     })
                   }
-                  className="px-3 py-1.5 border border-[#e0e0e0] rounded-lg text-sm focus:outline-none focus:border-[#0f5dd9] bg-white cursor-pointer"
+                  className="px-3 py-1.5 border border-[#e0e0e0] rounded-lg text-sm focus:outline-none focus:border-[#d90f0f] bg-white cursor-pointer"
                 >
                   {PAGE_SIZES.map((size) => (
                     <option key={size} value={size}>
@@ -452,3 +452,4 @@ const ManagerProductsPage = () => {
 };
 
 export default ManagerProductsPage;
+

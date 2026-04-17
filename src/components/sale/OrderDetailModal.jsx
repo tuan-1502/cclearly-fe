@@ -1,4 +1,4 @@
-import {
+﻿import {
   X,
   Package,
   User,
@@ -22,7 +22,7 @@ const STATUS_MAP = {
   },
   CONFIRMED: {
     label: 'Đã xác nhận',
-    bg: 'bg-blue-50 text-blue-700 border-blue-200',
+    bg: 'bg-blue-50 text-red-700 border-red-200',
     icon: CheckCircle,
   },
   SHIPPED: {
@@ -59,7 +59,7 @@ const TYPE_MAP = {
   },
   prescription: {
     label: 'Có toa',
-    bg: 'bg-blue-50 text-blue-700 border-blue-200',
+    bg: 'bg-blue-50 text-red-700 border-red-200',
   },
 };
 
@@ -101,7 +101,7 @@ const OrderDetailModal = ({ order, onClose, onConfirm, onCancel }) => {
         <div className="p-6 space-y-6">
           {/* Order Info */}
           <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl">
-            <div className="w-12 h-12 bg-[#0f5dd9] rounded-xl flex items-center justify-center">
+            <div className="w-12 h-12 bg-[#d90f0f] rounded-xl flex items-center justify-center">
               <Package className="w-6 h-6 text-white" />
             </div>
             <div>
@@ -227,7 +227,7 @@ const OrderDetailModal = ({ order, onClose, onConfirm, onCancel }) => {
               )}
               <div className="flex justify-between text-sm font-semibold pt-2 border-t">
                 <span>Tổng cộng:</span>
-                <span className="text-[#0f5dd9]">{fmt(order.finalAmount)}</span>
+                <span className="text-[#d90f0f]">{fmt(order.finalAmount)}</span>
               </div>
               {order.shippingFee != null && (
                 <div className="flex justify-between text-sm">
@@ -330,3 +330,4 @@ const OrderDetailModal = ({ order, onClose, onConfirm, onCancel }) => {
 };
 
 export default OrderDetailModal;
+

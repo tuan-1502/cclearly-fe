@@ -1,4 +1,4 @@
-import { Scan, Box, Plus, Search, Filter } from 'lucide-react';
+﻿import { Scan, Box, Plus, Search, Filter } from 'lucide-react';
 
 const LensManagementPage = () => {
   return (
@@ -10,7 +10,7 @@ const LensManagementPage = () => {
             Danh mục tròng kính và cấu hình combo
           </p>
         </div>
-        <button className="bg-[#141f36] text-white px-6 py-3 rounded-full font-bold flex items-center gap-2">
+        <button className="bg-[#361414] text-white px-6 py-3 rounded-full font-bold flex items-center gap-2">
           <Plus className="w-5 h-5" /> Thêm tròng mới
         </button>
       </div>
@@ -21,7 +21,7 @@ const LensManagementPage = () => {
           <input
             type="text"
             placeholder="Tìm kiếm tròng kính..."
-            className="w-full pl-12 pr-5 py-3 bg-[#f9f9f9] border border-[#e0e0e0] rounded-full focus:outline-none focus:border-[#0f5dd9]"
+            className="w-full pl-12 pr-5 py-3 bg-[#f9f9f9] border border-[#e0e0e0] rounded-full focus:outline-none focus:border-[#d90f0f]"
           />
         </div>
         <button className="px-6 py-3 border border-[#e0e0e0] rounded-full font-bold flex items-center gap-2 hover:bg-gray-50 transition">
@@ -77,7 +77,7 @@ const LensManagementPage = () => {
               >
                 <td className="p-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center text-[#0f5dd9]">
+                    <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center text-[#d90f0f]">
                       <Scan className="w-5 h-5" />
                     </div>
                     <span className="font-bold text-[#222] text-sm">
@@ -107,7 +107,7 @@ const LensManagementPage = () => {
                   }).format(lens.price)}
                 </td>
                 <td className="p-4 text-right">
-                  <button className="text-[#0f5dd9] text-xs font-bold hover:underline">
+                  <button className="text-[#d90f0f] text-xs font-bold hover:underline">
                     Sửa
                   </button>
                 </td>
@@ -127,3 +127,4 @@ const LensManagementPage = () => {
 };
 
 export default LensManagementPage;
+

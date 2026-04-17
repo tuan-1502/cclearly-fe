@@ -1,4 +1,4 @@
-// Operations Lens Lab Page - Gia công tròng kính
+﻿// Operations Lens Lab Page - Gia công tròng kính
 import { TestTube, CheckCircle, XCircle, Eye, Truck } from 'lucide-react';
 import { useState, useMemo } from 'react';
 import { toast } from 'react-toastify';
@@ -57,7 +57,7 @@ const OperationsLensLabPage = () => {
   const getStatusBadge = (status) => {
     const s = (status || '').toUpperCase();
     const map = {
-      CONFIRMED: { label: 'Chờ gia công', class: 'bg-blue-100 text-blue-800' },
+      CONFIRMED: { label: 'Chờ gia công', class: 'bg-red-100 text-red-800' },
       PROCESSING: { label: 'Đang gia công', class: 'bg-purple-100 text-purple-800' },
     };
     return map[s] || { label: status, class: 'bg-gray-100 text-gray-800' };
@@ -133,7 +133,7 @@ const OperationsLensLabPage = () => {
       {/* Stats */}
       <div className="grid grid-cols-2 gap-4">
         <div className="bg-white rounded-xl p-4 shadow-sm">
-          <p className="text-2xl font-bold text-blue-600">{confirmedCount}</p>
+          <p className="text-2xl font-bold text-red-600">{confirmedCount}</p>
           <p className="text-sm text-[#4f5562]">Chờ gia công</p>
         </div>
         <div className="bg-white rounded-xl p-4 shadow-sm">
@@ -151,15 +151,15 @@ const OperationsLensLabPage = () => {
             <div key={order.orderId} className="bg-white rounded-xl p-6 shadow-sm">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                    <TestTube className="w-6 h-6 text-blue-600" />
+                  <div className="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
+                    <TestTube className="w-6 h-6 text-red-600" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
                       <span className="font-bold text-[#222]">
                         {order.code || order.orderId}
                       </span>
-                      <span className="px-2 py-0.5 rounded-full text-xs bg-blue-100 text-blue-800">
+                      <span className="px-2 py-0.5 rounded-full text-xs bg-red-100 text-red-800">
                         Có toa kính
                       </span>
                       <span
@@ -411,3 +411,4 @@ const OperationsLensLabPage = () => {
 };
 
 export default OperationsLensLabPage;
+

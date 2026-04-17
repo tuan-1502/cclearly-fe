@@ -9,6 +9,7 @@ import {
   Filter,
   Package,
   X,
+  TrendingUp,
 } from 'lucide-react';
 import { useState } from 'react';
 import ConfirmModal from '@/components/ui/ConfirmModal';
@@ -29,6 +30,7 @@ const PromotionPage = () => {
 
   const [couponSearch, setCouponSearch] = useState('');
   const [couponFilter, setCouponFilter] = useState('all');
+  const [sortOption, setSortOption] = useState('newest');
 
   const [showCouponModal, setShowCouponModal] = useState(false);
   const [editingCoupon, setEditingCoupon] = useState(null);
@@ -132,15 +134,23 @@ const PromotionPage = () => {
 
   // ─── Derived data ────────────────────────────────────────
 
-  const filteredCoupons = coupons.filter((c) => {
-    const matchesSearch = c.code
-      .toLowerCase()
-      .includes(couponSearch.toLowerCase());
+  const filteredCoupons = coupons
+    .filter((c) => {
+      const matchesSearch = c.code
+        .toLowerCase()
+        .includes(couponSearch.toLowerCase());
 
-    if (couponFilter === 'active') return matchesSearch && c.isActive;
-    if (couponFilter === 'disabled') return matchesSearch && !c.isActive;
-    return matchesSearch;
-  });
+      if (couponFilter === 'active') return matchesSearch && c.isActive;
+      if (couponFilter === 'disabled') return matchesSearch && !c.isActive;
+      return matchesSearch;
+    })
+    .sort((a, b) => {
+      if (sortOption === 'name-asc') return (a.code || '').localeCompare(b.code || '');
+      if (sortOption === 'name-desc') return (b.code || '').localeCompare(a.code || '');
+      if (sortOption === 'value-desc') return (b.value || 0) - (a.value || 0);
+      if (sortOption === 'value-asc') return (a.value || 0) - (b.value || 0);
+      return 0;
+    });
 
   const isPercent = (type) => type === 'PERCENT' || type === 'PERCENTAGE';
 
@@ -169,14 +179,14 @@ const PromotionPage = () => {
           <h1 className="text-2xl font-semibold text-gray-800">
             Quản lý Voucher
           </h1>
-          <p className="text-gray-500 text-sm">Tạo và quản lý mã giảm giá</p>
+          <p className="text-gray-500 text-sm">Tạo và quản lý mã giảm giá cho hệ thống</p>
         </div>
 
         <button
           onClick={openAddCoupon}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-900 text-white text-sm hover:bg-gray-800 transition-colors"
+          className="flex items-center gap-2 px-6 py-3 rounded-full bg-[#d90f0f] text-white text-sm font-medium hover:bg-[#b00c0c] transition shadow-lg shadow-red-100"
         >
-          <Plus size={16} />
+          <Plus size={18} />
           Tạo Voucher
         </button>
       </div>
@@ -202,15 +212,15 @@ const PromotionPage = () => {
             label: 'Đã tắt',
             val: disabledVouchers,
             icon: XCircle,
-            color: 'text-red-600',
+            color: 'text-[#d90f0f]',
             bg: 'bg-red-50',
           },
           {
             label: 'Lượt sử dụng',
             val: totalUsage,
             icon: Package,
-            color: 'text-blue-600',
-            bg: 'bg-blue-50',
+            color: 'text-[#d90f0f]',
+            bg: 'bg-red-50',
           },
         ].map((item, idx) => (
           <div
@@ -229,29 +239,41 @@ const PromotionPage = () => {
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-xl p-4 border border-gray-100 flex gap-4 items-center">
-        <div className="flex-1 relative">
-          <Search
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-            size={18}
-          />
+      <div className="bg-white rounded-xl p-4 border border-gray-100 flex flex-wrap gap-4 items-center">
+        <div className="flex-1 relative min-w-[300px]">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
           <input
             type="text"
             placeholder="Tìm theo mã voucher..."
             value={couponSearch}
             onChange={(e) => setCouponSearch(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-200 outline-none"
+            className="w-full pl-9 pr-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-red-200 outline-none"
           />
         </div>
 
+        <div className="flex items-center gap-2 border rounded-lg px-3 py-2 text-sm bg-gray-50/50">
+          <TrendingUp size={16} className="text-gray-400" />
+          <select
+            value={sortOption}
+            onChange={(e) => setSortOption(e.target.value)}
+            className="outline-none bg-transparent font-medium"
+          >
+            <option value="newest">Mới nhất</option>
+            <option value="name-asc">Tên (A-Z)</option>
+            <option value="name-desc">Tên (Z-A)</option>
+            <option value="value-desc">Giảm giá cao nhất</option>
+            <option value="value-asc">Giảm giá thấp nhất</option>
+          </select>
+        </div>
+
         <div className="flex items-center gap-2 border rounded-lg px-3 py-2 text-sm">
-          <Filter size={16} />
+          <Filter size={16} className="text-gray-400" />
           <select
             value={couponFilter}
             onChange={(e) => setCouponFilter(e.target.value)}
             className="outline-none bg-transparent"
           >
-            <option value="all">Tất cả</option>
+            <option value="all">Tất cả trạng thái</option>
             <option value="active">Đang hoạt động</option>
             <option value="disabled">Đã tắt</option>
           </select>
@@ -301,7 +323,7 @@ const PromotionPage = () => {
                     <span
                       className={`px-2 py-1 rounded-full text-xs font-medium ${
                         isPercent(coupon.discountType)
-                          ? 'bg-blue-100 text-blue-700'
+                          ? 'bg-red-100 text-red-700'
                           : 'bg-green-100 text-green-700'
                       }`}
                     >
@@ -309,7 +331,7 @@ const PromotionPage = () => {
                     </span>
                   </td>
 
-                  <td className="px-5 py-3 font-medium text-[#0f5dd9]">
+                  <td className="px-5 py-3 font-medium text-[#d90f0f]">
                     {formatDiscount(coupon)}
                   </td>
 
@@ -356,7 +378,7 @@ const PromotionPage = () => {
                     <div className="flex justify-end gap-1">
                       <button
                         onClick={() => openEditCoupon(coupon)}
-                        className="p-1.5 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors"
+                        className="p-1.5 bg-blue-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors"
                         title="Sửa"
                       >
                         <Edit2 size={15} />
@@ -599,3 +621,4 @@ const PromotionPage = () => {
 };
 
 export default PromotionPage;
+

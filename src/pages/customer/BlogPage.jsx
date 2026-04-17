@@ -1,4 +1,4 @@
-// Blog Page - Góc CClearly
+﻿// Blog Page - Góc CClearly
 import { Calendar, User, ArrowRight, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -47,7 +47,7 @@ const BlogPage = () => {
       {/* Header */}
       <section className="py-20 border-b border-[#efefef]">
         <div className="max-w-[1180px] mx-auto px-4 text-center">
-          <h2 className="text-xs font-bold text-[#0f5dd9] uppercase tracking-widest mb-4">
+          <h2 className="text-xs font-bold text-[#d90f0f] uppercase tracking-widest mb-4">
             Journal & Stories
           </h2>
           <h1 className="text-5xl md:text-7xl font-bold text-[#222] mb-8 uppercase tracking-tight">
@@ -76,7 +76,7 @@ const BlogPage = () => {
             {/* Content */}
             <div>
               <div className="flex items-center gap-4 mb-4">
-                <span className="px-3 py-1 bg-[#0f5dd9] text-white text-xs font-bold uppercase rounded-full">
+                <span className="px-3 py-1 bg-[#d90f0f] text-white text-xs font-bold uppercase rounded-full">
                   {featuredPost.category}
                 </span>
                 <span className="flex items-center gap-1 text-[#666] text-sm">
@@ -95,7 +95,7 @@ const BlogPage = () => {
                 </span>
                 <Link
                   to="/blog/1"
-                  className="flex items-center gap-2 text-[#0f5dd9] font-bold hover:underline"
+                  className="flex items-center gap-2 text-[#d90f0f] font-bold hover:underline"
                 >
                   Đọc tiếp <ArrowRight className="w-4 h-4" />
                 </Link>
@@ -114,7 +114,7 @@ const BlogPage = () => {
             </h2>
             <Link
               to="/blog"
-              className="flex items-center gap-2 text-[#0f5dd9] font-medium hover:underline"
+              className="flex items-center gap-2 text-[#d90f0f] font-medium hover:underline"
             >
               Xem tất cả <ArrowRight className="w-4 h-4" />
             </Link>
@@ -151,7 +151,7 @@ const BlogPage = () => {
                   </p>
                   <Link
                     to={`/blog/${post.id}`}
-                    className="flex items-center gap-2 text-[#0f5dd9] font-medium group-hover:underline"
+                    className="flex items-center gap-2 text-[#d90f0f] font-medium group-hover:underline"
                   >
                     Đọc tiếp <ArrowRight className="w-4 h-4" />
                   </Link>
@@ -163,7 +163,7 @@ const BlogPage = () => {
       </section>
 
       {/* Newsletter */}
-      <section className="py-20 bg-[#0f5dd9] text-white">
+      <section className="py-20 bg-[#d90f0f] text-white">
         <div className="max-w-[1180px] mx-auto px-4 text-center">
           <Sparkles className="w-12 h-12 mx-auto mb-6" />
           <h2 className="text-3xl font-bold mb-4">
@@ -193,3 +193,4 @@ const BlogPage = () => {
 };
 
 export default BlogPage;
+

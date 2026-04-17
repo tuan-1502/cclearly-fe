@@ -1,4 +1,4 @@
-// Wishlist Page
+﻿// Wishlist Page
 import { Lock, Heart, Glasses, Scan } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -28,7 +28,7 @@ const WishlistPage = () => {
           </p>
           <button
             onClick={() => navigate('/login', { state: { from: location.pathname } })}
-            className="bg-[#141f36] text-white px-10 py-4 rounded-full font-medium hover:bg-[#0d1322]"
+            className="bg-[#361414] text-white px-10 py-4 rounded-full font-medium hover:bg-[#0d1322]"
           >
             Đăng nhập
           </button>
@@ -72,13 +72,13 @@ const WishlistPage = () => {
                   )}
                 </div>
                 <div className="p-5">
-                  <span className="text-xs text-[#0f5dd9] bg-[#ececec] px-3 py-1 rounded-full">
+                  <span className="text-xs text-[#d90f0f] bg-[#ececec] px-3 py-1 rounded-full">
                     {product?.type === 'frame' ? 'Gọng kính' : 'Tròng kính'}
                   </span>
                   <h3 className="font-semibold text-[#222] mt-2">
                     {product?.name}
                   </h3>
-                  <p className="text-[#0f5dd9] font-bold mt-1">
+                  <p className="text-[#d90f0f] font-bold mt-1">
                     {new Intl.NumberFormat('vi-VN', {
                       style: 'currency',
                       currency: 'VND',
@@ -95,3 +95,4 @@ const WishlistPage = () => {
 };
 
 export default WishlistPage;
+

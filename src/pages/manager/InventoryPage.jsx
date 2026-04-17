@@ -1,4 +1,4 @@
-// Manager Inventory Page - Quản lý kho chi tiết theo biến thể
+﻿// Manager Inventory Page - Quản lý kho chi tiết theo biến thể
 import {
   Search,
   Package,
@@ -133,7 +133,7 @@ const ManagerInventoryPage = () => {
         </div>
         <button
           onClick={() => setShowImportModal(true)}
-          className="flex items-center gap-2 px-5 py-2.5 bg-[#0f5dd9] text-white rounded-xl font-medium hover:bg-[#0b4fc0]"
+          className="flex items-center gap-2 px-5 py-2.5 bg-[#d90f0f] text-white rounded-xl font-medium hover:bg-[#b00c0c]"
         >
           <Upload size={18} />
           Nhập kho
@@ -145,7 +145,7 @@ const ManagerInventoryPage = () => {
         <div className="bg-white rounded-xl p-5 shadow-sm">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center">
-              <Package className="w-6 h-6 text-[#0f5dd9]" />
+              <Package className="w-6 h-6 text-[#d90f0f]" />
             </div>
             <div>
               <p className="text-2xl font-bold text-[#222]">
@@ -204,7 +204,7 @@ const ManagerInventoryPage = () => {
                   setSearchTerm(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="w-full pl-12 pr-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0f5dd9]"
+                className="w-full pl-12 pr-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d90f0f]"
               />
             </div>
             <select
@@ -213,7 +213,7 @@ const ManagerInventoryPage = () => {
                 setStockFilter(e.target.value);
                 setCurrentPage(1);
               }}
-              className="px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0f5dd9]"
+              className="px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d90f0f]"
             >
               <option value="all">Tất cả tồn kho</option>
               <option value="available">Còn hàng</option>
@@ -229,7 +229,7 @@ const ManagerInventoryPage = () => {
                 setTypeFilter('all');
                 setCurrentPage(1);
               }}
-              className={`px-3 py-1.5 text-sm rounded-md transition-all ${typeFilter === 'all' ? 'bg-white shadow text-[#0f5dd9] font-medium' : 'text-gray-500 hover:text-gray-700'}`}
+              className={`px-3 py-1.5 text-sm rounded-md transition-all ${typeFilter === 'all' ? 'bg-white shadow text-[#d90f0f] font-medium' : 'text-gray-500 hover:text-gray-700'}`}
             >
               Tất cả
             </button>
@@ -238,7 +238,7 @@ const ManagerInventoryPage = () => {
                 setTypeFilter('frame');
                 setCurrentPage(1);
               }}
-              className={`px-3 py-1.5 text-sm rounded-md transition-all ${typeFilter === 'frame' ? 'bg-white shadow text-[#0f5dd9] font-medium' : 'text-gray-500 hover:text-gray-700'}`}
+              className={`px-3 py-1.5 text-sm rounded-md transition-all ${typeFilter === 'frame' ? 'bg-white shadow text-[#d90f0f] font-medium' : 'text-gray-500 hover:text-gray-700'}`}
             >
               Gọng kính
             </button>
@@ -247,7 +247,7 @@ const ManagerInventoryPage = () => {
                 setTypeFilter('lens');
                 setCurrentPage(1);
               }}
-              className={`px-3 py-1.5 text-sm rounded-md transition-all ${typeFilter === 'lens' ? 'bg-white shadow text-[#0f5dd9] font-medium' : 'text-gray-500 hover:text-gray-700'}`}
+              className={`px-3 py-1.5 text-sm rounded-md transition-all ${typeFilter === 'lens' ? 'bg-white shadow text-[#d90f0f] font-medium' : 'text-gray-500 hover:text-gray-700'}`}
             >
               Tròng kính
             </button>
@@ -256,7 +256,7 @@ const ManagerInventoryPage = () => {
                 setTypeFilter('accessory');
                 setCurrentPage(1);
               }}
-              className={`px-3 py-1.5 text-sm rounded-md transition-all ${typeFilter === 'accessory' ? 'bg-white shadow text-[#0f5dd9] font-medium' : 'text-gray-500 hover:text-gray-700'}`}
+              className={`px-3 py-1.5 text-sm rounded-md transition-all ${typeFilter === 'accessory' ? 'bg-white shadow text-[#d90f0f] font-medium' : 'text-gray-500 hover:text-gray-700'}`}
             >
               Phụ kiện
             </button>
@@ -390,7 +390,7 @@ const ManagerInventoryPage = () => {
                             {ws.locationCode || '-'}
                           </td>
                           <td className="px-4 py-3">
-                            <span className="px-2 py-1 bg-blue-100 text-blue-600 text-xs rounded-full">
+                            <span className="px-2 py-1 bg-red-100 text-red-600 text-xs rounded-full">
                               Kho
                             </span>
                           </td>
@@ -445,7 +445,7 @@ const ManagerInventoryPage = () => {
                 setPageSize(Number(e.target.value));
                 setCurrentPage(1);
               }}
-              className="px-3 py-1.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#0f5dd9]"
+              className="px-3 py-1.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#d90f0f]"
             >
               {PAGE_SIZES.map((size) => (
                 <option key={size} value={size}>
@@ -493,7 +493,7 @@ const ManagerInventoryPage = () => {
                       variantId: e.target.value,
                     })
                   }
-                  className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0f5dd9]"
+                  className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d90f0f]"
                 >
                   <option value="">Chọn biến thể</option>
                   {inventoryItems.map((item) => (
@@ -519,7 +519,7 @@ const ManagerInventoryPage = () => {
                           warehouseId: e.target.value,
                         })
                       }
-                      className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0f5dd9]"
+                      className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d90f0f]"
                     >
                       <option value="">Chọn kho</option>
                       {selectedItem.warehouseStocks.map((ws) => (
@@ -542,7 +542,7 @@ const ManagerInventoryPage = () => {
                   onChange={(e) =>
                     setImportForm({ ...importForm, quantity: e.target.value })
                   }
-                  className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0f5dd9]"
+                  className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d90f0f]"
                   placeholder="Nhập số lượng"
                 />
               </div>
@@ -557,7 +557,7 @@ const ManagerInventoryPage = () => {
                     setImportForm({ ...importForm, reason: e.target.value })
                   }
                   rows={3}
-                  className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0f5dd9]"
+                  className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d90f0f]"
                   placeholder="Nhập lý do nhập kho..."
                 />
               </div>
@@ -571,7 +571,7 @@ const ManagerInventoryPage = () => {
               </button>
               <button
                 onClick={handleImport}
-                className="flex-1 px-5 py-2.5 bg-[#0f5dd9] text-white rounded-xl hover:bg-[#0b4fc0] font-medium"
+                className="flex-1 px-5 py-2.5 bg-[#d90f0f] text-white rounded-xl hover:bg-[#b00c0c] font-medium"
               >
                 Nhập kho
               </button>
@@ -584,3 +584,4 @@ const ManagerInventoryPage = () => {
 };
 
 export default ManagerInventoryPage;
+

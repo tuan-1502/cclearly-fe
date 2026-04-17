@@ -1,4 +1,4 @@
-import { Eye, EyeOff } from 'lucide-react';
+﻿import { Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useRegister } from '@/hooks/useAuth';
@@ -99,7 +99,7 @@ const RegisterPage = () => {
             value={formData.name}
             onChange={handleChange}
             required
-            className="w-full px-5 py-3.5 border border-[#e0e0e0] rounded-xl focus:outline-none focus:border-[#0f5dd9] focus:ring-2 focus:ring-[#0f5dd9]/10 bg-white"
+            className="w-full px-5 py-3.5 border border-[#e0e0e0] rounded-xl focus:outline-none focus:border-[#d90f0f] focus:ring-2 focus:ring-[#d90f0f]/10 bg-white"
             placeholder="Nguyễn Văn A"
           />
         </div>
@@ -114,7 +114,7 @@ const RegisterPage = () => {
             value={formData.email}
             onChange={handleChange}
             required
-            className="w-full px-5 py-3.5 border border-[#e0e0e0] rounded-xl focus:outline-none focus:border-[#0f5dd9] focus:ring-2 focus:ring-[#0f5dd9]/10 bg-white"
+            className="w-full px-5 py-3.5 border border-[#e0e0e0] rounded-xl focus:outline-none focus:border-[#d90f0f] focus:ring-2 focus:ring-[#d90f0f]/10 bg-white"
             placeholder="email@cuaban.com"
           />
         </div>
@@ -128,7 +128,7 @@ const RegisterPage = () => {
             name="phone"
             value={formData.phone}
             onChange={handleChange}
-            className="w-full px-5 py-3.5 border border-[#e0e0e0] rounded-xl focus:outline-none focus:border-[#0f5dd9] focus:ring-2 focus:ring-[#0f5dd9]/10 bg-white"
+            className="w-full px-5 py-3.5 border border-[#e0e0e0] rounded-xl focus:outline-none focus:border-[#d90f0f] focus:ring-2 focus:ring-[#d90f0f]/10 bg-white"
             placeholder="0912 345 678"
           />
         </div>
@@ -145,7 +145,7 @@ const RegisterPage = () => {
               onChange={handleChange}
               required
               minLength={6}
-              className="w-full px-5 py-3.5 pr-12 border border-[#e0e0e0] rounded-xl focus:outline-none focus:border-[#0f5dd9] focus:ring-2 focus:ring-[#0f5dd9]/10 bg-white"
+              className="w-full px-5 py-3.5 pr-12 border border-[#e0e0e0] rounded-xl focus:outline-none focus:border-[#d90f0f] focus:ring-2 focus:ring-[#d90f0f]/10 bg-white"
               placeholder="Nhập mật khẩu"
             />
             <button
@@ -173,7 +173,7 @@ const RegisterPage = () => {
               value={formData.confirmPassword}
               onChange={handleChange}
               required
-              className="w-full px-5 py-3.5 pr-12 border border-[#e0e0e0] rounded-xl focus:outline-none focus:border-[#0f5dd9] focus:ring-2 focus:ring-[#0f5dd9]/10 bg-white"
+              className="w-full px-5 py-3.5 pr-12 border border-[#e0e0e0] rounded-xl focus:outline-none focus:border-[#d90f0f] focus:ring-2 focus:ring-[#d90f0f]/10 bg-white"
               placeholder="Nhập lại mật khẩu"
             />
             <button
@@ -193,7 +193,7 @@ const RegisterPage = () => {
         <button
           type="submit"
           disabled={register.isPending}
-          className="w-full bg-[#141f36] text-white py-4 rounded-xl font-medium hover:bg-[#0d1322] disabled:bg-gray-300 transition mt-2"
+          className="w-full bg-[#361414] text-white py-4 rounded-xl font-medium hover:bg-[#0d1322] disabled:bg-gray-300 transition mt-2"
         >
           {register.isPending ? 'Đang đăng ký...' : 'Tạo tài khoản'}
         </button>
@@ -204,7 +204,7 @@ const RegisterPage = () => {
         <Link
           to="/login"
           state={{ from }}
-          className="text-[#0f5dd9] hover:underline font-medium"
+          className="text-[#d90f0f] hover:underline font-medium"
         >
           Đăng nhập ngay
         </Link>
@@ -214,3 +214,4 @@ const RegisterPage = () => {
 };
 
 export default RegisterPage;
+
