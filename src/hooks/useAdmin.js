@@ -9,7 +9,8 @@ export const useAdminDashboard = () => {
   return useQuery({
     queryKey: QUERY_KEYS.ADMIN_DASHBOARD,
     queryFn: () => adminRequest.getDashboard(),
-    staleTime: 2 * 60 * 1000,
+    staleTime: 5000,
+    refetchInterval: 10000, // Refetch every 10 seconds for real-time updates
   });
 };
 

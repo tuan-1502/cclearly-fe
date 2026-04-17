@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 
 const banners = [
@@ -127,3 +127,4 @@ export const AuthLayout = () => {
     </div>
   );
 };
+

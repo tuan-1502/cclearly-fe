@@ -1,4 +1,4 @@
-import {
+﻿import {
   Search,
   ShoppingBag,
   User,
@@ -181,7 +181,7 @@ const MainLayout = () => {
               onMouseEnter={() => setIsProductsOpen(true)}
               onMouseLeave={() => setIsProductsOpen(false)}
             >
-              <button className="flex items-center gap-1 px-2 py-2 text-[13px] font-semibold text-[#666] hover:text-[#0f5dd9]">
+              <button className="flex items-center gap-1 px-2 py-2 text-[13px] font-semibold text-[#666] hover:text-[#d90f0f]">
                 Sản phẩm
                 <ChevronDown
                   className={`h-4 w-4 transition ${isProductsOpen ? 'rotate-180' : ''}`}
@@ -195,7 +195,7 @@ const MainLayout = () => {
                     key={link.to}
                     to={link.to}
                     className={({ isActive }) =>
-                      `block rounded-xl px-3 py-2 text-sm font-medium transition ${isActive ? 'bg-[#0f5dd9]/10 text-[#0f5dd9]' : 'text-[#666] hover:bg-[#f3f3f3] hover:text-[#0f5dd9]'}`
+                      `block rounded-xl px-3 py-2 text-sm font-medium transition ${isActive ? 'bg-[#d90f0f]/10 text-[#d90f0f]' : 'text-[#666] hover:bg-[#f3f3f3] hover:text-[#d90f0f]'}`
                     }
                   >
                     {link.label}
@@ -229,7 +229,7 @@ const MainLayout = () => {
               >
                 <ShoppingBag className="h-5 w-5" />
                 {cartItemCount > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-[#0f5dd9] px-1 text-[10px] font-bold text-white">
+                  <span className="absolute -top-0.5 -right-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-[#d90f0f] px-1 text-[10px] font-bold text-white">
                     {cartItemCount}
                   </span>
                 )}
@@ -259,7 +259,7 @@ const MainLayout = () => {
                       <div className="px-4 py-3 border-b border-[#efefef]">
                         <p className="font-medium text-[#222]">{user?.name}</p>
                         <p className="text-sm text-[#666]">{user?.email}</p>
-                        <span className="inline-block mt-1 px-2 py-0.5 bg-[#0f5dd9]/10 text-[#0f5dd9] text-xs rounded-full capitalize">
+                        <span className="inline-block mt-1 px-2 py-0.5 bg-[#d90f0f]/10 text-[#d90f0f] text-xs rounded-full capitalize">
                           {user?.role === 'CUSTOMER'
                             ? 'Khách hàng'
                             : user?.role}
@@ -271,14 +271,14 @@ const MainLayout = () => {
                         <Link
                           to="/cart"
                           onClick={() => setIsProfileDropdownOpen(false)}
-                          className="flex items-center justify-between px-4 py-2.5 text-[#666] hover:bg-[#f3f3f3] hover:text-[#0f5dd9]"
+                          className="flex items-center justify-between px-4 py-2.5 text-[#666] hover:bg-[#f3f3f3] hover:text-[#d90f0f]"
                         >
                           <div className="flex items-center gap-3">
                             <ShoppingBag className="h-4 w-4" />
                             <span className="text-sm">Giỏ hàng</span>
                           </div>
                           {cartItemCount > 0 && (
-                            <span className="bg-[#0f5dd9] text-white text-xs px-1.5 py-0.5 rounded-full">
+                            <span className="bg-[#d90f0f] text-white text-xs px-1.5 py-0.5 rounded-full">
                               {cartItemCount}
                             </span>
                           )}
@@ -289,7 +289,7 @@ const MainLayout = () => {
                         <Link
                           to={dashboardLink}
                           onClick={() => setIsProfileDropdownOpen(false)}
-                          className="flex items-center gap-3 px-4 py-2.5 text-[#666] hover:bg-[#f3f3f3] hover:text-[#0f5dd9]"
+                          className="flex items-center gap-3 px-4 py-2.5 text-[#666] hover:bg-[#f3f3f3] hover:text-[#d90f0f]"
                         >
                           <LayoutDashboard className="h-4 w-4" />
                           <span className="text-sm">{dashboardLabel}</span>
@@ -304,7 +304,7 @@ const MainLayout = () => {
                                 : '/manager/settings'
                             }
                             onClick={() => setIsProfileDropdownOpen(false)}
-                            className="flex items-center gap-3 px-4 py-2.5 text-[#666] hover:bg-[#f3f3f3] hover:text-[#0f5dd9]"
+                            className="flex items-center gap-3 px-4 py-2.5 text-[#666] hover:bg-[#f3f3f3] hover:text-[#d90f0f]"
                           >
                             <Settings className="h-4 w-4" />
                             <span className="text-sm">Cài đặt</span>
@@ -330,7 +330,7 @@ const MainLayout = () => {
                   <Link
                     to="/login"
                     state={{ from: location.pathname }}
-                    className="flex items-center gap-2 px-5 py-2 bg-[#0f5dd9] text-white rounded-full text-sm font-medium hover:bg-[#0b4fc0] transition"
+                    className="flex items-center gap-2 px-5 py-2 bg-[#d90f0f] text-white rounded-full text-sm font-medium hover:bg-[#b00c0c] transition"
                   >
                     <User className="h-4 w-4" />
                     Đăng nhập
@@ -364,7 +364,7 @@ const MainLayout = () => {
                     to={link.to}
                     onClick={() => setIsMobileMenuOpen(false)}
                     className={({ isActive }) =>
-                      `block rounded-xl px-4 py-2 text-sm ${isActive ? 'bg-[#0f5dd9]/10 text-[#0f5dd9]' : 'text-[#666]'}`
+                      `block rounded-xl px-4 py-2 text-sm ${isActive ? 'bg-[#d90f0f]/10 text-[#d90f0f]' : 'text-[#666]'}`
                     }
                   >
                     {link.label}
@@ -379,7 +379,7 @@ const MainLayout = () => {
                 to={item.to}
                 onClick={() => setIsMobileMenuOpen(false)}
                 className={({ isActive }) =>
-                  `block rounded-xl px-4 py-3 text-sm font-semibold ${isActive ? 'bg-[#0f5dd9]/10 text-[#0f5dd9]' : 'text-[#666]'}`
+                  `block rounded-xl px-4 py-3 text-sm font-semibold ${isActive ? 'bg-[#d90f0f]/10 text-[#d90f0f]' : 'text-[#666]'}`
                 }
               >
                 {item.label}
@@ -391,7 +391,7 @@ const MainLayout = () => {
                 <Link
                   to={dashboardLink}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold text-[#0f5dd9]"
+                  className="flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold text-[#d90f0f]"
                 >
                   <LayoutDashboard className="h-4 w-4" />
                   {dashboardLabel}
@@ -418,7 +418,7 @@ const MainLayout = () => {
                   to="/login"
                   state={{ from: location.pathname }}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center justify-center rounded-xl px-4 py-3 text-sm font-semibold bg-[#0f5dd9] text-white"
+                  className="flex items-center justify-center rounded-xl px-4 py-3 text-sm font-semibold bg-[#d90f0f] text-white"
                 >
                   Đăng nhập
                 </Link>
@@ -488,3 +488,4 @@ const MainLayout = () => {
 };
 
 export { MainLayout };
+

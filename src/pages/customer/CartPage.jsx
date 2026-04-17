@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+﻿import { useQuery } from '@tanstack/react-query';
 import {
   ShoppingCart,
   Glasses,
@@ -196,7 +196,7 @@ const CartPage = () => {
           <p className="text-[#4f5562] mb-8">Hãy thêm sản phẩm vào giỏ hàng</p>
           <Link
             to="/products"
-            className="inline-block bg-[#0f5dd9] text-white px-10 py-4 rounded-full font-medium hover:bg-[#0b4fc0] transition"
+            className="inline-block bg-[#d90f0f] text-white px-10 py-4 rounded-full font-medium hover:bg-[#b00c0c] transition"
           >
             Tiếp tục mua sắm
           </Link>
@@ -263,7 +263,7 @@ const CartPage = () => {
                       SKU: {item.variantSku}
                     </p>
                   )}
-                  <p className="text-[#0f5dd9] font-bold mt-1">
+                  <p className="text-[#d90f0f] font-bold mt-1">
                     {formatCurrency(item.price)}
                   </p>
                   <div className="flex flex-wrap items-center gap-2 mt-1">
@@ -337,18 +337,18 @@ const CartPage = () => {
                           [rxKey]: !prev[rxKey],
                         }))
                       }
-                      className="w-full flex items-center justify-between px-5 py-2.5 bg-blue-50 hover:bg-blue-100 transition border-t border-blue-100"
+                      className="w-full flex items-center justify-between px-5 py-2.5 bg-blue-50 hover:bg-red-100 transition border-t border-red-100"
                     >
-                      <div className="flex items-center gap-2 text-sm text-blue-700 font-medium">
+                      <div className="flex items-center gap-2 text-sm text-red-700 font-medium">
                         <Eye className="w-4 h-4" />
                         Xem đơn kính
                       </div>
                       <ChevronDown
-                        className={`w-4 h-4 text-blue-500 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+                        className={`w-4 h-4 text-red-500 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
                       />
                     </button>
                     {isExpanded && (
-                      <div className="px-5 py-4 bg-blue-50/50 border-t border-blue-100">
+                      <div className="px-5 py-4 bg-blue-50/50 border-t border-red-100">
                         <div className="grid grid-cols-5 gap-2 text-center text-xs font-bold text-gray-400 mb-2">
                           <div></div>
                           <div>SPH</div>
@@ -492,12 +492,12 @@ const CartPage = () => {
                           e.key === 'Enter' &&
                           (e.preventDefault(), handleApplyVoucher())
                         }
-                        className="flex-1 bg-[#f9f9f9] border border-[#e0e0e0] rounded-full px-4 py-2 text-sm focus:outline-none focus:border-[#0f5dd9]"
+                        className="flex-1 bg-[#f9f9f9] border border-[#e0e0e0] rounded-full px-4 py-2 text-sm focus:outline-none focus:border-[#d90f0f]"
                       />
                       <button
                         onClick={handleApplyVoucher}
                         disabled={voucherLoading}
-                        className="bg-[#141f36] text-white px-5 py-2 rounded-full text-sm font-bold hover:bg-[#0d1322] transition disabled:opacity-50 flex items-center gap-2"
+                        className="bg-[#361414] text-white px-5 py-2 rounded-full text-sm font-bold hover:bg-[#0d1322] transition disabled:opacity-50 flex items-center gap-2"
                       >
                         {voucherLoading ? (
                           <>
@@ -526,7 +526,7 @@ const CartPage = () => {
                 )}
                 <div className="border-t pt-4 flex justify-between font-bold text-xl">
                   <span className="text-[#222]">Tổng cộng:</span>
-                  <span className="text-[#0f5dd9]">
+                  <span className="text-[#d90f0f]">
                     {formatCurrency(totalAmount)}
                   </span>
                 </div>
@@ -534,7 +534,7 @@ const CartPage = () => {
 
               <button
                 onClick={() => navigate('/checkout')}
-                className="w-full bg-[#141f36] text-white py-4 rounded-full font-medium hover:bg-[#0d1322] transition"
+                className="w-full bg-[#361414] text-white py-4 rounded-full font-medium hover:bg-[#0d1322] transition"
               >
                 Tiến hành thanh toán
               </button>
@@ -547,3 +547,4 @@ const CartPage = () => {
 };
 
 export default CartPage;
+

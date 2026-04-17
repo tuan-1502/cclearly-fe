@@ -1,4 +1,4 @@
-import {
+﻿import {
   Users,
   DollarSign,
   Package,
@@ -51,7 +51,7 @@ const STATUS_LABEL = {
 
 const STATUS_COLOR = {
   PENDING: 'bg-yellow-100 text-yellow-800',
-  CONFIRMED: 'bg-blue-100 text-blue-800',
+  CONFIRMED: 'bg-red-100 text-red-800',
   PROCESSING: 'bg-purple-100 text-purple-800',
   SHIPPED: 'bg-orange-100 text-orange-800',
   DELIVERED: 'bg-green-100 text-green-800',
@@ -61,7 +61,7 @@ const STATUS_COLOR = {
 };
 
 const PIE_COLORS = [
-  '#0f5dd9',
+  '#d90f0f',
   '#22c55e',
   '#f59e0b',
   '#8b5cf6',
@@ -118,7 +118,7 @@ const ManagerDashboardPage = () => {
   if (loadingStats) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+        <Loader2 className="w-8 h-8 animate-spin text-red-600" />
       </div>
     );
   }
@@ -142,7 +142,7 @@ const ManagerDashboardPage = () => {
           value={formatCurrency(Number(stats?.totalRevenue ?? 0))}
         />
         <StatCard
-          icon={<ShoppingCart className="text-blue-600" />}
+          icon={<ShoppingCart className="text-red-600" />}
           bgColor="bg-blue-50"
           title="Tổng đơn hàng"
           value={stats?.totalOrders ?? 0}
@@ -171,7 +171,7 @@ const ManagerDashboardPage = () => {
             </h3>
             <Link
               to="/manager/reports"
-              className="text-[#0f5dd9] text-sm flex items-center gap-1 hover:underline"
+              className="text-[#d90f0f] text-sm flex items-center gap-1 hover:underline"
             >
               Xem chi tiết <ChevronRight size={14} />
             </Link>
@@ -190,7 +190,7 @@ const ManagerDashboardPage = () => {
                 tickFormatter={(v) => `${(v / 1000000).toFixed(0)}M`}
               />
               <Tooltip formatter={(v) => [formatCurrency(v), 'Doanh thu']} />
-              <Bar dataKey="revenue" fill="#0f5dd9" radius={[6, 6, 0, 0]} />
+              <Bar dataKey="revenue" fill="#d90f0f" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -232,7 +232,7 @@ const ManagerDashboardPage = () => {
             <h3 className="text-lg font-bold text-[#222]">Đơn hàng gần đây</h3>
             <Link
               to="/manager/orders"
-              className="text-[#0f5dd9] text-sm flex items-center gap-1 hover:underline"
+              className="text-[#d90f0f] text-sm flex items-center gap-1 hover:underline"
             >
               Xem tất cả <ChevronRight size={14} />
             </Link>
@@ -293,7 +293,7 @@ const ManagerDashboardPage = () => {
             <h3 className="text-lg font-bold text-[#222]">Sản phẩm bán chạy</h3>
             <Link
               to="/manager/products"
-              className="text-[#0f5dd9] text-sm flex items-center gap-1 hover:underline"
+              className="text-[#d90f0f] text-sm flex items-center gap-1 hover:underline"
             >
               Xem tất cả <ChevronRight size={14} />
             </Link>
@@ -305,21 +305,21 @@ const ManagerDashboardPage = () => {
                   key={i}
                   className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl"
                 >
-                  <div className="w-8 h-8 bg-[#0f5dd9] text-white rounded-lg text-sm font-bold flex items-center justify-center">
+                  <div className="w-8 h-8 bg-[#d90f0f] text-white rounded-lg text-sm font-bold flex items-center justify-center">
                     {i + 1}
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-medium text-[#222] truncate">{p.name}</p>
                     <div className="w-full bg-gray-200 h-1.5 rounded-full mt-1">
                       <div
-                        className="h-full bg-[#0f5dd9] rounded-full"
+                        className="h-full bg-[#d90f0f] rounded-full"
                         style={{
                           width: `${stats.topProducts[0]?.sold ? (p.sold / stats.topProducts[0].sold) * 100 : 0}%`,
                         }}
                       />
                     </div>
                   </div>
-                  <span className="text-[#0f5dd9] font-bold text-sm whitespace-nowrap">
+                  <span className="text-[#d90f0f] font-bold text-sm whitespace-nowrap">
                     {p.sold} đã bán
                   </span>
                 </div>
@@ -341,7 +341,7 @@ const ManagerDashboardPage = () => {
             </h3>
             <Link
               to="/manager/staff"
-              className="text-[#0f5dd9] text-sm flex items-center gap-1 hover:underline"
+              className="text-[#d90f0f] text-sm flex items-center gap-1 hover:underline"
             >
               Quản lý <ChevronRight size={14} />
             </Link>
@@ -353,7 +353,7 @@ const ManagerDashboardPage = () => {
                   key={member.userId || member.id}
                   className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl"
                 >
-                  <div className="w-9 h-9 bg-[#0f5dd9] text-white rounded-full flex items-center justify-center text-sm font-bold">
+                  <div className="w-9 h-9 bg-[#d90f0f] text-white rounded-full flex items-center justify-center text-sm font-bold">
                     {(member.fullName || member.name || '?').charAt(0)}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -385,7 +385,7 @@ const ManagerDashboardPage = () => {
             </h3>
             <Link
               to="/manager/promotions"
-              className="text-[#0f5dd9] text-sm flex items-center gap-1 hover:underline"
+              className="text-[#d90f0f] text-sm flex items-center gap-1 hover:underline"
             >
               Quản lý <ChevronRight size={14} />
             </Link>
@@ -408,7 +408,7 @@ const ManagerDashboardPage = () => {
                       {coupon.description || 'Mã giảm giá'}
                     </p>
                   </div>
-                  <span className="text-[#0f5dd9] font-bold text-sm whitespace-nowrap">
+                  <span className="text-[#d90f0f] font-bold text-sm whitespace-nowrap">
                     {coupon.discountType === 'PERCENT' ||
                     coupon.discountType === 'PERCENTAGE'
                       ? `${coupon.value}%`
@@ -433,7 +433,7 @@ const ManagerDashboardPage = () => {
             </h3>
             <Link
               to="/manager/inventory"
-              className="text-[#0f5dd9] text-sm flex items-center gap-1 hover:underline"
+              className="text-[#d90f0f] text-sm flex items-center gap-1 hover:underline"
             >
               Kho hàng <ChevronRight size={14} />
             </Link>
@@ -487,3 +487,4 @@ function StatCard({ icon, bgColor, title, value }) {
     </div>
   );
 }
+

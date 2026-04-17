@@ -1,4 +1,4 @@
-// Sales Dashboard Page
+﻿// Sales Dashboard Page
 import {
   Clock,
   CheckCircle,
@@ -28,9 +28,9 @@ const STATUS_MAP = {
   },
   CONFIRMED: {
     label: 'Đã xác nhận',
-    bg: 'bg-blue-50 text-blue-700 border-blue-200',
+    bg: 'bg-blue-50 text-red-700 border-red-200',
     icon: CheckCircle,
-    color: 'text-blue-600',
+    color: 'text-red-600',
   },
   SHIPPED: {
     label: 'Đang giao hàng',
@@ -130,7 +130,7 @@ const SalesDashboardPage = () => {
         </div>
         <button
           onClick={() => navigate('/sales/orders')}
-          className="px-4 py-2 bg-[#0f5dd9] text-white rounded-xl text-sm font-medium hover:bg-[#0b4fc0] transition"
+          className="px-4 py-2 bg-[#d90f0f] text-white rounded-xl text-sm font-medium hover:bg-[#b00c0c] transition"
         >
           Quản lý đơn hàng
         </button>
@@ -155,7 +155,7 @@ const SalesDashboardPage = () => {
         <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center">
-              <ShoppingBag className="w-6 h-6 text-blue-600" />
+              <ShoppingBag className="w-6 h-6 text-red-600" />
             </div>
             <div>
               <p className="text-2xl font-bold text-[#222]">
@@ -205,7 +205,7 @@ const SalesDashboardPage = () => {
               placeholder="Tìm kiếm: mã đơn, tên người nhận, email..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0f5dd9]/20"
+              className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d90f0f]/20"
             />
           </div>
           <select
@@ -232,7 +232,7 @@ const SalesDashboardPage = () => {
           </h3>
           <button
             onClick={() => navigate('/sales/orders')}
-            className="text-sm text-[#0f5dd9] hover:underline font-medium"
+            className="text-sm text-[#d90f0f] hover:underline font-medium"
           >
             Xem tất cả →
           </button>
@@ -292,7 +292,7 @@ const SalesDashboardPage = () => {
                       </p>
                       <div className="mt-1">{getStatusBadge(order.status)}</div>
                     </div>
-                    <Eye className="w-5 h-5 text-gray-300 group-hover:text-[#0f5dd9] transition shrink-0" />
+                    <Eye className="w-5 h-5 text-gray-300 group-hover:text-[#d90f0f] transition shrink-0" />
                   </div>
                 </div>
               );
@@ -306,7 +306,7 @@ const SalesDashboardPage = () => {
             {filteredOrders.length > 20 && (
               <button
                 onClick={() => navigate('/sales/orders')}
-                className="w-full py-3 text-center text-sm text-[#0f5dd9] font-medium hover:bg-blue-50 rounded-xl transition"
+                className="w-full py-3 text-center text-sm text-[#d90f0f] font-medium hover:bg-blue-50 rounded-xl transition"
               >
                 Xem thêm {filteredOrders.length - 20} đơn hàng →
               </button>
@@ -327,3 +327,4 @@ const SalesDashboardPage = () => {
 };
 
 export default SalesDashboardPage;
+

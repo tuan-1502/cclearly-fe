@@ -1,4 +1,4 @@
-const Table = ({ children, className = '' }) => {
+﻿const Table = ({ children, className = '' }) => {
   return (
     <div className={`overflow-x-auto ${className}`}>
       <table className="w-full">{children}</table>
@@ -39,3 +39,4 @@ Table.Head = TableHead;
 Table.Cell = TableCell;
 
 export default Table;
+

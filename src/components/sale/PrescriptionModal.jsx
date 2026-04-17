@@ -1,4 +1,4 @@
-import { X, Upload } from 'lucide-react';
+﻿import { X, Upload } from 'lucide-react';
 
 const PrescriptionModal = ({
   isOpen,
@@ -232,7 +232,7 @@ const PrescriptionModal = ({
           </button>
           <button
             onClick={onSave}
-            className="flex-1 px-5 py-3 bg-[#0f5dd9] text-white rounded-xl hover:bg-[#0b4fc0] font-medium"
+            className="flex-1 px-5 py-3 bg-[#d90f0f] text-white rounded-xl hover:bg-[#b00c0c] font-medium"
           >
             Lưu thay đổi
           </button>
@@ -243,3 +243,4 @@ const PrescriptionModal = ({
 };
 
 export default PrescriptionModal;
+

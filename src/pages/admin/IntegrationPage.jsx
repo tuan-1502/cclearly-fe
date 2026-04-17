@@ -1,4 +1,4 @@
-import {
+﻿import {
   CreditCard,
   Truck,
   MessageSquare,
@@ -64,7 +64,7 @@ const IntegrationPage = () => {
       title: 'API & Webhooks',
       services: ['Cấu hình hệ thống API'],
       status: 'active',
-      color: 'bg-blue-50 text-blue-600',
+      color: 'bg-blue-50 text-red-600',
     },
   ];
 
@@ -166,7 +166,7 @@ const IntegrationPage = () => {
                   onChange={(e) =>
                     setPayOSConfig({ ...payOSConfig, clientId: e.target.value })
                   }
-                  className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0f5dd9]"
+                  className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d90f0f]"
                 />
               </div>
 
@@ -180,7 +180,7 @@ const IntegrationPage = () => {
                   onChange={(e) =>
                     setPayOSConfig({ ...payOSConfig, apiKey: e.target.value })
                   }
-                  className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0f5dd9]"
+                  className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d90f0f]"
                   placeholder="Nhập API Key"
                 />
               </div>
@@ -198,7 +198,7 @@ const IntegrationPage = () => {
                       checksumKey: e.target.value,
                     })
                   }
-                  className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0f5dd9]"
+                  className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d90f0f]"
                   placeholder="Nhập Checksum Key"
                 />
               </div>
@@ -215,7 +215,7 @@ const IntegrationPage = () => {
                       environment: e.target.value,
                     })
                   }
-                  className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0f5dd9]"
+                  className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d90f0f]"
                 >
                   <option value="sandbox">Sandbox (Thử nghiệm)</option>
                   <option value="production">Production (Thực tế)</option>
@@ -235,7 +235,7 @@ const IntegrationPage = () => {
                       webhookUrl: e.target.value,
                     })
                   }
-                  className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0f5dd9]"
+                  className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d90f0f]"
                   placeholder="https://your-domain.com/api/webhook"
                 />
                 <p className="text-xs text-gray-500 mt-1">
@@ -252,7 +252,7 @@ const IntegrationPage = () => {
               </button>
               <button
                 onClick={handleSavePayOS}
-                className="flex-1 px-5 py-2.5 bg-[#0f5dd9] text-white rounded-xl hover:bg-[#0b4fc0] font-medium flex items-center justify-center gap-2"
+                className="flex-1 px-5 py-2.5 bg-[#d90f0f] text-white rounded-xl hover:bg-[#b00c0c] font-medium flex items-center justify-center gap-2"
               >
                 <Save size={18} />
                 Lưu
@@ -266,3 +266,4 @@ const IntegrationPage = () => {
 };
 
 export default IntegrationPage;
+

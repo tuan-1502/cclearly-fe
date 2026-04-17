@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useForgotPassword } from '@/hooks/useAuth';
 
@@ -51,7 +51,7 @@ const ForgotPasswordPage = () => {
         </p>
         <Link
           to="/login"
-          className="text-[#0f5dd9] hover:underline font-medium"
+          className="text-[#d90f0f] hover:underline font-medium"
         >
           Quay lại đăng nhập
         </Link>
@@ -95,7 +95,7 @@ const ForgotPasswordPage = () => {
             value={formData.email}
             onChange={handleChange}
             required
-            className="w-full px-5 py-3 border border-[#e0e0e0] rounded-full focus:outline-none focus:border-[#0f5dd9] bg-[#f9f9f9]"
+            className="w-full px-5 py-3 border border-[#e0e0e0] rounded-full focus:outline-none focus:border-[#d90f0f] bg-[#f9f9f9]"
             placeholder="email@example.com"
           />
         </div>
@@ -103,7 +103,7 @@ const ForgotPasswordPage = () => {
         <button
           type="submit"
           disabled={forgotPassword.isPending}
-          className="w-full bg-[#141f36] text-white py-4 rounded-full font-medium hover:bg-[#0d1322] disabled:bg-gray-300 transition"
+          className="w-full bg-[#361414] text-white py-4 rounded-full font-medium hover:bg-[#0d1322] disabled:bg-gray-300 transition"
         >
           {forgotPassword.isPending ? 'Đang gửi...' : 'Gửi link khôi phục'}
         </button>
@@ -113,7 +113,7 @@ const ForgotPasswordPage = () => {
         Nhớ mật khẩu rồi?{' '}
         <Link
           to="/login"
-          className="text-[#0f5dd9] hover:underline font-medium"
+          className="text-[#d90f0f] hover:underline font-medium"
         >
           Đăng nhập ngay
         </Link>
@@ -123,3 +123,4 @@ const ForgotPasswordPage = () => {
 };
 
 export default ForgotPasswordPage;
+

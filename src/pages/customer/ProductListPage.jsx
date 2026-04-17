@@ -1,4 +1,4 @@
-import {
+﻿import {
   Glasses,
   Scan,
   Search,
@@ -49,9 +49,9 @@ const CheckItem = ({ label, checked, onChange, count }) => (
       type="checkbox"
       checked={checked}
       onChange={onChange}
-      className="h-3.5 w-3.5 rounded border-gray-300 text-[#0f5dd9] focus:ring-[#0f5dd9]/30"
+      className="h-3.5 w-3.5 rounded border-gray-300 text-[#d90f0f] focus:ring-[#d90f0f]/30"
     />
-    <span className="flex-1 text-[#4f5562] group-hover:text-[#0f5dd9] transition-colors text-[13px]">
+    <span className="flex-1 text-[#4f5562] group-hover:text-[#d90f0f] transition-colors text-[13px]">
       {label}
     </span>
     {count !== undefined && (
@@ -101,7 +101,7 @@ const PriceRangeSlider = ({ min, max, value, onChange }) => {
       </div>
       <div className="relative h-1.5 rounded-full bg-gray-200">
         <div
-          className="absolute h-full rounded-full bg-[#0f5dd9]"
+          className="absolute h-full rounded-full bg-[#d90f0f]"
           style={{
             left: `${pct(local[0])}%`,
             width: `${pct(local[1]) - pct(local[0])}%`,
@@ -119,7 +119,7 @@ const PriceRangeSlider = ({ min, max, value, onChange }) => {
           }}
           onMouseUp={() => commitChange(local)}
           onTouchEnd={() => commitChange(local)}
-          className="pointer-events-none absolute inset-0 h-full w-full appearance-none bg-transparent [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#0f5dd9] [&::-webkit-slider-thumb]:shadow [&::-webkit-slider-thumb]:cursor-pointer"
+          className="pointer-events-none absolute inset-0 h-full w-full appearance-none bg-transparent [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#d90f0f] [&::-webkit-slider-thumb]:shadow [&::-webkit-slider-thumb]:cursor-pointer"
         />
         <input
           type="range"
@@ -133,7 +133,7 @@ const PriceRangeSlider = ({ min, max, value, onChange }) => {
           }}
           onMouseUp={() => commitChange(local)}
           onTouchEnd={() => commitChange(local)}
-          className="pointer-events-none absolute inset-0 h-full w-full appearance-none bg-transparent [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#0f5dd9] [&::-webkit-slider-thumb]:shadow [&::-webkit-slider-thumb]:cursor-pointer"
+          className="pointer-events-none absolute inset-0 h-full w-full appearance-none bg-transparent [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#d90f0f] [&::-webkit-slider-thumb]:shadow [&::-webkit-slider-thumb]:cursor-pointer"
         />
       </div>
     </div>
@@ -362,7 +362,7 @@ const ProductListPage = ({ type }) => {
         <h3 className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#1d2433]">
           <SlidersHorizontal className="h-4 w-4" /> Bộ lọc
           {activeFilterCount > 0 && (
-            <span className="ml-1 rounded-full bg-[#0f5dd9] px-1.5 py-0.5 text-[10px] text-white">
+            <span className="ml-1 rounded-full bg-[#d90f0f] px-1.5 py-0.5 text-[10px] text-white">
               {activeFilterCount}
             </span>
           )}
@@ -570,7 +570,7 @@ const ProductListPage = ({ type }) => {
       <section className="border-b border-[#dbe4f4] bg-white">
         <div className="mx-auto max-w-7xl px-4 py-8">
           <div className="flex items-center gap-2 text-sm text-[#606b7f]">
-            <Link to="/" className="hover:text-[#0f5dd9]">
+            <Link to="/" className="hover:text-[#d90f0f]">
               Trang chủ
             </Link>
             <span>/</span>
@@ -595,7 +595,7 @@ const ProductListPage = ({ type }) => {
               placeholder="Tìm kiếm sản phẩm..."
               value={search}
               onChange={handleSearch}
-              className="w-full rounded-2xl border border-[#d8e2f2] bg-[#f8fbff] py-2.5 pl-12 pr-4 text-sm text-[#1f2937] outline-none transition focus:border-[#0f5dd9] focus:ring-2 focus:ring-[#0f5dd9]/20"
+              className="w-full rounded-2xl border border-[#d8e2f2] bg-[#f8fbff] py-2.5 pl-12 pr-4 text-sm text-[#1f2937] outline-none transition focus:border-[#d90f0f] focus:ring-2 focus:ring-[#d90f0f]/20"
             />
           </div>
 
@@ -608,13 +608,13 @@ const ProductListPage = ({ type }) => {
               <SlidersHorizontal className="h-4 w-4" />
               Lọc
               {activeFilterCount > 0 && (
-                <span className="rounded-full bg-[#0f5dd9] px-1.5 py-0.5 text-[10px] text-white">
+                <span className="rounded-full bg-[#d90f0f] px-1.5 py-0.5 text-[10px] text-white">
                   {activeFilterCount}
                 </span>
               )}
             </button>
             <div className="hidden items-center gap-3 sm:flex ml-auto">
-              <p className="rounded-xl bg-[#eff4ff] px-3 py-2 text-xs font-semibold uppercase tracking-[0.12em] text-[#0f5dd9]">
+              <p className="rounded-xl bg-[#eff4ff] px-3 py-2 text-xs font-semibold uppercase tracking-[0.12em] text-[#d90f0f]">
                 {shownFrom}–{shownTo} / {filteredProducts.length} sản phẩm
               </p>
               <div className="flex items-center gap-1.5">
@@ -627,7 +627,7 @@ const ProductListPage = ({ type }) => {
                     setPageSize(Number(e.target.value));
                     setPage(1);
                   }}
-                  className="rounded-lg border border-[#d8e2f2] bg-white px-2.5 py-1.5 text-xs font-medium text-[#1d2433] outline-none cursor-pointer hover:border-[#0f5dd9] focus:border-[#0f5dd9] focus:ring-2 focus:ring-[#0f5dd9]/20 transition"
+                  className="rounded-lg border border-[#d8e2f2] bg-white px-2.5 py-1.5 text-xs font-medium text-[#1d2433] outline-none cursor-pointer hover:border-[#d90f0f] focus:border-[#d90f0f] focus:ring-2 focus:ring-[#d90f0f]/20 transition"
                 >
                   {PAGE_SIZE_OPTIONS.map((s) => (
                     <option key={s} value={s}>
@@ -665,7 +665,7 @@ const ProductListPage = ({ type }) => {
         <section className="flex-1 min-w-0">
           {isLoading ? (
             <div className="flex justify-center py-20">
-              <Loader2 className="h-8 w-8 animate-spin text-[#0f5dd9]" />
+              <Loader2 className="h-8 w-8 animate-spin text-[#d90f0f]" />
             </div>
           ) : paginatedProducts.length === 0 ? (
             <div className="rounded-2xl border border-dashed border-[#cad7ed] bg-white px-6 py-20 text-center">
@@ -677,7 +677,7 @@ const ProductListPage = ({ type }) => {
               </p>
               <button
                 onClick={clearAllFilters}
-                className="mt-6 rounded-full bg-[#0f5dd9] px-6 py-2 text-xs font-bold uppercase tracking-[0.14em] text-white transition hover:bg-[#0b4caf]"
+                className="mt-6 rounded-full bg-[#d90f0f] px-6 py-2 text-xs font-bold uppercase tracking-[0.14em] text-white transition hover:bg-[#0b4caf]"
               >
                 Xóa bộ lọc
               </button>
@@ -726,7 +726,7 @@ const ProductListPage = ({ type }) => {
                           />
                         ) : (
                           <div className="flex h-full items-center justify-center">
-                            <IconComponent className="h-20 w-20 text-[#c5cdd8] transition-transform duration-300 group-hover:scale-110 group-hover:text-[#0f5dd9]" />
+                            <IconComponent className="h-20 w-20 text-[#c5cdd8] transition-transform duration-300 group-hover:scale-110 group-hover:text-[#d90f0f]" />
                           </div>
                         )}
 
@@ -751,7 +751,7 @@ const ProductListPage = ({ type }) => {
 
                       <div className="space-y-2 p-4">
                         <div className="flex flex-wrap gap-1">
-                          <span className="inline-block rounded bg-[#eff4ff] px-2 py-0.5 text-[10px] font-semibold tracking-wider text-[#0f5dd9]">
+                          <span className="inline-block rounded bg-[#eff4ff] px-2 py-0.5 text-[10px] font-semibold tracking-wider text-[#d90f0f]">
                             {product.subCategory || getTypeLabel(product.type)}
                           </span>
                           {isPreorder && (
@@ -775,7 +775,7 @@ const ProductListPage = ({ type }) => {
                               </span>
                             </>
                           ) : (
-                            <span className="text-base font-black text-[#0f5dd9]">
+                            <span className="text-base font-black text-[#d90f0f]">
                               {currencyFormatter.format(product.basePrice)}
                             </span>
                           )}
@@ -828,3 +828,4 @@ const ProductListPage = ({ type }) => {
 };
 
 export default ProductListPage;
+

@@ -1,4 +1,3 @@
-// Staff Management Page
 import {
   Plus,
   X,
@@ -8,6 +7,8 @@ import {
   Edit2,
   Lock,
   Unlock,
+  TrendingUp,
+  Filter,
 } from 'lucide-react';
 import { useState } from 'react';
 import ConfirmModal from '@/components/ui/ConfirmModal';
@@ -29,7 +30,7 @@ const ROLE_LABEL = {
 
 const ROLE_COLOR = {
   ADMIN: 'bg-red-100 text-red-700',
-  MANAGER: 'bg-blue-100 text-blue-700',
+  MANAGER: 'bg-red-100 text-red-700',
   SALES_STAFF: 'bg-emerald-100 text-emerald-700',
   OPERATION_STAFF: 'bg-purple-100 text-purple-700',
 };
@@ -44,6 +45,8 @@ const emptyForm = {
 
 const StaffPage = () => {
   const [search, setSearch] = useState('');
+  const [roleFilter, setRoleFilter] = useState('all');
+  const [sortOption, setSortOption] = useState('newest');
   const [showModal, setShowModal] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
   const [formData, setFormData] = useState(emptyForm);
@@ -63,13 +66,20 @@ const StaffPage = () => {
       return role !== 'CUSTOMER';
     })
     .filter((u) => {
-      if (!search) return true;
       const q = search.toLowerCase();
-      return (
+      const matchesSearch = !search || 
         u.fullName?.toLowerCase().includes(q) ||
         u.email?.toLowerCase().includes(q) ||
-        u.phoneNumber?.includes(q)
-      );
+        u.phoneNumber?.includes(q);
+
+      const matchesRole = roleFilter === 'all' || u.role === roleFilter;
+      
+      return matchesSearch && matchesRole;
+    })
+    .sort((a, b) => {
+      if (sortOption === 'name-asc') return (a.fullName || '').localeCompare(b.fullName || '', 'vi');
+      if (sortOption === 'name-desc') return (b.fullName || '').localeCompare(a.fullName || '', 'vi');
+      return 0; // Default logic
     });
 
   // ── Open modal ──
@@ -141,27 +151,55 @@ const StaffPage = () => {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold text-[#222]">Quản lý nhân sự</h1>
-          <p className="text-[#4f5562]">Quản lý tài khoản nhân viên</p>
+          <p className="text-[#4f5562]">Quản lý danh sách nhân viên trong hệ thống</p>
         </div>
         <button
           onClick={handleOpenCreate}
-          className="bg-[#141f36] text-white px-5 py-2.5 rounded-full font-medium hover:bg-black transition flex items-center gap-2"
+          className="bg-[#d90f0f] text-white px-6 py-3 rounded-full font-medium hover:bg-[#b00c0c] transition flex items-center gap-2 shadow-lg shadow-red-100"
         >
-          <Plus className="w-4 h-4" /> Thêm nhân viên
+          <Plus className="w-5 h-5" /> Thêm nhân viên
         </button>
       </div>
 
-      {/* Search */}
-      <div className="bg-white rounded-2xl shadow-[0_10px_30px_rgba(13,22,39,0.06)] p-5">
-        <div className="relative max-w-md">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+      {/* Filters */}
+      <div className="bg-white rounded-xl p-4 border border-gray-100 flex flex-wrap gap-4 items-center">
+        <div className="flex-1 relative min-w-[300px]">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
           <input
             type="text"
             placeholder="Tìm theo tên, email, SĐT..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-12 pr-5 py-2.5 border border-gray-200 rounded-full focus:outline-none focus:border-[#0f5dd9] bg-[#f9f9f9]"
+            className="w-full pl-9 pr-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-red-200 outline-none transition"
           />
+        </div>
+
+        <div className="flex items-center gap-2 border rounded-lg px-3 py-2 text-sm bg-gray-50/50">
+          <TrendingUp size={16} className="text-gray-400" />
+          <select
+            value={sortOption}
+            onChange={(e) => setSortOption(e.target.value)}
+            className="outline-none bg-transparent font-medium"
+          >
+            <option value="newest">Mới nhất</option>
+            <option value="name-asc">Tên (A-Z)</option>
+            <option value="name-desc">Tên (Z-A)</option>
+          </select>
+        </div>
+
+        <div className="flex items-center gap-2 border rounded-lg px-3 py-2 text-sm">
+          <Filter size={16} className="text-gray-400" />
+          <select
+            value={roleFilter}
+            onChange={(e) => setRoleFilter(e.target.value)}
+            className="outline-none bg-transparent"
+          >
+            <option value="all">Tất cả vai trò</option>
+            <option value="ADMIN">Admin</option>
+            <option value="MANAGER">Quản lý</option>
+            <option value="SALES_STAFF">Bán hàng</option>
+            <option value="OPERATION_STAFF">Vận hành</option>
+          </select>
         </div>
       </div>
 
@@ -204,7 +242,7 @@ const StaffPage = () => {
                 <tr key={user.userId} className="hover:bg-gray-50 transition">
                   <td className="px-6 py-3">
                     <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 bg-[#141f36] rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0">
+                      <div className="w-9 h-9 bg-[#361414] rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0">
                         {user.fullName?.charAt(0)?.toUpperCase() || '?'}
                       </div>
                       <span className="font-semibold text-[#222] text-sm">
@@ -240,7 +278,7 @@ const StaffPage = () => {
                     <div className="flex justify-end gap-1.5">
                       <button
                         onClick={() => handleOpenEdit(user)}
-                        className="p-2 text-gray-400 hover:text-[#0f5dd9] hover:bg-blue-50 rounded-lg transition"
+                        className="p-2 text-gray-400 hover:text-[#d90f0f] hover:bg-blue-50 rounded-lg transition"
                         title="Chỉnh sửa"
                       >
                         <Edit2 className="w-4 h-4" />
@@ -303,7 +341,7 @@ const StaffPage = () => {
                   onChange={(e) =>
                     setFormData({ ...formData, fullName: e.target.value })
                   }
-                  className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500/20 outline-none"
+                  className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-red-500/20 outline-none"
                   placeholder="Nguyễn Văn A"
                 />
               </div>
@@ -320,7 +358,7 @@ const StaffPage = () => {
                   onChange={(e) =>
                     setFormData({ ...formData, email: e.target.value })
                   }
-                  className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500/20 outline-none disabled:bg-gray-100 disabled:text-gray-500"
+                  className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-red-500/20 outline-none disabled:bg-gray-100 disabled:text-gray-500"
                   placeholder="email@cclearly.vn"
                 />
               </div>
@@ -336,7 +374,7 @@ const StaffPage = () => {
                     onChange={(e) =>
                       setFormData({ ...formData, phoneNumber: e.target.value })
                     }
-                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500/20 outline-none"
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-red-500/20 outline-none"
                     placeholder="0912 xxx xxx"
                   />
                 </div>
@@ -372,7 +410,7 @@ const StaffPage = () => {
                     onChange={(e) =>
                       setFormData({ ...formData, password: e.target.value })
                     }
-                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500/20 outline-none"
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-red-500/20 outline-none"
                     placeholder="Tối thiểu 6 ký tự"
                   />
                 </div>
@@ -389,7 +427,7 @@ const StaffPage = () => {
                 <button
                   type="submit"
                   disabled={isPending}
-                  className="px-8 py-2 bg-[#141f36] text-white rounded-lg hover:bg-[#0d1322] disabled:bg-gray-400 transition font-bold text-sm flex items-center gap-2 shadow-lg"
+                  className="px-8 py-2 bg-[#361414] text-white rounded-lg hover:bg-[#0d1322] disabled:bg-gray-400 transition font-bold text-sm flex items-center gap-2 shadow-lg"
                 >
                   {isPending ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
@@ -429,3 +467,4 @@ const StaffPage = () => {
 };
 
 export default StaffPage;
+

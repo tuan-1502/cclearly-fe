@@ -37,6 +37,7 @@ const AdminOrdersPage = () => {
   const [statusFilter, setStatusFilter] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [sortOption, setSortOption] = useState('date-desc');
 
   const { data: ordersData } = useAdminOrders({
     status: statusFilter !== 'all' ? statusFilter : undefined,
@@ -85,18 +86,40 @@ const AdminOrdersPage = () => {
 
   /* ---------- Derived data ---------- */
 
-  const filteredOrders = orders.filter((order) => {
-    const orderId = order.code || order.orderId || order.id || '';
-    const customerName =
-      order.recipientName || order.shippingAddress?.name || '';
-    const customerPhone =
-      order.shippingPhone || order.shippingAddress?.phone || '';
-    return (
-      orderId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      customerPhone.includes(searchTerm)
-    );
-  });
+  const filteredOrders = orders
+    .filter((order) => {
+      const orderId = order.code || order.orderId || order.id || '';
+      const customerName =
+        order.recipientName || order.shippingAddress?.name || '';
+      const customerPhone =
+        order.shippingPhone || order.shippingAddress?.phone || '';
+      return (
+        orderId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        customerPhone.includes(searchTerm)
+      );
+    })
+    .sort((a, b) => {
+      if (sortOption === 'name-asc') {
+        return (a.recipientName || '').localeCompare(
+          b.recipientName || '',
+          'vi'
+        );
+      }
+      if (sortOption === 'name-desc') {
+        return (b.recipientName || '').localeCompare(
+          a.recipientName || '',
+          'vi'
+        );
+      }
+      if (sortOption === 'date-asc') {
+        return new Date(a.createdAt || 0) - new Date(b.createdAt || 0);
+      }
+      if (sortOption === 'date-desc') {
+        return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
+      }
+      return 0;
+    });
 
   const paginatedOrders = filteredOrders;
 
@@ -110,7 +133,7 @@ const AdminOrdersPage = () => {
 
   const STATUS_MAP = {
     PENDING: { label: 'Chờ xác nhận', css: 'bg-yellow-100 text-yellow-700' },
-    CONFIRMED: { label: 'Đã xác nhận', css: 'bg-blue-100 text-blue-700' },
+    CONFIRMED: { label: 'Đã xác nhận', css: 'bg-red-100 text-red-700' },
     PROCESSING: { label: 'Đang xử lý', css: 'bg-purple-100 text-purple-700' },
     SHIPPED: { label: 'Đang giao hàng', css: 'bg-orange-100 text-orange-700' },
     DELIVERED: { label: 'Đã giao', css: 'bg-green-100 text-green-700' },
@@ -124,7 +147,7 @@ const AdminOrdersPage = () => {
 
   const TYPE_MAP = {
     standard: { label: 'Thường', css: 'bg-green-100 text-green-700' },
-    prescription: { label: 'Có toa', css: 'bg-blue-100 text-blue-700' },
+    prescription: { label: 'Có toa', css: 'bg-red-100 text-red-700' },
   };
 
   const getStatusBadge = (status) =>
@@ -267,7 +290,7 @@ const AdminOrdersPage = () => {
             label: 'Đã xác nhận',
             val: orders.filter((o) => o.status === 'CONFIRMED').length,
             icon: CheckCircle,
-            color: 'text-blue-600',
+            color: 'text-red-600',
             bg: 'bg-blue-50',
           },
           {
@@ -322,12 +345,26 @@ const AdminOrdersPage = () => {
               setSearchTerm(e.target.value);
               setCurrentPage(1);
             }}
-            className="w-full pl-9 pr-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-200 outline-none"
+            className="w-full pl-9 pr-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-red-200 outline-none"
           />
         </div>
 
+        <div className="flex items-center gap-2 border rounded-lg px-3 py-2 text-sm bg-gray-50/50">
+          <TrendingUp size={16} className="text-gray-400" />
+          <select
+            value={sortOption}
+            onChange={(e) => setSortOption(e.target.value)}
+            className="outline-none bg-transparent font-medium"
+          >
+            <option value="date-desc">Mới nhất</option>
+            <option value="date-asc">Cũ nhất</option>
+            <option value="name-asc">Tên (A-Z)</option>
+            <option value="name-desc">Tên (Z-A)</option>
+          </select>
+        </div>
+
         <div className="flex items-center gap-2 border rounded-lg px-3 py-2 text-sm">
-          <Filter size={16} />
+          <Filter size={16} className="text-gray-400" />
           <select
             value={statusFilter}
             onChange={(e) => {
@@ -336,7 +373,7 @@ const AdminOrdersPage = () => {
             }}
             className="outline-none bg-transparent"
           >
-            <option value="all">Tất cả</option>
+            <option value="all">Tất cả trạng thái</option>
             <option value="PENDING">Chờ xác nhận</option>
             <option value="CONFIRMED">Đã xác nhận</option>
             <option value="PROCESSING">Đang xử lý</option>
@@ -380,7 +417,7 @@ const AdminOrdersPage = () => {
                   className="hover:bg-gray-50 cursor-pointer"
                   onClick={() => setSelectedOrder(order)}
                 >
-                  <td className="px-5 py-3 text-[#0f5dd9] font-medium">
+                  <td className="px-5 py-3 text-[#d90f0f] font-medium">
                     #{order.code || order.orderId || order.id}
                   </td>
 
@@ -427,7 +464,7 @@ const AdminOrdersPage = () => {
                       {/* View detail */}
                       <button
                         onClick={() => setSelectedOrder(order)}
-                        className="p-1.5 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors"
+                        className="p-1.5 bg-blue-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors"
                         title="Xem chi tiết"
                       >
                         <Eye size={15} />
@@ -468,7 +505,7 @@ const AdminOrdersPage = () => {
                       {s === 'PROCESSING' && (
                         <button
                           onClick={() => handleShip(order)}
-                          className="px-2 py-1.5 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors text-xs font-medium flex items-center gap-1"
+                          className="px-2 py-1.5 bg-blue-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors text-xs font-medium flex items-center gap-1"
                           title="Giao hàng"
                         >
                           <Truck size={13} /> Giao hàng
@@ -624,7 +661,7 @@ const AdminOrdersPage = () => {
                     carrier: '',
                   });
                 }}
-                className="flex-1 bg-blue-600 text-white py-2 rounded"
+                className="flex-1 bg-red-600 text-white py-2 rounded"
               >
                 Xác nhận
               </button>
@@ -697,3 +734,4 @@ const AdminOrdersPage = () => {
 };
 
 export default AdminOrdersPage;
+

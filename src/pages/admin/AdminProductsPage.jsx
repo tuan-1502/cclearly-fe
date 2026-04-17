@@ -1,4 +1,4 @@
-import { Glasses, Scan, Plus, Search, Edit2, Trash2 } from 'lucide-react';
+import { Glasses, Scan, Plus, Search, Edit2, Trash2, TrendingUp, Filter } from 'lucide-react';
 import { useState } from 'react';
 import ProductModal from '@/components/admin/product/ProductModal';
 import ConfirmModal from '@/components/ui/ConfirmModal';
@@ -21,6 +21,7 @@ const AdminProductsPage = () => {
     search: '',
   });
 
+  const [sortOption, setSortOption] = useState('newest');
   const [showModal, setShowModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [confirmModal, setConfirmModal] = useState({
@@ -212,7 +213,17 @@ const AdminProductsPage = () => {
     setVariants(variants.filter((_, i) => i !== index));
   };
 
-  const products = data?.content || [];
+  // Sorting logic (local sorting since API might not support all these)
+  const products = (data?.content || []).sort((a, b) => {
+    if (sortOption === 'name-asc') return (a.name || '').localeCompare(b.name || '', 'vi');
+    if (sortOption === 'name-desc') return (b.name || '').localeCompare(a.name || '', 'vi');
+    if (sortOption === 'price-asc') return (a.basePrice || 0) - (b.basePrice || 0);
+    if (sortOption === 'price-desc') return (b.basePrice || 0) - (a.basePrice || 0);
+    if (sortOption === 'newest') return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
+    if (sortOption === 'oldest') return new Date(a.createdAt || 0) - new Date(b.createdAt || 0);
+    return 0;
+  });
+
   const totalPages = data?.totalPages || 1;
 
   return (
@@ -221,11 +232,11 @@ const AdminProductsPage = () => {
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-3xl font-bold text-[#222]">Quản lý sản phẩm</h1>
-          <p className="text-[#4f5562] mt-1">Quản lý danh mục sản phẩm</p>
+          <p className="text-[#4f5562] mt-1">Quản lý danh mục sản phẩm của hệ thống</p>
         </div>
         <button
           onClick={() => handleOpenModal()}
-          className="px-6 py-3 bg-[#141f36] text-white rounded-full font-medium hover:bg-[#0d1322] transition flex items-center gap-2"
+          className="px-6 py-3 bg-[#d90f0f] text-white rounded-full font-medium hover:bg-[#b00c0c] transition flex items-center gap-2 shadow-lg shadow-red-100"
         >
           <Plus className="w-5 h-5" />
           Thêm sản phẩm
@@ -233,26 +244,40 @@ const AdminProductsPage = () => {
       </div>
 
       {/* Filters UI */}
-      <div className="bg-white rounded-2xl shadow-[0_10px_30px_rgba(13,22,39,0.06)] p-5 mb-6">
-        <div className="flex flex-wrap gap-4">
-          <div className="relative flex-1 min-w-[250px]">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Tìm kiếm sản phẩm..."
-              value={filters.search}
-              onChange={(e) =>
-                setFilters({ ...filters, search: e.target.value, page: 1 })
-              }
-              className="w-full pl-12 pr-5 py-3 border border-[#e0e0e0] rounded-full focus:outline-none focus:border-[#0f5dd9] bg-[#f9f9f9]"
-            />
-          </div>
+      <div className="bg-white rounded-xl p-4 border border-gray-100 flex flex-wrap gap-4 items-center mb-6">
+        <div className="flex-1 relative min-w-[300px]">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+          <input
+            type="text"
+            placeholder="Tìm kiếm theo tên, mã SKU..."
+            value={filters.search}
+            onChange={(e) => setFilters({ ...filters, search: e.target.value, page: 1 })}
+            className="w-full pl-9 pr-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-red-200 outline-none transition"
+          />
+        </div>
+
+        <div className="flex items-center gap-2 border rounded-lg px-3 py-2 text-sm bg-gray-50/50">
+          <TrendingUp size={16} className="text-gray-400" />
+          <select
+            value={sortOption}
+            onChange={(e) => setSortOption(e.target.value)}
+            className="outline-none bg-transparent font-medium"
+          >
+            <option value="newest">Mới nhất</option>
+            <option value="oldest">Cũ nhất</option>
+            <option value="name-asc">Tên (A-Z)</option>
+            <option value="name-desc">Tên (Z-A)</option>
+            <option value="price-asc">Giá tăng dần</option>
+            <option value="price-desc">Giá giảm dần</option>
+          </select>
+        </div>
+
+        <div className="flex items-center gap-2 border rounded-lg px-3 py-2 text-sm">
+          <Filter size={16} className="text-gray-400" />
           <select
             value={filters.type}
-            onChange={(e) =>
-              setFilters({ ...filters, type: e.target.value, page: 1 })
-            }
-            className="px-5 py-3 border border-[#e0e0e0] rounded-full focus:outline-none focus:border-[#0f5dd9] bg-white min-w-[180px]"
+            onChange={(e) => setFilters({ ...filters, type: e.target.value, page: 1 })}
+            className="outline-none bg-transparent"
           >
             <option value="">Tất cả loại</option>
             <option value="frame">Gọng kính</option>
@@ -322,14 +347,14 @@ const AdminProductsPage = () => {
                             )}
                           </div>
                           <div className="min-w-0">
-                            <p className="text-sm font-semibold text-[#222] truncate group-hover:text-[#0f5dd9] transition-colors">
+                            <p className="text-sm font-semibold text-[#222] truncate group-hover:text-[#d90f0f] transition-colors">
                               {product.name}
                             </p>
                             <p className="text-[10px] text-gray-400 font-medium uppercase tracking-tighter">
                               {product.sku}
                             </p>
                             {product.variants?.length > 0 && (
-                              <p className="text-[10px] text-blue-500">
+                              <p className="text-[10px] text-red-500">
                                 {product.variants.length} biến thể
                               </p>
                             )}
@@ -370,7 +395,7 @@ const AdminProductsPage = () => {
                         <div className="flex justify-end gap-1.5">
                           <button
                             onClick={() => handleOpenModal(product)}
-                            className="p-2 text-gray-400 hover:text-[#0f5dd9] hover:bg-blue-50 rounded-lg transition"
+                            className="p-2 text-gray-400 hover:text-[#d90f0f] hover:bg-blue-50 rounded-lg transition"
                           >
                             <Edit2 className="w-4 h-4" />
                           </button>
@@ -404,7 +429,7 @@ const AdminProductsPage = () => {
                       page: 1,
                     })
                   }
-                  className="px-3 py-1.5 border border-[#e0e0e0] rounded-lg text-sm focus:outline-none focus:border-[#0f5dd9] bg-white cursor-pointer"
+                  className="px-3 py-1.5 border border-[#e0e0e0] rounded-lg text-sm focus:outline-none focus:border-[#d90f0f] bg-white cursor-pointer"
                 >
                   {PAGE_SIZES.map((size) => (
                     <option key={size} value={size}>
@@ -454,3 +479,4 @@ const AdminProductsPage = () => {
 };
 
 export default AdminProductsPage;
+

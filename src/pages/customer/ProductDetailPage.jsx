@@ -1,4 +1,4 @@
-import {
+﻿import {
   Glasses,
   Scan,
   Minus,
@@ -193,7 +193,7 @@ const ProductDetailPage = () => {
                     onClick={() => setMainImage(img)}
                     className={`w-20 h-20 rounded-xl overflow-hidden border-2 flex-shrink-0 ${
                       (mainImage || displayImages[0]) === img
-                        ? 'border-blue-500'
+                        ? 'border-red-500'
                         : 'border-transparent'
                     }`}
                   >
@@ -212,7 +212,7 @@ const ProductDetailPage = () => {
           <div>
             {/* BADGES */}
             <div className="flex gap-2 mb-4">
-              <span className="text-xs bg-blue-50 text-blue-600 px-3 py-1 rounded-full">
+              <span className="text-xs bg-blue-50 text-red-600 px-3 py-1 rounded-full">
                 {TYPE_LABELS[product.type] || product.type}
               </span>
 
@@ -236,7 +236,7 @@ const ProductDetailPage = () => {
 
             {/* PRICE */}
             <div className="mb-6 flex items-center gap-4">
-              <span className="text-3xl font-bold text-[#0f5dd9]">
+              <span className="text-3xl font-bold text-[#d90f0f]">
                 {new Intl.NumberFormat('vi-VN', {
                   style: 'currency',
                   currency: 'VND',
@@ -303,7 +303,7 @@ const ProductDetailPage = () => {
                           }}
                           className={`px-4 py-2 rounded-full text-sm font-medium border-2 transition ${
                             isSelected
-                              ? 'border-blue-600 bg-blue-50 text-blue-700'
+                              ? 'border-red-600 bg-blue-50 text-red-700'
                               : 'border-gray-200 bg-white text-gray-700 hover:border-gray-400'
                           }`}
                         >
@@ -373,7 +373,7 @@ const ProductDetailPage = () => {
                     `/prescription-form?productId=${product.id}&variantId=${selectedVariant?.variantId}&quantity=${quantity}`
                   )
                 }
-                className="w-full bg-blue-600 text-white py-4 rounded-full font-semibold hover:bg-blue-700"
+                className="w-full bg-red-600 text-white py-4 rounded-full font-semibold hover:bg-red-700"
               >
                 Nhập đơn kính
               </button>
@@ -469,7 +469,7 @@ const ProductDetailPage = () => {
                     [&_em]:italic
                     [&_u]:underline
                     [&_s]:line-through
-                    [&_a]:text-blue-600 [&_a]:underline [&_a]:break-all
+                    [&_a]:text-red-600 [&_a]:underline [&_a]:break-all
                     [&_img]:rounded-lg [&_img]:my-4 [&_img]:max-w-full [&_img]:h-auto [&_img]:block
                     [&_blockquote]:border-l-4 [&_blockquote]:border-gray-300 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-gray-500
                     [&_*]:max-w-full"
@@ -516,3 +516,4 @@ const ProductDetailPage = () => {
 };
 
 export default ProductDetailPage;
+

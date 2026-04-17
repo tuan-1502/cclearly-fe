@@ -1,4 +1,4 @@
-import {
+﻿import {
   Search,
   Eye,
   Edit2,
@@ -94,7 +94,7 @@ const SalesOrdersPage = () => {
 
   const STATUS_MAP = {
     PENDING: { label: 'Chờ xác nhận', css: 'bg-yellow-100 text-yellow-700' },
-    CONFIRMED: { label: 'Đã xác nhận', css: 'bg-blue-100 text-blue-700' },
+    CONFIRMED: { label: 'Đã xác nhận', css: 'bg-red-100 text-red-700' },
     SHIPPED: { label: 'Đang giao hàng', css: 'bg-purple-100 text-purple-700' },
     DELIVERED: { label: 'Đã giao', css: 'bg-green-100 text-green-700' },
     CANCELLED: { label: 'Đã hủy', css: 'bg-red-100 text-red-700' },
@@ -107,7 +107,7 @@ const SalesOrdersPage = () => {
 
   const TYPE_MAP = {
     standard: { label: 'Thường', css: 'bg-green-100 text-green-700' },
-    prescription: { label: 'Có toa', css: 'bg-blue-100 text-blue-700' },
+    prescription: { label: 'Có toa', css: 'bg-red-100 text-red-700' },
   };
 
   const getStatusBadge = (status) =>
@@ -203,7 +203,7 @@ const SalesOrdersPage = () => {
             label: 'Đã xác nhận',
             val: orders.filter((o) => o.status === 'CONFIRMED').length,
             icon: CheckCircle,
-            color: 'text-blue-600',
+            color: 'text-red-600',
             bg: 'bg-blue-50',
           },
           {
@@ -259,7 +259,7 @@ const SalesOrdersPage = () => {
               setSearchTerm(e.target.value);
               setCurrentPage(1);
             }}
-            className="w-full pl-9 pr-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-200 outline-none"
+            className="w-full pl-9 pr-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-red-200 outline-none"
           />
         </div>
 
@@ -314,7 +314,7 @@ const SalesOrdersPage = () => {
                 className="hover:bg-gray-50 cursor-pointer"
                 onClick={() => setSelectedOrder(order)}
               >
-                <td className="px-5 py-3 text-[#0f5dd9] font-medium">
+                <td className="px-5 py-3 text-[#d90f0f] font-medium">
                   #{order.code || order.orderId || order.id}
                 </td>
 
@@ -360,7 +360,7 @@ const SalesOrdersPage = () => {
                   >
                     <button
                       onClick={() => setSelectedOrder(order)}
-                      className="p-1.5 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors"
+                      className="p-1.5 bg-blue-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors"
                       title="Xem chi tiết"
                     >
                       <Eye size={15} />
@@ -492,3 +492,4 @@ const SalesOrdersPage = () => {
 };
 
 export default SalesOrdersPage;
+

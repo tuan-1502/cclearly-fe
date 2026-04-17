@@ -1,4 +1,4 @@
-import { AlertTriangle } from 'lucide-react';
+﻿import { AlertTriangle } from 'lucide-react';
 import React from 'react';
 import { SectionHeader, FormField } from '@/components/common/CommonControls';
 
@@ -10,17 +10,17 @@ const PaymentTab = () => {
         description="Quản lý cổng thanh toán trực tuyến VietQR qua PayOS"
       />
 
-      <div className="bg-blue-50 border border-blue-100 rounded-xl p-5 flex items-center gap-4">
+      <div className="bg-blue-50 border border-red-100 rounded-xl p-5 flex items-center gap-4">
         <img
           src="https://about.cas.so/wp-content/uploads/sites/11/2023/08/cropped-Untitled-1.png"
           alt="PayOS"
           className="h-8 object-contain"
         />
         <div>
-          <p className="text-sm font-bold text-blue-700">
+          <p className="text-sm font-bold text-red-700">
             Tích hợp thanh toán QR Code
           </p>
-          <p className="text-xs text-blue-600">
+          <p className="text-xs text-red-600">
             Nhận tiền ngay qua tài khoản ngân hàng với phí 0%
           </p>
         </div>
@@ -63,3 +63,4 @@ const PaymentTab = () => {
 };
 
 export default PaymentTab;
+

@@ -1,4 +1,4 @@
-import { Search, Package, Truck, CheckCircle, Eye } from 'lucide-react';
+﻿import { Search, Package, Truck, CheckCircle, Eye } from 'lucide-react';
 import { useState, useMemo } from 'react';
 import { toast } from 'react-toastify';
 import ConfirmModal from '@/components/ui/ConfirmModal';
@@ -55,7 +55,7 @@ const OperationsOrdersPage = () => {
 
   const statusMap = {
     PENDING: ['Chờ xác nhận', 'bg-yellow-100 text-yellow-700'],
-    CONFIRMED: ['Đã xác nhận', 'bg-blue-100 text-blue-700'],
+    CONFIRMED: ['Đã xác nhận', 'bg-red-100 text-red-700'],
     PROCESSING: ['Đang xử lý', 'bg-purple-100 text-purple-700'],
     SHIPPED: ['Đang giao', 'bg-orange-100 text-orange-700'],
     DELIVERED: ['Hoàn thành', 'bg-green-100 text-green-700'],
@@ -228,7 +228,7 @@ const OperationsOrdersPage = () => {
                         tracking: '',
                       })
                     }
-                    className="bg-blue-500 text-white px-3 py-1 rounded-lg text-xs flex items-center gap-1"
+                    className="bg-red-500 text-white px-3 py-1 rounded-lg text-xs flex items-center gap-1"
                   >
                     <CheckCircle size={12} /> Giao hàng
                   </button>
@@ -362,7 +362,7 @@ const OperationsOrdersPage = () => {
                   });
                   setTrackingModal({ open: false, id: null, tracking: '', carrier: '' });
                 }}
-                className="flex-1 bg-blue-600 text-white py-2 rounded"
+                className="flex-1 bg-red-600 text-white py-2 rounded"
               >
                 Xác nhận
               </button>
@@ -388,3 +388,4 @@ const OperationsOrdersPage = () => {
 };
 
 export default OperationsOrdersPage;
+

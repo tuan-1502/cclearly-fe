@@ -1,9 +1,8 @@
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+﻿import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import heroWoman from '@/assets/homepage/hero_woman_v2.png';
 import polarizedImg from '@/assets/homepage/polarized_lenses.png';
-import virtualTryOnImg from '@/assets/homepage/virtual_try_on.png';
 import { useProducts, useActiveBanners } from '@/hooks/useProduct';
 
 const uspItems = [
@@ -16,7 +15,7 @@ const uspItems = [
 const styleItems = [
   { name: 'Cổ điển', color: '#BBC0C9' },
   { name: 'Thân thiện môi trường', color: '#C79831' },
-  { name: 'Nghệ thuật', color: '#13718A' },
+  { name: 'Nghệ thuật', color: '#8A1313' },
   { name: 'Retro', color: '#8B533D' },
   { name: 'Cá tính', color: '#B6461C' },
 ];
@@ -80,7 +79,6 @@ const heroAvatars = [
     objectPosition: '48% 24%',
     filter: 'hue-rotate(-6deg) saturate(1.05)',
   },
-  { src: virtualTryOnImg, objectPosition: '50% 10%', filter: 'saturate(0.95)' },
   {
     src: polarizedImg,
     objectPosition: '40% 35%',
@@ -104,7 +102,7 @@ const StarIcon = ({ className = 'h-3.5 w-3.5' }) => (
   </svg>
 );
 
-const GlassesSketch = ({ stroke = '#2B4C70', className = 'h-20 w-full' }) => (
+const GlassesSketch = ({ stroke = '#702B2B', className = 'h-20 w-full' }) => (
   <svg viewBox="0 0 180 70" fill="none" className={className}>
     <path
       d="M12 24c10-7 42-8 58-1 0 0 3 23-24 23S26 29 24 28m144-4c-10-7-42-8-58-1 0 0-3 23 24 23s20-17 22-18m-86-4h40m-86 2c-2 8-7 18-12 22m144-22c2 8 7 18 12 22"
@@ -154,7 +152,7 @@ const HomePage = () => {
   const bestSellingItems =
     productData?.content?.map((product) => {
       // Determine a stroke color based on material or just a random nice blue/grey
-      const strokeColors = ['#2E5EA8', '#8C6842', '#2C4F5E', '#7F273A'];
+      const strokeColors = ['#A82E2E', '#8C6842', '#2C4F5E', '#7F273A'];
       const randomStroke =
         strokeColors[Math.floor(Math.random() * strokeColors.length)];
 
@@ -173,7 +171,7 @@ const HomePage = () => {
     <div className="bg-white text-[#101010]">
       {/* ─── HEADER Banner (announcement bar) ─── */}
       {headerBanners.length > 0 && (
-        <section className="bg-[#141f36] text-white">
+        <section className="bg-[#361414] text-white">
           <div className="mx-auto flex max-w-[1240px] items-center justify-center gap-4 px-4 py-2.5 text-center">
             {headerBanners[0].imageUrl && (
               <img
@@ -187,7 +185,7 @@ const HomePage = () => {
             </p>
             <Link
               to="/products"
-              className="ml-2 rounded-full border border-white/40 px-4 py-0.5 text-xs font-medium transition hover:bg-white hover:text-[#141f36]"
+              className="ml-2 rounded-full border border-white/40 px-4 py-0.5 text-xs font-medium transition hover:bg-white hover:text-[#361414]"
             >
               Xem ngay
             </Link>
@@ -219,7 +217,7 @@ const HomePage = () => {
 
             <Link
               to="/products"
-              className="mt-9 inline-flex rounded-full bg-[#141f36] px-11 py-4 text-xl font-medium !text-white transition hover:bg-[#0d1322]"
+              className="mt-9 inline-flex rounded-full bg-[#361414] px-11 py-4 text-xl font-medium !text-white transition hover:bg-[#0d1322]"
             >
               Khám phá ngay
             </Link>
@@ -296,7 +294,7 @@ const HomePage = () => {
         </div>
       </section>
 
-      <section className="bg-[#0f5dd9] py-4 text-white">
+      <section className="bg-[#d90f0f] py-4 text-white">
         <div className="mx-auto flex w-full max-w-[1240px] items-center justify-between px-4 text-xs sm:px-6 sm:text-sm">
           {uspItems.map((item) => (
             <div
@@ -399,7 +397,7 @@ const HomePage = () => {
             </h2>
             <Link
               to="/best-sellers"
-              className="mt-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#0f5dd9] text-white transition hover:bg-[#0b4fc0]"
+              className="mt-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#d90f0f] text-white transition hover:bg-[#b00c0c]"
               aria-label="Xem tất cả sản phẩm bán chạy"
             >
               <svg
@@ -535,53 +533,6 @@ const HomePage = () => {
         </section>
       )}
 
-      <section className="relative overflow-hidden bg-[#1060db] py-16 text-white">
-        <div
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              'radial-gradient(circle at -6% 52%, rgba(61,151,255,0.46) 0%, rgba(61,151,255,0.46) 30%, transparent 31%), radial-gradient(circle at 64% 50%, rgba(43,129,243,0.36) 0%, rgba(43,129,243,0.36) 40%, transparent 41%)',
-          }}
-        />
-
-        <div className="relative z-10 mx-auto grid max-w-[1240px] items-center gap-10 px-4 sm:px-6 lg:grid-cols-[1fr_0.9fr] lg:px-8">
-          {/* IMAGE */}
-          <div className="mx-auto w-full max-w-[470px] lg:mx-0">
-            <div
-              className="relative overflow-hidden bg-[#ececec]"
-              style={{
-                clipPath:
-                  'polygon(18% 0%, 100% 0%, 100% 82%, 82% 100%, 0% 100%, 0% 18%)',
-              }}
-            >
-              <img
-                src={virtualTryOnImg}
-                alt="Virtual try-on preview"
-                className="h-full w-full object-cover"
-              />
-            </div>
-          </div>
-
-          {/* TEXT */}
-          <div className="pb-2 lg:pl-4">
-            <h2 className="text-4xl font-semibold tracking-[-0.02em] sm:text-5xl lg:text-[58px]">
-              Thử kính ảo
-            </h2>
-
-            <p className="mt-5 max-w-[420px] text-[22px] leading-[1.5] text-white/90 sm:text-[24px] lg:text-[32px]">
-              Tìm chiếc kính phù hợp với khuôn mặt bạn với tính năng Thử kính
-              ảo, sau đó chỉ cần thêm tròng kính theo đơn kính của bạn!
-            </p>
-
-            <button
-              type="button"
-              className="mt-8 rounded-full border-2 border-white/90 px-9 py-3 text-xl font-medium text-white transition hover:bg-white hover:text-[#1060db]"
-            >
-              Thử ngay
-            </button>
-          </div>
-        </div>
-      </section>
       <section className="relative overflow-hidden">
         <div className="absolute inset-0">
           <div className="h-full w-full bg-[#ececec]" />
@@ -741,11 +692,11 @@ const HomePage = () => {
             <input
               type="email"
               placeholder="email@cuaban.com"
-              className="h-11 flex-1 rounded-full border border-[#e0e0e0] bg-white px-5 text-sm outline-none transition focus:border-[#0f5dd9]"
+              className="h-11 flex-1 rounded-full border border-[#e0e0e0] bg-white px-5 text-sm outline-none transition focus:border-[#d90f0f]"
             />
             <button
               type="submit"
-              className="h-11 rounded-full bg-[#141c2f] px-8 text-sm font-medium text-white transition hover:bg-[#0d1322]"
+              className="h-11 rounded-full bg-[#2f141c] px-8 text-sm font-medium text-white transition hover:bg-[#0d1322]"
             >
               Đăng ký
             </button>
@@ -757,3 +708,4 @@ const HomePage = () => {
 };
 
 export default HomePage;
+

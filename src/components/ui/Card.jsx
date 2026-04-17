@@ -1,4 +1,4 @@
-const Card = ({ children, className = '', ...props }) => {
+﻿const Card = ({ children, className = '', ...props }) => {
   return (
     <div className={`bg-white rounded-lg shadow-sm ${className}`} {...props}>
       {children}
@@ -23,3 +23,4 @@ Card.Body = CardBody;
 Card.Footer = CardFooter;
 
 export default Card;
+

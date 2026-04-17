@@ -1,4 +1,4 @@
-const Select = ({ label, error, options = [], className = '', ...props }) => {
+﻿const Select = ({ label, error, options = [], className = '', ...props }) => {
   return (
     <div className={className}>
       {label && (
@@ -8,7 +8,7 @@ const Select = ({ label, error, options = [], className = '', ...props }) => {
       )}
       <select
         className={`
-          w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500
+          w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500
           ${error ? 'border-red-500' : 'border-gray-300'}
         `}
         {...props}
@@ -25,3 +25,4 @@ const Select = ({ label, error, options = [], className = '', ...props }) => {
 };
 
 export default Select;
+

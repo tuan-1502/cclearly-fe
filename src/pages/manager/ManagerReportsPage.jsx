@@ -1,4 +1,4 @@
-import {
+﻿import {
   BarChart3,
   TrendingUp,
   TrendingDown,
@@ -79,7 +79,7 @@ const ManagerReportsPage = () => {
 
         <div className="bg-white p-6 rounded-xl shadow-sm">
           <div className="flex justify-between mb-3">
-            <ShoppingCart className="text-blue-600" />
+            <ShoppingCart className="text-red-600" />
             <span className="text-green-600 flex items-center gap-1 text-sm">
               <TrendingUp size={16} />
               5.2%
@@ -180,13 +180,13 @@ const ManagerReportsPage = () => {
                 key={i}
                 className="flex items-center gap-3 bg-gray-50 p-3 rounded-lg"
               >
-                <span className="w-6 h-6 bg-blue-600 text-white rounded-full text-xs flex items-center justify-center">
+                <span className="w-6 h-6 bg-red-600 text-white rounded-full text-xs flex items-center justify-center">
                   {i + 1}
                 </span>
 
                 <span className="flex-1">{p.name}</span>
 
-                <span className="text-blue-600 font-medium">{p.sold}</span>
+                <span className="text-red-600 font-medium">{p.sold}</span>
               </div>
             ))}
           </div>
@@ -228,3 +228,4 @@ const ManagerReportsPage = () => {
 };
 
 export default ManagerReportsPage;
+

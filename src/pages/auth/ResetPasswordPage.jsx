@@ -1,4 +1,4 @@
-import { Eye, EyeOff } from 'lucide-react';
+﻿import { Eye, EyeOff } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useResetPassword } from '@/hooks/useAuth';
@@ -83,7 +83,7 @@ const ResetPasswordPage = () => {
         </p>
         <Link
           to="/login"
-          className="inline-block bg-[#141f36] text-white px-8 py-3 rounded-full font-medium hover:bg-[#0d1322] transition"
+          className="inline-block bg-[#361414] text-white px-8 py-3 rounded-full font-medium hover:bg-[#0d1322] transition"
         >
           Đăng nhập ngay
         </Link>
@@ -137,7 +137,7 @@ const ResetPasswordPage = () => {
               onChange={handleChange}
               required
               minLength={6}
-              className="w-full px-5 py-3.5 pr-12 border border-[#e0e0e0] rounded-xl focus:outline-none focus:border-[#0f5dd9] focus:ring-2 focus:ring-[#0f5dd9]/10 bg-white"
+              className="w-full px-5 py-3.5 pr-12 border border-[#e0e0e0] rounded-xl focus:outline-none focus:border-[#d90f0f] focus:ring-2 focus:ring-[#d90f0f]/10 bg-white"
               placeholder="Nhập mật khẩu mới"
             />
             <button
@@ -165,7 +165,7 @@ const ResetPasswordPage = () => {
               value={formData.confirmPassword}
               onChange={handleChange}
               required
-              className="w-full px-5 py-3.5 pr-12 border border-[#e0e0e0] rounded-xl focus:outline-none focus:border-[#0f5dd9] focus:ring-2 focus:ring-[#0f5dd9]/10 bg-white"
+              className="w-full px-5 py-3.5 pr-12 border border-[#e0e0e0] rounded-xl focus:outline-none focus:border-[#d90f0f] focus:ring-2 focus:ring-[#d90f0f]/10 bg-white"
               placeholder="Nhập lại mật khẩu mới"
             />
             <button
@@ -185,7 +185,7 @@ const ResetPasswordPage = () => {
         <button
           type="submit"
           disabled={resetPassword.isPending}
-          className="w-full bg-[#141f36] text-white py-4 rounded-full font-medium hover:bg-[#0d1322] disabled:bg-gray-300 transition"
+          className="w-full bg-[#361414] text-white py-4 rounded-full font-medium hover:bg-[#0d1322] disabled:bg-gray-300 transition"
         >
           {resetPassword.isPending ? 'Đang xử lý...' : 'Đặt lại mật khẩu'}
         </button>
@@ -194,7 +194,7 @@ const ResetPasswordPage = () => {
       <p className="mt-8 text-center text-[#4f5562]">
         <Link
           to="/login"
-          className="text-[#0f5dd9] hover:underline font-medium"
+          className="text-[#d90f0f] hover:underline font-medium"
         >
           ← Quay lại đăng nhập
         </Link>
@@ -204,3 +204,4 @@ const ResetPasswordPage = () => {
 };
 
 export default ResetPasswordPage;
+

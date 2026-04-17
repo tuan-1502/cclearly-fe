@@ -33,7 +33,7 @@ const BestSellerPage = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <p className="text-lg font-semibold text-red-500">
-          Dữ liệu sản phẩm không hợp lệ. Vui lòng thử lại sau.
+          Dữ liệu SẢN PHẨM kh�ng h?p l?. Vui l�ng th? l?i sau.
         </p>
       </div>
     );
@@ -69,7 +69,7 @@ const BestSellerPage = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <p className="text-lg font-semibold text-red-500">
-          Không thể tải dữ liệu sản phẩm. Vui lòng thử lại sau.
+          Kh�ng th? t?i Dữ liệu SẢN PHẨM. Vui l�ng th? l?i sau.
         </p>
       </div>
     );
@@ -159,8 +159,8 @@ const BestSellerPage = () => {
   const categoryOptions = useMemo(
     () => [
       { value: '', label: 'Tất cả', count: bestSellers.length },
-      { value: 'frame', label: 'Gọng kính', count: summaryStats.frameCount },
-      { value: 'lens', label: 'Tròng kính', count: summaryStats.lensCount },
+      { value: 'frame', label: 'G?ng k�nh', count: summaryStats.frameCount },
+      { value: 'lens', label: 'Tr�ng k�nh', count: summaryStats.lensCount },
     ],
     [bestSellers.length, summaryStats.frameCount, summaryStats.lensCount]
   );
@@ -232,7 +232,7 @@ const BestSellerPage = () => {
       <section className="border-b border-[#dbe4f4] bg-white">
         <div className="mx-auto max-w-[1180px] px-4 py-8">
           <div className="flex items-center gap-2 text-sm text-[#606b7f]">
-            <Link to="/" className="hover:text-[#0f5dd9]">
+            <Link to="/" className="hover:text-[#d90f0f]">
               Trang chủ
             </Link>
             <span>/</span>
@@ -242,8 +242,8 @@ const BestSellerPage = () => {
             Best Sellers
           </h1>
           <p className="mt-2 text-[#606b7f]">
-            Những thiết kế biểu tượng được khách hàng CClearly lựa chọn nhiều
-            nhất
+            Những thiết kế biểu tượng du?c kh�ch h�ng CClearly lựa chọn nhi?u
+            nh?t
           </p>
         </div>
       </section>
@@ -257,8 +257,8 @@ const BestSellerPage = () => {
                 type="text"
                 value={searchTerm}
                 onChange={handleSearchChange}
-                placeholder="Tìm sản phẩm hot theo tên, mô tả hoặc mã SKU..."
-                className="w-full rounded-2xl border border-[#d8e2f2] bg-[#f8fbff] py-3 pl-12 pr-4 text-sm text-[#1f2937] outline-none transition focus:border-[#0f5dd9] focus:ring-2 focus:ring-[#0f5dd9]/20"
+                placeholder="T�m SẢN PHẨM hot theo t�n, m� t? ho?c m� SKU..."
+                className="w-full rounded-2xl border border-[#d8e2f2] bg-[#f8fbff] py-3 pl-12 pr-4 text-sm text-[#1f2937] outline-none transition focus:border-[#d90f0f] focus:ring-2 focus:ring-[#d90f0f]/20"
               />
             </div>
 
@@ -269,17 +269,17 @@ const BestSellerPage = () => {
                 <select
                   value={pageSize}
                   onChange={handlePageSizeChange}
-                  className="bg-transparent font-semibold text-[#0f5dd9] outline-none"
+                  className="bg-transparent font-semibold text-[#d90f0f] outline-none"
                 >
                   {pageSizeOptions.map((value) => (
                     <option key={value} value={value}>
-                      {value}/trang
+                      {value}/ trang
                     </option>
                   ))}
                 </select>
               </div>
-              <p className="rounded-xl bg-[#eff4ff] px-3 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#0f5dd9]">
-                {shownFrom}-{shownTo} / {filteredProducts.length} sản phẩm
+              <p className="rounded-xl bg-[#eff4ff] px-3 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#d90f0f]">
+                {shownFrom}-{shownTo} / {filteredProducts.length} SẢN PHẨM
               </p>
             </div>
           </div>
@@ -293,13 +293,13 @@ const BestSellerPage = () => {
                   onClick={() => handleCategoryChange(option.value)}
                   className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition ${
                     isActive
-                      ? 'border-[#0f5dd9] bg-[#0f5dd9] text-white shadow-[0_8px_20px_rgba(15,93,217,0.3)]'
-                      : 'border-[#d8e2f2] bg-white text-[#4f5562] hover:border-[#0f5dd9]/35 hover:text-[#0f5dd9]'
+                      ? 'border-[#d90f0f] bg-[#d90f0f] text-white shadow-[0_8px_20px_rgba(15,93,217,0.3)]'
+                      : 'border-[#d8e2f2] bg-white text-[#4f5562] hover:border-[#d90f0f]/35 hover:text-[#d90f0f]'
                   }`}
                 >
                   <span>{option.label}</span>
                   <span
-                    className={`rounded-full px-2 py-0.5 text-xs ${isActive ? 'bg-white/20' : 'bg-[#eff4ff] text-[#0f5dd9]'}`}
+                    className={`rounded-full px-2 py-0.5 text-xs ${isActive ? 'bg-white/20' : 'bg-[#eff4ff] text-[#d90f0f]'}`}
                   >
                     {option.count}
                   </span>
@@ -337,9 +337,9 @@ const BestSellerPage = () => {
                         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(15,93,217,0.12),transparent_50%)]" />
                         <div className="relative flex h-full items-center justify-center">
                           {product.type === 'frame' ? (
-                            <Glasses className="h-24 w-24 text-[#7b8494] transition-transform duration-300 group-hover:scale-110 group-hover:text-[#0f5dd9]" />
+                            <Glasses className="h-24 w-24 text-[#7b8494] transition-transform duration-300 group-hover:scale-110 group-hover:text-[#d90f0f]" />
                           ) : (
-                            <Scan className="h-24 w-24 text-[#7b8494] transition-transform duration-300 group-hover:scale-110 group-hover:text-[#0f5dd9]" />
+                            <Scan className="h-24 w-24 text-[#7b8494] transition-transform duration-300 group-hover:scale-110 group-hover:text-[#d90f0f]" />
                           )}
                         </div>
 
@@ -350,7 +350,7 @@ const BestSellerPage = () => {
                             </span>
                           )}
                           {product.rating >= 4.5 && (
-                            <span className="inline-flex items-center gap-1 rounded-full bg-[#0f5dd9] px-3 py-1 text-xs font-bold text-white">
+                            <span className="inline-flex items-center gap-1 rounded-full bg-[#d90f0f] px-3 py-1 text-xs font-bold text-white">
                               <Sparkles className="h-3 w-3" />
                               Hot
                             </span>
@@ -365,10 +365,10 @@ const BestSellerPage = () => {
                       </div>
 
                       <div className="p-5">
-                        <span className="mb-3 inline-flex rounded-full bg-[#eff4ff] px-3 py-1 text-xs font-semibold text-[#0f5dd9]">
+                        <span className="mb-3 inline-flex rounded-full bg-[#eff4ff] px-3 py-1 text-xs font-semibold text-[#d90f0f]">
                           {product.type === 'frame'
-                            ? 'Gọng kính'
-                            : 'Tròng kính'}
+                            ? 'G?ng k�nh'
+                            : 'Tr�ng k�nh'}
                         </span>
                         <h3 className="line-clamp-1 text-lg font-semibold text-[#1d2433]">
                           {product.name}
@@ -387,7 +387,7 @@ const BestSellerPage = () => {
                             ))}
                           </div>
                           <span className="text-xs font-medium text-[#606b7f]">
-                            ({product.reviewCount || 0} đánh giá)
+                            ({product.reviewCount || 0} d�nh gi�)
                           </span>
                         </div>
 
@@ -424,10 +424,10 @@ const BestSellerPage = () => {
           ) : (
             <div className="rounded-3xl border border-dashed border-[#cad7ed] bg-white px-6 py-20 text-center">
               <p className="text-lg font-semibold text-[#1d2433]">
-                Không tìm thấy sản phẩm phù hợp
+                Kh�ng t�m th?y SẢN PHẨM ph� h?p
               </p>
               <p className="mt-2 text-sm text-[#606b7f]">
-                Thử đổi từ khóa hoặc chọn lại danh mục để xem thêm gợi ý.
+                Th? d?i t? kh�a ho?c ch?n l?i danh m?c d? xem th�m g?i �.
               </p>
               <button
                 onClick={() => {
@@ -435,9 +435,9 @@ const BestSellerPage = () => {
                   setCategoryFilter('');
                   setCurrentPage(1);
                 }}
-                className="mt-6 rounded-full bg-[#0f5dd9] px-6 py-2 text-xs font-bold uppercase tracking-[0.14em] text-white transition hover:bg-[#0b4caf]"
+                className="mt-6 rounded-full bg-[#d90f0f] px-6 py-2 text-xs font-bold uppercase tracking-[0.14em] text-white transition hover:bg-[#0b4caf]"
               >
-                Xem tất cả best sellers
+                Xem Tất cả best sellers
               </button>
             </div>
           )}
@@ -448,3 +448,4 @@ const BestSellerPage = () => {
 };
 
 export default BestSellerPage;
+

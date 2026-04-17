@@ -1,4 +1,4 @@
-import { FileText, RefreshCcw, ShieldCheck, Clock } from 'lucide-react';
+﻿import { FileText, RefreshCcw, ShieldCheck, Clock } from 'lucide-react';
 
 const PolicyPage = () => {
   return (
@@ -38,13 +38,13 @@ const PolicyPage = () => {
             className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow cursor-pointer group"
           >
             <div className="w-14 h-14 bg-gray-50 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-blue-50 transition-colors">
-              <item.icon className="w-7 h-7 text-gray-400 group-hover:text-[#0f5dd9] transition-colors" />
+              <item.icon className="w-7 h-7 text-gray-400 group-hover:text-[#d90f0f] transition-colors" />
             </div>
             <h3 className="font-bold text-[#222] text-xl mb-2">{item.title}</h3>
             <p className="text-sm text-[#4f5562] mb-6 leading-relaxed">
               {item.desc}
             </p>
-            <button className="text-[#0f5dd9] text-sm font-bold flex items-center gap-2">
+            <button className="text-[#d90f0f] text-sm font-bold flex items-center gap-2">
               Chỉnh sửa nội dung <FileText className="w-4 h-4" />
             </button>
           </div>
@@ -55,3 +55,4 @@ const PolicyPage = () => {
 };
 
 export default PolicyPage;
+

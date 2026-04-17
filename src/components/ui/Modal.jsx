@@ -1,4 +1,4 @@
-const Modal = ({ isOpen, onClose, title, children, size = 'md' }) => {
+﻿const Modal = ({ isOpen, onClose, title, children, size = 'md' }) => {
   if (!isOpen) return null;
 
   const sizes = {
@@ -55,3 +55,4 @@ const Modal = ({ isOpen, onClose, title, children, size = 'md' }) => {
 };
 
 export default Modal;
+

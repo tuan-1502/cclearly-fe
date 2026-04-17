@@ -1,4 +1,4 @@
-import {
+﻿import {
   Lock,
   User,
   LogOut,
@@ -106,7 +106,7 @@ const ProfilePage = () => {
           <p className="text-[#4f5562] mb-8">Đăng nhập để quản lý tài khoản</p>
           <button
             onClick={() => navigate('/login', { state: { from: location.pathname } })}
-            className="bg-[#141f36] text-white px-10 py-4 rounded-full font-medium hover:bg-[#0d1322] transition"
+            className="bg-[#361414] text-white px-10 py-4 rounded-full font-medium hover:bg-[#0d1322] transition"
           >
             Đăng nhập
           </button>
@@ -191,7 +191,7 @@ const ProfilePage = () => {
         label: 'Chờ xác nhận',
         class: 'bg-yellow-100 text-yellow-800',
       },
-      CONFIRMED: { label: 'Đã xác nhận', class: 'bg-blue-100 text-blue-800' },
+      CONFIRMED: { label: 'Đã xác nhận', class: 'bg-red-100 text-red-800' },
       PROCESSING: {
         label: 'Đang xử lý',
         class: 'bg-purple-100 text-purple-800',
@@ -282,7 +282,7 @@ const ProfilePage = () => {
           <div className="md:col-span-1">
             <div className="bg-white rounded-2xl shadow-[0_10px_30px_rgba(13,22,39,0.06)] p-6 sticky top-4">
               <div className="text-center mb-6">
-                <div className="w-24 h-24 bg-[#0f5dd9] rounded-full flex items-center justify-center text-white text-4xl font-bold mx-auto mb-4">
+                <div className="w-24 h-24 bg-[#d90f0f] rounded-full flex items-center justify-center text-white text-4xl font-bold mx-auto mb-4">
                   {displayName.charAt(0).toUpperCase()}
                 </div>
                 <h2 className="text-xl font-bold text-[#222]">{displayName}</h2>
@@ -294,7 +294,7 @@ const ProfilePage = () => {
               <nav className="space-y-2">
                 <button
                   onClick={() => setActiveTab('info')}
-                  className={`w-full text-left px-4 py-3 rounded-xl font-medium flex items-center gap-2 transition ${activeTab === 'info' ? 'bg-[#0f5dd9] text-white' : 'text-[#4f5562] hover:bg-[#f3f3f3]'}`}
+                  className={`w-full text-left px-4 py-3 rounded-xl font-medium flex items-center gap-2 transition ${activeTab === 'info' ? 'bg-[#d90f0f] text-white' : 'text-[#4f5562] hover:bg-[#f3f3f3]'}`}
                 >
                   <User className="w-5 h-5" />
                   Thông tin tài khoản
@@ -303,14 +303,14 @@ const ProfilePage = () => {
                   <>
                     <button
                       onClick={() => setActiveTab('addresses')}
-                      className={`w-full text-left px-4 py-3 rounded-xl font-medium flex items-center gap-2 transition ${activeTab === 'addresses' ? 'bg-[#0f5dd9] text-white' : 'text-[#4f5562] hover:bg-[#f3f3f3]'}`}
+                      className={`w-full text-left px-4 py-3 rounded-xl font-medium flex items-center gap-2 transition ${activeTab === 'addresses' ? 'bg-[#d90f0f] text-white' : 'text-[#4f5562] hover:bg-[#f3f3f3]'}`}
                     >
                       <MapPin className="w-5 h-5" />
                       Sổ địa chỉ
                     </button>
                     <button
                       onClick={() => setActiveTab('orders')}
-                      className={`w-full text-left px-4 py-3 rounded-xl font-medium flex items-center gap-2 transition ${activeTab === 'orders' ? 'bg-[#0f5dd9] text-white' : 'text-[#4f5562] hover:bg-[#f3f3f3]'}`}
+                      className={`w-full text-left px-4 py-3 rounded-xl font-medium flex items-center gap-2 transition ${activeTab === 'orders' ? 'bg-[#d90f0f] text-white' : 'text-[#4f5562] hover:bg-[#f3f3f3]'}`}
                     >
                       <ShoppingBag className="w-5 h-5" />
                       Lịch sử đơn hàng
@@ -344,12 +344,12 @@ const ProfilePage = () => {
 
                 {ordersLoading ? (
                   <div className="flex justify-center py-10">
-                    <Loader2 className="w-8 h-8 animate-spin text-[#0f5dd9]" />
+                    <Loader2 className="w-8 h-8 animate-spin text-[#d90f0f]" />
                   </div>
                 ) : orders.length === 0 ? (
                   <div className="text-center py-20 bg-white rounded-2xl shadow-[0_10px_30px_rgba(13,22,39,0.06)]">
-                    <div className="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                      <Package className="w-12 h-12 text-blue-500" />
+                    <div className="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                      <Package className="w-12 h-12 text-red-500" />
                     </div>
                     <h2 className="text-2xl font-bold text-[#222] mb-4">
                       Bạn chưa có đơn hàng nào
@@ -359,7 +359,7 @@ const ProfilePage = () => {
                     </p>
                     <Link
                       to="/products"
-                      className="inline-block bg-[#141f36] text-white px-10 py-4 rounded-full font-medium hover:bg-[#0d1322] transition"
+                      className="inline-block bg-[#361414] text-white px-10 py-4 rounded-full font-medium hover:bg-[#0d1322] transition"
                     >
                       Mua sắm ngay
                     </Link>
@@ -410,11 +410,11 @@ const ProfilePage = () => {
                                       className="flex items-center flex-shrink-0"
                                     >
                                       <div
-                                        className={`w-3 h-3 rounded-full ${isCompleted ? 'bg-[#0f5dd9]' : 'bg-gray-300'}`}
+                                        className={`w-3 h-3 rounded-full ${isCompleted ? 'bg-[#d90f0f]' : 'bg-gray-300'}`}
                                       ></div>
                                       {index < 4 && (
                                         <div
-                                          className={`w-8 h-0.5 ${isCompleted ? 'bg-[#0f5dd9]' : 'bg-gray-300'}`}
+                                          className={`w-8 h-0.5 ${isCompleted ? 'bg-[#d90f0f]' : 'bg-gray-300'}`}
                                         ></div>
                                       )}
                                     </div>
@@ -495,7 +495,7 @@ const ProfilePage = () => {
                               )}
                               <button
                                 onClick={() => setSelectedOrder(order)}
-                                className="px-5 py-2.5 text-[#0f5dd9] border-2 border-[#0f5dd9] rounded-full hover:bg-[#f0f7ff] transition font-medium"
+                                className="px-5 py-2.5 text-[#d90f0f] border-2 border-[#d90f0f] rounded-full hover:bg-[#f0f7ff] transition font-medium"
                               >
                                 Xem chi tiết
                               </button>
@@ -526,7 +526,7 @@ const ProfilePage = () => {
                             onClick={() => setOrdersPage(page)}
                             className={`w-10 h-10 rounded-full text-sm font-medium transition ${
                               page === ordersPage
-                                ? 'bg-[#0f5dd9] text-white'
+                                ? 'bg-[#d90f0f] text-white'
                                 : 'text-[#4f5562] hover:bg-white'
                             }`}
                           >
@@ -657,11 +657,11 @@ const ProfilePage = () => {
                                   </p>
                                   {/* Prescription details */}
                                   {item.prescription && (
-                                    <div className="mt-2 p-2.5 bg-blue-50 rounded-lg border border-blue-100">
-                                      <p className="text-xs font-medium text-blue-700 mb-1.5">Đơn kính</p>
+                                    <div className="mt-2 p-2.5 bg-blue-50 rounded-lg border border-red-100">
+                                      <p className="text-xs font-medium text-red-700 mb-1.5">Đơn kính</p>
                                       {item.prescription.imageUrl && (
                                         <a href={item.prescription.imageUrl} target="_blank" rel="noreferrer"
-                                          className="text-xs text-blue-600 underline mb-1.5 block">Xem ảnh đơn thuốc</a>
+                                          className="text-xs text-red-600 underline mb-1.5 block">Xem ảnh đơn thuốc</a>
                                       )}
                                       <div className="grid grid-cols-5 gap-0.5 text-[11px] text-center">
                                         <div></div>
@@ -761,7 +761,7 @@ const ProfilePage = () => {
                   </h2>
                   <button
                     onClick={() => setIsEditing(!isEditing)}
-                    className="text-[#0f5dd9] hover:underline font-medium flex items-center gap-1"
+                    className="text-[#d90f0f] hover:underline font-medium flex items-center gap-1"
                   >
                     <Edit2 className="w-4 h-4" />
                     {isEditing ? 'Hủy' : 'Chỉnh sửa'}
@@ -770,7 +770,7 @@ const ProfilePage = () => {
 
                 {profileLoading ? (
                   <div className="flex justify-center py-10">
-                    <Loader2 className="w-8 h-8 animate-spin text-[#0f5dd9]" />
+                    <Loader2 className="w-8 h-8 animate-spin text-[#d90f0f]" />
                   </div>
                 ) : isEditing ? (
                   <form onSubmit={handleSubmit} className="space-y-5">
@@ -783,7 +783,7 @@ const ProfilePage = () => {
                         name="fullName"
                         value={formData.fullName}
                         onChange={handleChange}
-                        className="w-full px-5 py-3 border border-[#e0e0e0] rounded-full focus:outline-none focus:border-[#0f5dd9] bg-[#f9f9f9]"
+                        className="w-full px-5 py-3 border border-[#e0e0e0] rounded-full focus:outline-none focus:border-[#d90f0f] bg-[#f9f9f9]"
                       />
                     </div>
                     <div>
@@ -795,13 +795,13 @@ const ProfilePage = () => {
                         name="phoneNumber"
                         value={formData.phoneNumber}
                         onChange={handleChange}
-                        className="w-full px-5 py-3 border border-[#e0e0e0] rounded-full focus:outline-none focus:border-[#0f5dd9] bg-[#f9f9f9]"
+                        className="w-full px-5 py-3 border border-[#e0e0e0] rounded-full focus:outline-none focus:border-[#d90f0f] bg-[#f9f9f9]"
                       />
                     </div>
                     <button
                       type="submit"
                       disabled={updateProfileMutation.isPending}
-                      className="bg-[#141f36] text-white px-8 py-3 rounded-full hover:bg-[#0d1322] transition font-medium disabled:opacity-50 flex items-center gap-2"
+                      className="bg-[#361414] text-white px-8 py-3 rounded-full hover:bg-[#0d1322] transition font-medium disabled:opacity-50 flex items-center gap-2"
                     >
                       {updateProfileMutation.isPending && (
                         <Loader2 className="w-4 h-4 animate-spin" />
@@ -853,7 +853,7 @@ const ProfilePage = () => {
                         resetAddressForm();
                         setShowAddressForm(true);
                       }}
-                      className="text-sm font-bold bg-[#141f36] text-white px-6 py-2 rounded-full hover:bg-[#0d1322] transition"
+                      className="text-sm font-bold bg-[#361414] text-white px-6 py-2 rounded-full hover:bg-[#0d1322] transition"
                     >
                       Thêm địa chỉ mới
                     </button>
@@ -862,7 +862,7 @@ const ProfilePage = () => {
 
                 {addressesLoading ? (
                   <div className="flex justify-center py-10">
-                    <Loader2 className="w-8 h-8 animate-spin text-[#0f5dd9]" />
+                    <Loader2 className="w-8 h-8 animate-spin text-[#d90f0f]" />
                   </div>
                 ) : showAddressForm ? (
                   <form
@@ -887,7 +887,7 @@ const ProfilePage = () => {
                               name: e.target.value,
                             })
                           }
-                          className="w-full px-4 py-2 border border-[#e0e0e0] rounded-xl focus:outline-none focus:border-[#0f5dd9]"
+                          className="w-full px-4 py-2 border border-[#e0e0e0] rounded-xl focus:outline-none focus:border-[#d90f0f]"
                         />
                       </div>
                       <div>
@@ -904,7 +904,7 @@ const ProfilePage = () => {
                               phone: e.target.value,
                             })
                           }
-                          className="w-full px-4 py-2 border border-[#e0e0e0] rounded-xl focus:outline-none focus:border-[#0f5dd9]"
+                          className="w-full px-4 py-2 border border-[#e0e0e0] rounded-xl focus:outline-none focus:border-[#d90f0f]"
                         />
                       </div>
                     </div>
@@ -921,7 +921,7 @@ const ProfilePage = () => {
                             address: e.target.value,
                           })
                         }
-                        className="w-full px-4 py-2 border border-[#e0e0e0] rounded-xl focus:outline-none focus:border-[#0f5dd9] h-20 resize-none"
+                        className="w-full px-4 py-2 border border-[#e0e0e0] rounded-xl focus:outline-none focus:border-[#d90f0f] h-20 resize-none"
                       />
                     </div>
                     <div className="flex items-center gap-2">
@@ -935,7 +935,7 @@ const ProfilePage = () => {
                             isDefault: e.target.checked,
                           })
                         }
-                        className="w-4 h-4 text-[#0f5dd9]"
+                        className="w-4 h-4 text-[#d90f0f]"
                       />
                       <label
                         htmlFor="isDefault"
@@ -951,7 +951,7 @@ const ProfilePage = () => {
                           createAddressMutation.isPending ||
                           updateAddressMutation.isPending
                         }
-                        className="bg-[#0f5dd9] text-white px-6 py-2 rounded-full text-sm font-bold hover:bg-[#0d4fb8] transition disabled:opacity-50 flex items-center gap-2"
+                        className="bg-[#d90f0f] text-white px-6 py-2 rounded-full text-sm font-bold hover:bg-[#0d4fb8] transition disabled:opacity-50 flex items-center gap-2"
                       >
                         {(createAddressMutation.isPending ||
                           updateAddressMutation.isPending) && (
@@ -976,7 +976,7 @@ const ProfilePage = () => {
                     {addresses.map((addr) => (
                       <div
                         key={addr.addressId}
-                        className="border border-[#e0e0e0] rounded-2xl p-6 relative hover:border-[#0f5dd9] transition-colors group"
+                        className="border border-[#e0e0e0] rounded-2xl p-6 relative hover:border-[#d90f0f] transition-colors group"
                       >
                         <div className="flex justify-between items-start mb-2">
                           <div className="flex items-center gap-3">
@@ -984,7 +984,7 @@ const ProfilePage = () => {
                               {addr.name}
                             </span>
                             {addr.isDefault && (
-                              <span className="text-[10px] bg-blue-50 text-[#0f5dd9] px-2 py-0.5 rounded-md font-bold uppercase">
+                              <span className="text-[10px] bg-blue-50 text-[#d90f0f] px-2 py-0.5 rounded-md font-bold uppercase">
                                 Mặc định
                               </span>
                             )}
@@ -994,14 +994,14 @@ const ProfilePage = () => {
                               <button
                                 onClick={() => handleSetDefault(addr.addressId)}
                                 disabled={setDefaultMutation.isPending}
-                                className="text-xs text-[#4f5562] font-medium hover:text-[#0f5dd9] disabled:opacity-50"
+                                className="text-xs text-[#4f5562] font-medium hover:text-[#d90f0f] disabled:opacity-50"
                               >
                                 Thiết lập mặc định
                               </button>
                             )}
                             <button
                               onClick={() => openEditAddress(addr)}
-                              className="text-xs text-[#0f5dd9] font-medium hover:underline"
+                              className="text-xs text-[#d90f0f] font-medium hover:underline"
                             >
                               Sửa
                             </button>
@@ -1045,4 +1045,5 @@ const ProfilePage = () => {
 };
 
 export default ProfilePage;
+
 
