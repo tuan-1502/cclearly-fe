@@ -1,8 +1,9 @@
-﻿// Operations Lens Lab Page - Gia công tròng kính
-import { TestTube, CheckCircle, XCircle, Eye, Truck } from 'lucide-react';
+// Operations Lens Lab Page - Gia công tròng kính
+import { TestTube, CheckCircle, XCircle, Eye, Truck, Search } from 'lucide-react';
 import { useState, useMemo } from 'react';
 import { toast } from 'react-toastify';
 import OrderDetailModal from '@/components/sale/OrderDetailModal';
+import Pagination from '@/components/ui/Pagination';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAdminOrders, useUpdateOrderStatus } from '@/hooks/useOrder';
 
@@ -10,6 +11,8 @@ const SHIPPING_CARRIERS = [
   { value: 'Giao hàng tiết kiệm', label: 'Giao hàng tiết kiệm' },
   { value: 'Giao hàng nhanh', label: 'Giao hàng nhanh' },
 ];
+
+const PAGE_SIZES = [6, 12, 18, 30, 60];
 
 const OperationsLensLabPage = () => {
   const { user } = useAuth();
@@ -30,8 +33,15 @@ const OperationsLensLabPage = () => {
   });
   const [selectedOrder, setSelectedOrder] = useState(null);
 
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(6);
+
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortParam, setSortParam] = useState('date_desc');
+  const [statusFilter, setStatusFilter] = useState('all');
+
   // Lọc đơn prescription đang ở trạng thái gia công (PROCESSING + type=prescription)
-  const prescriptionOrders = useMemo(() => {
+  const basePrescriptionOrders = useMemo(() => {
     return orders.filter((o) => {
       const status = (o.status || '').toUpperCase();
       return (
@@ -41,12 +51,55 @@ const OperationsLensLabPage = () => {
     });
   }, [orders]);
 
-  const confirmedCount = prescriptionOrders.filter(
+  const prescriptionOrders = useMemo(() => {
+    let result = basePrescriptionOrders.filter((order) => {
+      const id = (order.code || order.orderId || order.id || '').toString().toLowerCase();
+      const name = (order.recipientName || '').toLowerCase();
+      const term = searchTerm.toLowerCase();
+      const matchSearch = id.includes(term) || name.includes(term);
+
+      const s = (order.status || '').toUpperCase();
+      if (statusFilter !== 'all' && s !== statusFilter) return false;
+
+      return matchSearch;
+    });
+
+    result.sort((a, b) => {
+      const nameA = (a.recipientName || '').toLowerCase();
+      const nameB = (b.recipientName || '').toLowerCase();
+      const amountA = a.finalAmount || a.totalAmount || 0;
+      const amountB = b.finalAmount || b.totalAmount || 0;
+      const dateA = new Date(a.createdAt).getTime();
+      const dateB = new Date(b.createdAt).getTime();
+
+      switch (sortParam) {
+        case 'name_asc': return nameA.localeCompare(nameB, 'vi');
+        case 'name_desc': return nameB.localeCompare(nameA, 'vi');
+        case 'amount_asc': return amountA - amountB;
+        case 'amount_desc': return amountB - amountA;
+        case 'date_asc': return dateA - dateB;
+        case 'date_desc':
+        default:
+          return dateB - dateA;
+      }
+    });
+    return result;
+  }, [basePrescriptionOrders, searchTerm, statusFilter, sortParam]);
+
+  const confirmedCount = basePrescriptionOrders.filter(
     (o) => (o.status || '').toUpperCase() === 'CONFIRMED'
   ).length;
-  const processingCount = prescriptionOrders.filter(
+  const processingCount = basePrescriptionOrders.filter(
     (o) => (o.status || '').toUpperCase() === 'PROCESSING'
   ).length;
+
+  const totalItems = prescriptionOrders.length;
+  const totalPages = Math.ceil(totalItems / pageSize);
+  
+  const paginatedOrders = useMemo(() => {
+    const startIndex = (page - 1) * pageSize;
+    return prescriptionOrders.slice(startIndex, startIndex + pageSize);
+  }, [prescriptionOrders, page, pageSize]);
 
   const formatCurrency = (amount) =>
     new Intl.NumberFormat('vi-VN', {
@@ -132,19 +185,77 @@ const OperationsLensLabPage = () => {
 
       {/* Stats */}
       <div className="grid grid-cols-2 gap-4">
-        <div className="bg-white rounded-xl p-4 shadow-sm">
-          <p className="text-2xl font-bold text-red-600">{confirmedCount}</p>
-          <p className="text-sm text-[#4f5562]">Chờ gia công</p>
+        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-2xl font-bold text-blue-600">{confirmedCount}</p>
+              <p className="text-sm text-[#4f5562] font-medium">Chờ gia công</p>
+            </div>
+            <div className="p-3 bg-blue-50 rounded-xl flex items-center justify-center">
+              <TestTube className="w-6 h-6 text-blue-600" />
+            </div>
+          </div>
         </div>
-        <div className="bg-white rounded-xl p-4 shadow-sm">
-          <p className="text-2xl font-bold text-purple-600">{processingCount}</p>
-          <p className="text-sm text-[#4f5562]">Đang gia công</p>
+        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-2xl font-bold text-purple-600">{processingCount}</p>
+              <p className="text-sm text-[#4f5562] font-medium">Đang gia công</p>
+            </div>
+            <div className="p-3 bg-purple-50 rounded-xl flex items-center justify-center">
+              <TestTube className="w-6 h-6 text-purple-600" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Search & Filter */}
+      <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+        <div className="flex flex-col md:flex-row gap-4">
+          <div className="flex-1 relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <input
+              placeholder="Tìm theo mã đơn hoặc tên khách hàng..."
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setPage(1);
+              }}
+              className="w-full pl-12 pr-4 py-3 bg-[#f9f9f9] border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-[#0f5dd9] text-sm"
+            />
+          </div>
+
+          <select
+            value={sortParam}
+            onChange={(e) => { setSortParam(e.target.value); setPage(1); }}
+            className="bg-[#f9f9f9] border border-gray-200 rounded-full px-6 py-3 text-sm focus:outline-none"
+          >
+            <option value="date_desc">Ngày mới nhất</option>
+            <option value="date_asc">Ngày cũ nhất</option>
+            <option value="amount_desc">Tổng tiền giảm dần</option>
+            <option value="amount_asc">Tổng tiền tăng dần</option>
+            <option value="name_asc">Tên A-Z</option>
+            <option value="name_desc">Tên Z-A</option>
+          </select>
+
+          <select
+            value={statusFilter}
+            onChange={(e) => {
+              setStatusFilter(e.target.value);
+              setPage(1);
+            }}
+            className="bg-[#f9f9f9] border border-gray-200 rounded-full px-6 py-3 text-sm focus:outline-none"
+          >
+            <option value="all">Tất cả</option>
+            <option value="CONFIRMED">Chờ gia công</option>
+            <option value="PROCESSING">Đang gia công</option>
+          </select>
         </div>
       </div>
 
       {/* Orders List */}
-      <div className="space-y-4">
-        {prescriptionOrders.map((order) => {
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {paginatedOrders.map((order) => {
           const s = (order.status || '').toUpperCase();
           const statusBadge = getStatusBadge(order.status);
           return (
@@ -292,6 +403,34 @@ const OperationsLensLabPage = () => {
           </div>
         )}
       </div>
+
+      {totalItems > 0 && (
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-gray-500">Hiển thị:</span>
+            <select
+              value={pageSize}
+              onChange={(e) => {
+                setPageSize(Number(e.target.value));
+                setPage(1);
+              }}
+              className="px-3 py-1.5 border border-gray-200 rounded-lg text-sm"
+            >
+              {PAGE_SIZES.map((size) => (
+                <option key={size} value={size}>{size}</option>
+              ))}
+            </select>
+            <span className="text-sm text-gray-500">/ {totalItems} kết quả</span>
+          </div>
+          {totalPages > 1 && (
+            <Pagination
+              currentPage={page}
+              totalPages={totalPages}
+              onPageChange={setPage}
+            />
+          )}
+        </div>
+      )}
 
       {/* QC Fail Modal */}
       {qcFailModal.isOpen && (
