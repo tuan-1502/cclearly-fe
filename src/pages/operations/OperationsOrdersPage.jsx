@@ -14,6 +14,7 @@ const OperationsOrdersPage = () => {
 
   const [search, setSearch] = useState('');
   const [status, setStatus] = useState('all');
+  const [sortParam, setSortParam] = useState('date_desc');
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
@@ -65,7 +66,7 @@ const OperationsOrdersPage = () => {
   };
 
   const filtered = useMemo(() => {
-    return orders.filter((o) => {
+    let result = orders.filter((o) => {
       const orderId = o.code || o.orderId || o.id || '';
       const customerName = o.recipientName || o.shippingAddress?.name || '';
       const searchMatch =
@@ -74,7 +75,29 @@ const OperationsOrdersPage = () => {
 
       return searchMatch;
     });
-  }, [orders, search]);
+
+    result.sort((a, b) => {
+      const nameA = (a.recipientName || a.shippingAddress?.name || '').toLowerCase();
+      const nameB = (b.recipientName || b.shippingAddress?.name || '').toLowerCase();
+      const amountA = a.finalAmount || a.totalAmount || 0;
+      const amountB = b.finalAmount || b.totalAmount || 0;
+      const dateA = new Date(a.createdAt).getTime();
+      const dateB = new Date(b.createdAt).getTime();
+
+      switch (sortParam) {
+        case 'name_asc': return nameA.localeCompare(nameB, 'vi');
+        case 'name_desc': return nameB.localeCompare(nameA, 'vi');
+        case 'amount_asc': return amountA - amountB;
+        case 'amount_desc': return amountB - amountA;
+        case 'date_asc': return dateA - dateB;
+        case 'date_desc':
+        default:
+          return dateB - dateA;
+      }
+    });
+
+    return result;
+  }, [orders, search, sortParam]);
 
   // Pagination is server-side
   const paginated = filtered;
@@ -98,39 +121,52 @@ const OperationsOrdersPage = () => {
         <p className="text-gray-500">Xin chào, {user?.name || 'Operations'}</p>
       </div>
 
-      {/* FILTER */}
+      {/* Search & Filter */}
+      <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+        <div className="flex flex-col md:flex-row gap-4">
+          <div className="flex-1 relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <input
+              placeholder="Tìm theo mã đơn hoặc tên khách hàng..."
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(1);
+              }}
+              className="w-full pl-12 pr-4 py-3 bg-[#f9f9f9] border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-[#0f5dd9] text-sm"
+            />
+          </div>
 
-      <div className="bg-white p-4 rounded-xl shadow-sm flex gap-3">
-        <div className="flex-1 relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <select
+            value={sortParam}
+            onChange={(e) => { setSortParam(e.target.value); setPage(1); }}
+            className="bg-[#f9f9f9] border border-gray-200 rounded-full px-6 py-3 text-sm focus:outline-none"
+          >
+            <option value="date_desc">Ngày mới nhất</option>
+            <option value="date_asc">Ngày cũ nhất</option>
+            <option value="amount_desc">Tổng tiền giảm dần</option>
+            <option value="amount_asc">Tổng tiền tăng dần</option>
+            <option value="name_asc">Tên A-Z</option>
+            <option value="name_desc">Tên Z-A</option>
+          </select>
 
-          <input
-            placeholder="Tìm đơn hàng..."
-            value={search}
+          <select
+            value={status}
             onChange={(e) => {
-              setSearch(e.target.value);
+              setStatus(e.target.value);
               setPage(1);
             }}
-            className="w-full pl-9 pr-3 py-2 border rounded-lg"
-          />
+            className="bg-[#f9f9f9] border border-gray-200 rounded-full px-6 py-3 text-sm focus:outline-none"
+          >
+            <option value="all">Tất cả</option>
+            <option value="PENDING">Chờ xác nhận</option>
+            <option value="CONFIRMED">Đã xác nhận</option>
+            <option value="PROCESSING">Đang xử lý</option>
+            <option value="SHIPPED">Đang giao</option>
+            <option value="DELIVERED">Hoàn thành</option>
+            <option value="CANCELLED">Đã hủy</option>
+          </select>
         </div>
-
-        <select
-          value={status}
-          onChange={(e) => {
-            setStatus(e.target.value);
-            setPage(1);
-          }}
-          className="px-3 py-2 border rounded-lg"
-        >
-          <option value="all">Tất cả</option>
-          <option value="PENDING">Chờ xác nhận</option>
-          <option value="CONFIRMED">Đã xác nhận</option>
-          <option value="PROCESSING">Đang xử lý</option>
-          <option value="SHIPPED">Đang giao</option>
-          <option value="DELIVERED">Hoàn thành</option>
-          <option value="CANCELLED">Đã hủy</option>
-        </select>
       </div>
 
       {/* TABLE */}

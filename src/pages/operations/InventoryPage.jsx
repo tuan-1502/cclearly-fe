@@ -24,7 +24,7 @@ const InventoryPage = () => {
   const [typeFilter, setTypeFilter] = useState('all');
   const [stockFilter, setStockFilter] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(20);
+  const [pageSize, setPageSize] = useState(10);
 
   // Modal states
   const [showImportModal, setShowImportModal] = useState(false);
