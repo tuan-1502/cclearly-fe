@@ -1,5 +1,6 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, Outlet } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
 
 const banners = [
   {
@@ -35,7 +36,15 @@ export const AuthLayout = () => {
   }, []);
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex relative">
+      {/* Back Button */}
+      <Link
+        to="/"
+        className="fixed top-6 left-6 z-50 flex items-center gap-2 px-4 py-2 rounded-full transition-all group bg-white shadow-md border border-gray-100 text-[#222] hover:bg-gray-50 lg:bg-white/10 lg:backdrop-blur-md lg:border-white/20 lg:text-white lg:hover:bg-white/20 lg:shadow-none"
+      >
+        <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
+        <span className="text-sm font-semibold tracking-wide">TRANG CHỦ</span>
+      </Link>
       {/* Left Side - Branding with Carousel */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden flex-col justify-center items-center p-12">
         {/* Background Images */}
