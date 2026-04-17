@@ -297,19 +297,19 @@ const MainLayout = () => {
 
                         {(user?.role === ROLES.ADMIN ||
                           user?.role === ROLES.MANAGER) && (
-                          <Link
-                            to={
-                              user?.role === ROLES.ADMIN
-                                ? '/admin/settings'
-                                : '/manager/settings'
-                            }
-                            onClick={() => setIsProfileDropdownOpen(false)}
-                            className="flex items-center gap-3 px-4 py-2.5 text-[#666] hover:bg-[#f3f3f3] hover:text-[#d90f0f]"
-                          >
-                            <Settings className="h-4 w-4" />
-                            <span className="text-sm">Cài đặt</span>
-                          </Link>
-                        )}
+                            <Link
+                              to={
+                                user?.role === ROLES.ADMIN
+                                  ? '/admin/settings'
+                                  : '/manager/settings'
+                              }
+                              onClick={() => setIsProfileDropdownOpen(false)}
+                              className="flex items-center gap-3 px-4 py-2.5 text-[#666] hover:bg-[#f3f3f3] hover:text-[#d90f0f]"
+                            >
+                              <Settings className="h-4 w-4" />
+                              <span className="text-sm">Cài đặt</span>
+                            </Link>
+                          )}
 
                         <div className="border-t border-[#efefef] mt-2 pt-2">
                           <button
@@ -470,9 +470,9 @@ const MainLayout = () => {
                 ))}
               </div>
               <p className="mt-4 text-sm text-[#b7b7b7]">
-                support@cclearly.com
+                admin@cclearly.com
               </p>
-              <p className="text-sm text-[#b7b7b7]">+1 (800) 123-4567</p>
+              <p className="text-sm text-[#b7b7b7]">+84 328679007 </p>
             </div>
           </div>
 

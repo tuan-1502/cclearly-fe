@@ -194,35 +194,6 @@ const LoginPage = () => {
           Đăng ký ngay
         </Link>
       </p>
-
-      {/* Demo accounts info */}
-      <div className="mt-8 p-5 bg-[#ececec] rounded-2xl">
-        <p className="text-sm font-semibold text-[#222] mb-3">
-          Tài khoản demo:
-        </p>
-        <div className="text-xs text-[#4f5562] space-y-1.5">
-          <p>
-            <span className="font-medium">Customer:</span> customer@gmail.com /
-            customer123
-          </p>
-          <p>
-            <span className="font-medium">Sales/Staff:</span> sales@cclearly.com
-            / sales123
-          </p>
-          <p>
-            <span className="font-medium">Manager:</span> manager@cclearly.com /
-            manager123
-          </p>
-          <p>
-            <span className="font-medium">Admin:</span> admin@cclearly.com /
-            admin123
-          </p>
-          <p>
-            <span className="font-medium">Operations:</span>ops@cclearly.com /
-            ops123
-          </p>
-        </div>
-      </div>
     </div>
   );
 };
