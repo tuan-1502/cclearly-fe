@@ -273,21 +273,37 @@ const OperationsBoardPage = () => {
       </div>
 
       <div className="grid grid-cols-4 gap-4">
-        {columns.map((col) => (
-          <div key={col.id} className="bg-white rounded-xl p-4 shadow-sm">
-            <p className={`text-2xl font-bold text-${col.color}-600`}>
-              {col.count}
-            </p>
-            <p className="text-sm text-[#4f5562]">{col.title}</p>
-          </div>
-        ))}
+        {columns.map((col) => {
+          const colorStyles = {
+            yellow: { text: 'text-yellow-600', iconBg: 'bg-yellow-50' },
+            purple: { text: 'text-purple-600', iconBg: 'bg-purple-50' },
+            blue: { text: 'text-blue-600', iconBg: 'bg-blue-50' },
+            orange: { text: 'text-orange-600', iconBg: 'bg-orange-50' },
+          }[col.color];
+
+          return (
+            <div key={col.id} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+              <div className="flex justify-between items-start">
+                <div>
+                  <p className={`text-2xl font-bold ${colorStyles.text}`}>
+                    {col.count}
+                  </p>
+                  <p className="text-sm text-[#4f5562] font-medium">{col.title}</p>
+                </div>
+                <div className={`p-3 rounded-xl flex items-center justify-center ${colorStyles.iconBg}`}>
+                  <col.icon className={`w-6 h-6 ${colorStyles.text}`} />
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="space-y-6">
         {columns.map((column) => (
           <div
             key={column.id}
-            className={`rounded-xl p-4 ${colorMap[column.color]}`}
+            className={`rounded-xl p-4 md:p-6 ${colorMap[column.color]}`}
           >
             <div className="flex items-center gap-2 mb-4">
               <column.icon className={`w-5 h-5 text-${column.color}-600`} />
@@ -297,13 +313,13 @@ const OperationsBoardPage = () => {
               </span>
             </div>
 
-            <div className="space-y-3 min-h-[200px]">
+            <div className="flex overflow-x-auto gap-4 pb-2 min-h-[200px] flex-nowrap custom-scrollbar">
               {column.orders.map((order) => {
                 const badge = getStatusBadge(order.status);
                 return (
                   <div
                     key={order.orderId || order.id}
-                    className="bg-white rounded-xl p-4 shadow-sm"
+                    className="bg-white rounded-xl p-4 shadow-sm min-w-[300px] w-[300px] shrink-0 flex flex-col"
                   >
                     <div className="flex justify-between items-start mb-2">
                       <span className="font-bold text-[#222]">
@@ -325,27 +341,9 @@ const OperationsBoardPage = () => {
                       </div>
                     </div>
 
-                    <p className="text-sm text-[#4f5562] mb-1">
+                    <p className="text-sm text-[#4f5562] mb-3 truncate">
                       {order.recipientName}
                     </p>
-                    {order.type === 'prescription' && (
-                      <span className="inline-block px-1.5 py-0.5 rounded text-xs bg-blue-50 text-blue-600 mb-2">
-                        Có toa kính
-                      </span>
-                    )}
-
-                    <div className="text-xs text-[#4f5562] mb-3">
-                      {order.items?.slice(0, 2).map((item, idx) => (
-                        <p key={idx} className="truncate">
-                          {item.productName || item.name} x{item.quantity}
-                        </p>
-                      ))}
-                      {order.items?.length > 2 && (
-                        <p className="text-gray-400">
-                          +{order.items.length - 2} sản phẩm khác
-                        </p>
-                      )}
-                    </div>
 
                     <div className="flex justify-between items-center pt-2 border-t">
                       <span className="font-medium text-sm">
@@ -356,7 +354,7 @@ const OperationsBoardPage = () => {
                       </span>
                     </div>
 
-                    <div className="mt-3 pt-3 border-t">
+                    <div className="mt-auto pt-3 border-t">
                       {renderActions(column.id, order)}
                     </div>
                   </div>

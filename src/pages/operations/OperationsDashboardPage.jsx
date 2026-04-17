@@ -1,7 +1,8 @@
-// Operations Dashboard Page
 import { useState } from 'react';
 import { toast } from 'react-toastify';
+import { Clock, Box, Truck, RefreshCw } from 'lucide-react';
 import ConfirmModal from '@/components/ui/ConfirmModal';
+import Pagination from '@/components/ui/Pagination';
 import { useAdminOrders, useUpdateOrderStatus } from '@/hooks/useOrder';
 import {
   useReturns,
@@ -9,8 +10,12 @@ import {
   useRejectReturn,
 } from '@/hooks/useReturn';
 
+const PAGE_SIZES = [6, 12, 18, 30, 60];
+
 const OperationsDashboardPage = () => {
   const [tab, setTab] = useState('pending');
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(6);
   const [trackingModal, setTrackingModal] = useState({
     isOpen: false,
     orderId: null,
@@ -81,6 +86,14 @@ const OperationsDashboardPage = () => {
           ? shippedOrders
           : [];
 
+  const totalReturns = pendingReturns.length;
+  const totalReturnsPages = Math.ceil(totalReturns / pageSize);
+  const paginatedReturns = pendingReturns.slice((page - 1) * pageSize, page * pageSize);
+
+  const totalOrders = currentOrders.length;
+  const totalOrdersPages = Math.ceil(totalOrders / pageSize);
+  const paginatedOrders = currentOrders.slice((page - 1) * pageSize, page * pageSize);
+
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('vi-VN', {
       style: 'currency',
@@ -117,21 +130,38 @@ const OperationsDashboardPage = () => {
         <p className="text-[#4f5562]">Bảng điều phối đơn hàng</p>
       </div>
 
-      {/* Tabs */}
-      <div className="flex gap-4 border-b border-[#ececec] overflow-x-auto">
-        {tabs.map((t) => (
-          <button
-            key={t.key}
-            onClick={() => setTab(t.key)}
-            className={`px-6 py-3 font-medium transition border-b-2 whitespace-nowrap ${
-              tab === t.key
-                ? 'border-[#0f5dd9] text-[#0f5dd9]'
-                : 'border-transparent text-[#4f5562] hover:text-[#222]'
-            }`}
-          >
-            {t.label} ({t.count})
-          </button>
-        ))}
+      {/* Stats as Tabs */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {tabs.map((t) => {
+          const isSelected = tab === t.key;
+          let colorStyles = { active: 'border-blue-300 ring-2 ring-blue-100', text: 'text-blue-600', bg: 'bg-blue-50' };
+          let Icon = Clock;
+          
+          if (t.key === 'pending') { colorStyles = { active: 'border-yellow-300 ring-2 ring-yellow-100 hover:border-yellow-200', text: 'text-yellow-600', bg: 'bg-yellow-50' }; Icon = Clock; }
+          if (t.key === 'processing') { colorStyles = { active: 'border-purple-300 ring-2 ring-purple-100 hover:border-purple-200', text: 'text-purple-600', bg: 'bg-purple-50' }; Icon = Box; }
+          if (t.key === 'shipping') { colorStyles = { active: 'border-orange-300 ring-2 ring-orange-100 hover:border-orange-200', text: 'text-orange-600', bg: 'bg-orange-50' }; Icon = Truck; }
+          if (t.key === 'returns') { colorStyles = { active: 'border-red-300 ring-2 ring-red-100 hover:border-red-200', text: 'text-red-500', bg: 'bg-red-50' }; Icon = RefreshCw; }
+
+          return (
+            <div
+              key={t.key}
+              onClick={() => { setTab(t.key); setPage(1); }}
+              className={`bg-white rounded-2xl p-6 shadow-sm border cursor-pointer transition ${isSelected ? colorStyles.active : 'border-gray-100 hover:border-gray-200'}`}
+            >
+              <div className="flex justify-between items-start">
+                <div>
+                  <p className={`text-2xl font-bold ${colorStyles.text}`}>
+                    {t.count}
+                  </p>
+                  <p className="text-sm text-[#4f5562] font-medium">{t.label}</p>
+                </div>
+                <div className={`p-3 rounded-xl flex items-center justify-center ${colorStyles.bg}`}>
+                  <Icon className={`w-6 h-6 ${colorStyles.text}`} />
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
 
       {/* Returns Section */}
@@ -141,8 +171,8 @@ const OperationsDashboardPage = () => {
             Yêu cầu đổi trả
           </h3>
           <div className="space-y-3">
-            {pendingReturns.length > 0 ? (
-              pendingReturns.map((ret) => {
+            {paginatedReturns.length > 0 ? (
+              paginatedReturns.map((ret) => {
                 const statusBadge = getReturnStatusBadge(ret.status);
                 return (
                   <div
@@ -203,18 +233,48 @@ const OperationsDashboardPage = () => {
               </p>
             )}
           </div>
+
+          {/* pagination */}
+          {totalReturns > 0 && (
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4 mt-6 border-t pt-4">
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-500">Hiển thị:</span>
+                <select
+                  value={pageSize}
+                  onChange={(e) => {
+                    setPageSize(Number(e.target.value));
+                    setPage(1);
+                  }}
+                  className="px-3 py-1.5 border border-gray-200 rounded-lg text-sm"
+                >
+                  {PAGE_SIZES.map((size) => (
+                    <option key={size} value={size}>{size}</option>
+                  ))}
+                </select>
+                <span className="text-sm text-gray-500">/ {totalReturns} kết quả</span>
+              </div>
+              {totalReturnsPages > 1 && (
+                <Pagination
+                  currentPage={page}
+                  totalPages={totalReturnsPages}
+                  onPageChange={setPage}
+                />
+              )}
+            </div>
+          )}
         </div>
       )}
 
       {/* Orders Board */}
       {tab !== 'returns' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {currentOrders.length === 0 ? (
-            <div className="col-span-full text-center py-12 text-[#4f5562]">
-              Không có đơn hàng nào
-            </div>
-          ) : (
-            currentOrders.map((order) => {
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {paginatedOrders.length === 0 ? (
+              <div className="col-span-full text-center py-12 text-[#4f5562] bg-white rounded-2xl shadow-sm border border-gray-50">
+                Không có đơn hàng nào
+              </div>
+            ) : (
+              paginatedOrders.map((order) => {
               const statusBadge = getStatusBadge(order.status);
               return (
                 <div
@@ -293,6 +353,36 @@ const OperationsDashboardPage = () => {
                 </div>
               );
             })
+          )}
+          </div>
+
+          {/* pagination */}
+          {totalOrders > 0 && (
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-500">Hiển thị:</span>
+                <select
+                  value={pageSize}
+                  onChange={(e) => {
+                    setPageSize(Number(e.target.value));
+                    setPage(1);
+                  }}
+                  className="px-3 py-1.5 border border-gray-200 rounded-lg text-sm"
+                >
+                  {PAGE_SIZES.map((size) => (
+                    <option key={size} value={size}>{size}</option>
+                  ))}
+                </select>
+                <span className="text-sm text-gray-500">/ {totalOrders} kết quả</span>
+              </div>
+              {totalOrdersPages > 1 && (
+                <Pagination
+                  currentPage={page}
+                  totalPages={totalOrdersPages}
+                  onPageChange={setPage}
+                />
+              )}
+            </div>
           )}
         </div>
       )}

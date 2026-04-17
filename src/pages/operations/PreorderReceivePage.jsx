@@ -14,7 +14,10 @@ import { useState, useMemo } from 'react';
 import { toast } from 'react-toastify';
 import ConfirmModal from '@/components/ui/ConfirmModal';
 import OrderDetailModal from '@/components/sale/OrderDetailModal';
+import Pagination from '@/components/ui/Pagination';
 import { useAdminOrders, useUpdateOrderStatus } from '@/hooks/useOrder';
+
+const PAGE_SIZES = [5, 10, 15, 20, 30, 50];
 
 const PreorderReceivePage = () => {
   const { data: orderData, isLoading } = useAdminOrders({ size: 1000 });
@@ -23,6 +26,9 @@ const PreorderReceivePage = () => {
 
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all'); // all | waiting | overdue | received
+  const [sortParam, setSortParam] = useState('date_desc');
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [confirmModal, setConfirmModal] = useState({
     isOpen: false,
@@ -96,8 +102,33 @@ const PreorderReceivePage = () => {
       });
     }
 
+    // Sort
+    result.sort((a, b) => {
+      const nameA = (a.recipientName || '').toLowerCase();
+      const nameB = (b.recipientName || '').toLowerCase();
+      const amountA = a.finalAmount || a.totalAmount || 0;
+      const amountB = b.finalAmount || b.totalAmount || 0;
+      const dateA = new Date(a.createdAt).getTime();
+      const dateB = new Date(b.createdAt).getTime();
+
+      switch (sortParam) {
+        case 'name_asc': return nameA.localeCompare(nameB, 'vi');
+        case 'name_desc': return nameB.localeCompare(nameA, 'vi');
+        case 'amount_asc': return amountA - amountB;
+        case 'amount_desc': return amountB - amountA;
+        case 'date_asc': return dateA - dateB;
+        case 'date_desc':
+        default:
+          return dateB - dateA;
+      }
+    });
+
     return result;
-  }, [preorderOrders, statusFilter, searchTerm]);
+  }, [preorderOrders, statusFilter, searchTerm, sortParam]);
+
+  const totalItems = filteredOrders.length;
+  const totalPages = Math.ceil(totalItems / pageSize);
+  const paginatedOrders = filteredOrders.slice((page - 1) * pageSize, page * pageSize);
 
   const formatCurrency = (amount) =>
     new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
@@ -168,7 +199,7 @@ const PreorderReceivePage = () => {
       {/* Stats Cards — clickable filters */}
       <div className="grid md:grid-cols-3 gap-4">
         <div
-          onClick={() => setStatusFilter('waiting')}
+          onClick={() => { setStatusFilter('waiting'); setPage(1); }}
           className={`bg-white p-6 rounded-2xl shadow-sm border cursor-pointer transition ${
             statusFilter === 'waiting' ? 'border-blue-300 ring-2 ring-blue-100' : 'border-gray-100 hover:border-blue-200'
           }`}
@@ -185,7 +216,7 @@ const PreorderReceivePage = () => {
         </div>
 
         <div
-          onClick={() => setStatusFilter('overdue')}
+          onClick={() => { setStatusFilter('overdue'); setPage(1); }}
           className={`bg-white p-6 rounded-2xl shadow-sm border cursor-pointer transition ${
             statusFilter === 'overdue' ? 'border-red-300 ring-2 ring-red-100' : 'border-gray-100 hover:border-red-200'
           }`}
@@ -202,7 +233,7 @@ const PreorderReceivePage = () => {
         </div>
 
         <div
-          onClick={() => setStatusFilter('received')}
+          onClick={() => { setStatusFilter('received'); setPage(1); }}
           className={`bg-white p-6 rounded-2xl shadow-sm border cursor-pointer transition ${
             statusFilter === 'received' ? 'border-green-300 ring-2 ring-green-100' : 'border-gray-100 hover:border-green-200'
           }`}
@@ -219,27 +250,48 @@ const PreorderReceivePage = () => {
         </div>
       </div>
 
-      {/* Search & Reset */}
+      {/* Search & Sort & Filter UI */}
       <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-        <div className="flex flex-col md:flex-row gap-4 items-center">
+        <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1 relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
             <input
-              type="text"
               placeholder="Tìm theo mã đơn, tên khách, SKU..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setPage(1);
+              }}
               className="w-full pl-12 pr-4 py-3 bg-[#f9f9f9] border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-[#0f5dd9] text-sm"
             />
           </div>
-          {statusFilter !== 'all' && (
-            <button
-              onClick={() => setStatusFilter('all')}
-              className="text-sm text-[#4f5562] hover:text-[#222] transition whitespace-nowrap"
-            >
-              Xem tất cả
-            </button>
-          )}
+
+          <select
+            value={sortParam}
+            onChange={(e) => { setSortParam(e.target.value); setPage(1); }}
+            className="bg-[#f9f9f9] border border-gray-200 rounded-full px-6 py-3 text-sm focus:outline-none"
+          >
+            <option value="date_desc">Ngày mới nhất</option>
+            <option value="date_asc">Ngày cũ nhất</option>
+            <option value="amount_desc">Tổng tiền giảm dần</option>
+            <option value="amount_asc">Tổng tiền tăng dần</option>
+            <option value="name_asc">Tên A-Z</option>
+            <option value="name_desc">Tên Z-A</option>
+          </select>
+
+          <select
+            value={statusFilter}
+            onChange={(e) => {
+              setStatusFilter(e.target.value);
+              setPage(1);
+            }}
+            className="bg-[#f9f9f9] border border-gray-200 rounded-full px-6 py-3 text-sm focus:outline-none"
+          >
+            <option value="all">Tất cả trạng thái</option>
+            <option value="waiting">Đang chờ hàng về</option>
+            <option value="overdue">Trễ hẹn (SLA)</option>
+            <option value="received">Đã nhập kho</option>
+          </select>
         </div>
       </div>
 
@@ -247,7 +299,7 @@ const PreorderReceivePage = () => {
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
         <div className="p-6 border-b border-gray-100 bg-[#f9f9f9]/50">
           <h2 className="font-bold text-[#222]">
-            Đơn Pre-order ({filteredOrders.length})
+            Đơn Pre-order ({totalItems})
           </h2>
         </div>
         <div className="overflow-x-auto">
@@ -264,7 +316,7 @@ const PreorderReceivePage = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
-              {filteredOrders.map((order) => {
+              {paginatedOrders.map((order) => {
                 const daysLeft = getDaysLeft(order.preorderDeadline);
                 const isWaiting =
                   (order.status || '').toUpperCase() === 'PENDING' ||
@@ -406,6 +458,35 @@ const PreorderReceivePage = () => {
           </div>
         )}
       </div>
+
+      {/* Pagination */}
+      {totalItems > 0 && (
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-gray-500">Hiển thị:</span>
+            <select
+              value={pageSize}
+              onChange={(e) => {
+                setPageSize(Number(e.target.value));
+                setPage(1);
+              }}
+              className="px-3 py-1.5 border border-gray-200 rounded-lg text-sm"
+            >
+              {PAGE_SIZES.map((size) => (
+                <option key={size} value={size}>{size}</option>
+              ))}
+            </select>
+            <span className="text-sm text-gray-500">/ {totalItems} kết quả</span>
+          </div>
+          {totalPages > 1 && (
+            <Pagination
+              currentPage={page}
+              totalPages={totalPages}
+              onPageChange={setPage}
+            />
+          )}
+        </div>
+      )}
 
       {/* Confirm Modal */}
       <ConfirmModal
