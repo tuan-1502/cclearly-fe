@@ -184,7 +184,7 @@ const PromotionPage = () => {
 
         <button
           onClick={openAddCoupon}
-          className="flex items-center gap-2 px-6 py-3 rounded-full bg-[#d90f0f] text-white text-sm font-medium hover:bg-[#b00c0c] transition shadow-lg shadow-red-100"
+          className="flex items-center gap-2 px-6 py-3 rounded-full bg-red-600 text-white text-sm font-medium hover:bg-red-700 transition-colors shadow-lg shadow-red-100"
         >
           <Plus size={18} />
           Tạo Voucher
@@ -212,14 +212,14 @@ const PromotionPage = () => {
             label: 'Đã tắt',
             val: disabledVouchers,
             icon: XCircle,
-            color: 'text-[#d90f0f]',
+            color: 'text-red-600',
             bg: 'bg-red-50',
           },
           {
             label: 'Lượt sử dụng',
             val: totalUsage,
             icon: Package,
-            color: 'text-[#d90f0f]',
+            color: 'text-red-600',
             bg: 'bg-red-50',
           },
         ].map((item, idx) => (
@@ -239,44 +239,46 @@ const PromotionPage = () => {
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-xl p-4 border border-gray-100 flex flex-wrap gap-4 items-center">
-        <div className="flex-1 relative min-w-[300px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-          <input
-            type="text"
-            placeholder="Tìm theo mã voucher..."
-            value={couponSearch}
-            onChange={(e) => setCouponSearch(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-red-200 outline-none"
-          />
-        </div>
+      <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+        <div className="flex flex-col md:flex-row gap-4">
+          <div className="flex-1 relative min-w-[300px]">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" size={18} />
+            <input
+              type="text"
+              placeholder="Tìm theo mã voucher..."
+              value={couponSearch}
+              onChange={(e) => setCouponSearch(e.target.value)}
+              className="w-full pl-12 pr-4 py-3 bg-[#f9f9f9] border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-[#0f5dd9] text-sm"
+            />
+          </div>
 
-        <div className="flex items-center gap-2 border rounded-lg px-3 py-2 text-sm bg-gray-50/50">
-          <TrendingUp size={16} className="text-gray-400" />
-          <select
-            value={sortOption}
-            onChange={(e) => setSortOption(e.target.value)}
-            className="outline-none bg-transparent font-medium"
-          >
-            <option value="newest">Mới nhất</option>
-            <option value="name-asc">Tên (A-Z)</option>
-            <option value="name-desc">Tên (Z-A)</option>
-            <option value="value-desc">Giảm giá cao nhất</option>
-            <option value="value-asc">Giảm giá thấp nhất</option>
-          </select>
-        </div>
+          {/* <div className="bg-[#f9f9f9] border border-gray-200 rounded-full px-6 py-3 text-sm flex items-center gap-2">
+            <TrendingUp size={16} className="text-gray-400" /> */}
+            <select
+              value={sortOption}
+              onChange={(e) => setSortOption(e.target.value)}
+              className="bg-[#f9f9f9] border border-gray-200 rounded-full px-6 py-3 text-sm focus:outline-none"
+            >
+              <option value="newest">Mới nhất</option>
+              <option value="name-asc">Tên (A-Z)</option>
+              <option value="name-desc">Tên (Z-A)</option>
+              <option value="value-desc">Giảm giá cao nhất</option>
+              <option value="value-asc">Giảm giá thấp nhất</option>
+            </select>
+          {/* </div> */}
 
-        <div className="flex items-center gap-2 border rounded-lg px-3 py-2 text-sm">
-          <Filter size={16} className="text-gray-400" />
-          <select
-            value={couponFilter}
-            onChange={(e) => setCouponFilter(e.target.value)}
-            className="outline-none bg-transparent"
-          >
-            <option value="all">Tất cả trạng thái</option>
-            <option value="active">Đang hoạt động</option>
-            <option value="disabled">Đã tắt</option>
-          </select>
+          <div className="bg-[#f9f9f9] border border-gray-200 rounded-full px-6 py-3 text-sm flex items-center gap-2">
+            <Filter size={16} className="text-gray-400" />
+            <select
+              value={couponFilter}
+              onChange={(e) => setCouponFilter(e.target.value)}
+              className="outline-none bg-transparent"
+            >
+              <option value="all">Tất cả trạng thái</option>
+              <option value="active">Đang hoạt động</option>
+              <option value="disabled">Đã tắt</option>
+            </select>
+          </div>
         </div>
       </div>
 
@@ -331,7 +333,7 @@ const PromotionPage = () => {
                     </span>
                   </td>
 
-                  <td className="px-5 py-3 font-medium text-[#d90f0f]">
+                  <td className="px-5 py-3 font-medium text-red-600">
                     {formatDiscount(coupon)}
                   </td>
 
@@ -621,4 +623,3 @@ const PromotionPage = () => {
 };
 
 export default PromotionPage;
-

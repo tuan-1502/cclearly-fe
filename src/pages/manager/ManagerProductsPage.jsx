@@ -224,37 +224,39 @@ const ManagerProductsPage = () => {
       </div>
 
       {/* Actions */}
-      <div className="flex flex-col md:flex-row gap-4">
-        <div className="flex-1 relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-          <input
-            type="text"
-            placeholder="Tìm kiếm sản phẩm..."
-            value={filters.search}
+      <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+        <div className="flex flex-col md:flex-row gap-4">
+          <div className="flex-1 relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Tìm kiếm sản phẩm..."
+              value={filters.search}
+              onChange={(e) =>
+                setFilters({ ...filters, search: e.target.value, page: 1 })
+              }
+              className="w-full pl-12 pr-4 py-3 bg-[#f9f9f9] border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-[#0f5dd9] text-sm"
+            />
+          </div>
+          <select
+            value={filters.type}
             onChange={(e) =>
-              setFilters({ ...filters, search: e.target.value, page: 1 })
+              setFilters({ ...filters, type: e.target.value, page: 1 })
             }
-            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d90f0f]"
-          />
+            className="bg-[#f9f9f9] border border-gray-200 rounded-full px-6 py-3 text-sm focus:outline-none"
+          >
+            <option value="">Tất cả loại</option>
+            <option value="frame">Gọng kính</option>
+            <option value="lens">Tròng kính</option>
+            <option value="accessory">Phụ kiện</option>
+          </select>
+          <button
+            onClick={() => handleOpenModal()}
+            className="bg-red-600 text-white px-6 py-2 rounded-xl font-medium hover:bg-red-700 flex items-center gap-2 transition-colors"
+          >
+            <Plus className="w-5 h-5" /> Thêm sản phẩm
+          </button>
         </div>
-        <select
-          value={filters.type}
-          onChange={(e) =>
-            setFilters({ ...filters, type: e.target.value, page: 1 })
-          }
-          className="px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d90f0f] bg-white"
-        >
-          <option value="">Tất cả loại</option>
-          <option value="frame">Gọng kính</option>
-          <option value="lens">Tròng kính</option>
-          <option value="accessory">Phụ kiện</option>
-        </select>
-        <button
-          onClick={() => handleOpenModal()}
-          className="bg-[#d90f0f] text-white px-6 py-2 rounded-xl font-medium hover:bg-[#b00c0c] flex items-center gap-2"
-        >
-          <Plus className="w-5 h-5" /> Thêm sản phẩm
-        </button>
       </div>
 
       {/* Products Table */}
@@ -317,7 +319,7 @@ const ManagerProductsPage = () => {
                             )}
                           </div>
                           <div className="min-w-0">
-                            <p className="text-sm font-semibold text-[#222] truncate group-hover:text-[#d90f0f] transition-colors">
+                            <p className="text-sm font-semibold text-[#222] truncate group-hover:text-red-600 transition-colors">
                               {product.name}
                             </p>
                             <p className="text-[10px] text-gray-400 font-medium uppercase tracking-tighter">
@@ -363,10 +365,10 @@ const ManagerProductsPage = () => {
                       </td>
                       <td className="px-4 py-2.5 text-right">
                         <div className="flex justify-end gap-1.5">
-                          <button
-                            onClick={() => handleOpenModal(product)}
-                            className="p-2 text-gray-400 hover:text-[#d90f0f] hover:bg-blue-50 rounded-lg transition"
-                          >
+                            <button
+                              onClick={() => handleOpenModal(product)}
+                              className="p-2 text-gray-400 hover:text-red-600 hover:bg-blue-50 rounded-lg transition"
+                            >
                             <Edit2 className="w-4 h-4" />
                           </button>
                           <button
@@ -399,7 +401,7 @@ const ManagerProductsPage = () => {
                       page: 1,
                     })
                   }
-                  className="px-3 py-1.5 border border-[#e0e0e0] rounded-lg text-sm focus:outline-none focus:border-[#d90f0f] bg-white cursor-pointer"
+                  className="px-3 py-1.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-red-600 bg-white cursor-pointer"
                 >
                   {PAGE_SIZES.map((size) => (
                     <option key={size} value={size}>

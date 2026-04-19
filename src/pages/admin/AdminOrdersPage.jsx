@@ -33,21 +33,23 @@ const SHIPPING_CARRIERS = [
 const AdminOrdersPage = () => {
   const { user } = useAuth();
 
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all');
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [filters, setFilters] = useState({
+    page: 1,
+    size: 20,
+    type: 'all',
+    search: '',
+  });
   const [sortOption, setSortOption] = useState('date-desc');
 
   const { data: ordersData } = useAdminOrders({
-    status: statusFilter !== 'all' ? statusFilter : undefined,
-    page: currentPage,
-    size: pageSize,
+    status: filters.type !== 'all' && filters.type !== '' ? filters.type : undefined,
+    page: filters.page,
+    size: filters.size,
   });
   const orders = ordersData?.items || ordersData || [];
   const totalItems = ordersData?.meta?.totalElements || orders.length;
   const totalPages =
-    ordersData?.meta?.totalPages || Math.ceil(totalItems / pageSize);
+    ordersData?.meta?.totalPages || Math.ceil(totalItems / filters.size);
 
   const savePrescriptionMutation = useSavePrescription();
   const updateStatusMutation = useUpdateOrderStatus();
@@ -61,7 +63,6 @@ const AdminOrdersPage = () => {
     pd: '',
     prescriptionImage: null,
   });
-
   const [confirmModal, setConfirmModal] = useState({
     isOpen: false,
     title: '',
@@ -85,59 +86,13 @@ const AdminOrdersPage = () => {
   const AXS_VALUES = Array.from({ length: 181 }, (_, i) => i.toString());
 
   /* ---------- Derived data ---------- */
-
-  const filteredOrders = orders
-    .filter((order) => {
-      const orderId = order.code || order.orderId || order.id || '';
-      const customerName =
-        order.recipientName || order.shippingAddress?.name || '';
-      const customerPhone =
-        order.shippingPhone || order.shippingAddress?.phone || '';
-      return (
-        orderId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        customerPhone.includes(searchTerm)
-      );
-    })
-    .sort((a, b) => {
-      if (sortOption === 'name-asc') {
-        return (a.recipientName || '').localeCompare(
-          b.recipientName || '',
-          'vi'
-        );
-      }
-      if (sortOption === 'name-desc') {
-        return (b.recipientName || '').localeCompare(
-          a.recipientName || '',
-          'vi'
-        );
-      }
-      if (sortOption === 'date-asc') {
-        return new Date(a.createdAt || 0) - new Date(b.createdAt || 0);
-      }
-      if (sortOption === 'date-desc') {
-        return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
-      }
-      return 0;
-    });
-
-  const paginatedOrders = filteredOrders;
-
-  /* ---------- Helpers ---------- */
-
-  const formatCurrency = (amount) =>
-    new Intl.NumberFormat('vi-VN', {
-      style: 'currency',
-      currency: 'VND',
-    }).format(amount || 0);
-
   const STATUS_MAP = {
     PENDING: { label: 'Chờ xác nhận', css: 'bg-yellow-100 text-yellow-700' },
-    CONFIRMED: { label: 'Đã xác nhận', css: 'bg-red-100 text-red-700' },
+    CONFIRMED: { label: 'Đã xác nhận', css: 'bg-blue-100 text-blue-700' },
     PROCESSING: { label: 'Đang xử lý', css: 'bg-purple-100 text-purple-700' },
-    SHIPPED: { label: 'Đang giao hàng', css: 'bg-orange-100 text-orange-700' },
+    SHIPPED: { label: 'Đang giao', css: 'bg-orange-100 text-orange-700' },
     DELIVERED: { label: 'Đã giao', css: 'bg-green-100 text-green-700' },
-    CANCELLED: { label: 'Đã hủy', css: 'bg-red-100 text-red-700' },
+    CANCELLED: { label: 'Đã hủy', css: 'bg-gray-100 text-gray-700' },
     RETURN_REQUESTED: {
       label: 'Yêu cầu trả hàng',
       css: 'bg-pink-100 text-pink-700',
@@ -151,12 +106,38 @@ const AdminOrdersPage = () => {
   };
 
   const getStatusBadge = (status) =>
-    STATUS_MAP[status] || { label: status, css: 'bg-gray-100 text-gray-700' };
+    STATUS_MAP[status] || { label: status || '—', css: 'bg-gray-100 text-gray-700' };
   const getTypeBadge = (type) =>
-    TYPE_MAP[type] || {
-      label: type || 'Thường',
-      css: 'bg-gray-100 text-gray-700',
-    };
+    TYPE_MAP[type] || { label: type || 'Thường', css: 'bg-gray-100 text-gray-700' };
+
+  const formatCurrency = (amount) =>
+    new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }).format(amount);
+
+  const filteredOrders = orders.filter((order) => {
+    if (!filters.search) return true;
+    const term = filters.search.toString().toLowerCase();
+    const code = (order.code || order.orderId || '').toString().toLowerCase();
+    const name = (order.recipientName || '').toLowerCase();
+    const phone = (order.shippingPhone || '').toLowerCase();
+    return code.includes(term) || name.includes(term) || phone.includes(term);
+  });
+
+  // sorting
+  if (sortOption === 'date-desc') {
+    filteredOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  } else if (sortOption === 'date-asc') {
+    filteredOrders.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+  } else if (sortOption === 'name-asc') {
+    filteredOrders.sort((a, b) => (a.recipientName || '').localeCompare(b.recipientName || ''));
+  } else if (sortOption === 'name-desc') {
+    filteredOrders.sort((a, b) => (b.recipientName || '').localeCompare(a.recipientName || ''));
+  }
+
+  // pagination
+  const paginatedOrders = filteredOrders;
 
   /* ---------- Actions ---------- */
 
@@ -330,61 +311,53 @@ const AdminOrdersPage = () => {
         ))}
       </div>
 
-      {/* Filters */}
-      <div className="bg-white rounded-xl p-4 border border-gray-100 flex gap-4 items-center">
-        <div className="flex-1 relative">
-          <Search
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-            size={18}
-          />
-          <input
-            type="text"
-            placeholder="Tìm mã đơn, khách hàng, SĐT..."
-            value={searchTerm}
-            onChange={(e) => {
-              setSearchTerm(e.target.value);
-              setCurrentPage(1);
-            }}
-            className="w-full pl-9 pr-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-red-200 outline-none"
-          />
-        </div>
+      {/* Filters UI */}
+      <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6">
+        <div className="flex flex-col md:flex-row gap-4">
+          <div className="flex-1 relative min-w-[300px]">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+            <input
+              type="text"
+              placeholder="Tìm mã đơn, khách hàng, SĐT..."
+              value={filters.search}
+              onChange={(e) => setFilters({ ...filters, search: e.target.value, page: 1 })}
+              className="w-full pl-12 pr-4 py-3 bg-[#f9f9f9] border border-gray-200 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-[#0f5dd9] transition"
+            />
+          </div>
 
-        <div className="flex items-center gap-2 border rounded-lg px-3 py-2 text-sm bg-gray-50/50">
-          <TrendingUp size={16} className="text-gray-400" />
+          {/* <div className="bg-[#f9f9f9] border border-gray-200 rounded-full px-6 py-3 text-sm flex items-center gap-2"> */}
+          {/* <TrendingUp size={16} className="text-gray-400" /> */}
           <select
             value={sortOption}
             onChange={(e) => setSortOption(e.target.value)}
-            className="outline-none bg-transparent font-medium"
+            className="bg-[#f9f9f9] border border-gray-200 rounded-full px-6 py-3 text-sm focus:outline-none"
           >
             <option value="date-desc">Mới nhất</option>
             <option value="date-asc">Cũ nhất</option>
             <option value="name-asc">Tên (A-Z)</option>
             <option value="name-desc">Tên (Z-A)</option>
           </select>
-        </div>
+          {/* </div> */}
 
-        <div className="flex items-center gap-2 border rounded-lg px-3 py-2 text-sm">
-          <Filter size={16} className="text-gray-400" />
-          <select
-            value={statusFilter}
-            onChange={(e) => {
-              setStatusFilter(e.target.value);
-              setCurrentPage(1);
-            }}
-            className="outline-none bg-transparent"
-          >
-            <option value="all">Tất cả trạng thái</option>
-            <option value="PENDING">Chờ xác nhận</option>
-            <option value="CONFIRMED">Đã xác nhận</option>
-            <option value="PROCESSING">Đang xử lý</option>
-            <option value="SHIPPED">Đang giao hàng</option>
-            <option value="DELIVERED">Đã giao</option>
-            <option value="CANCELLED">Đã hủy</option>
-            <option value="RETURN_REQUESTED">Yêu cầu trả hàng</option>
-          </select>
+          <div className="bg-[#f9f9f9] border border-gray-200 rounded-full px-6 py-3 text-sm flex items-center gap-2">
+            <Filter size={16} className="text-gray-400" />
+            <select
+              value={filters.type}
+              onChange={(e) => setFilters({ ...filters, type: e.target.value, page: 1 })}
+              className="outline-none bg-transparent"
+            >
+              <option value="all">Tất cả trạng thái</option>
+              <option value="PENDING">Chờ xác nhận</option>
+              <option value="CONFIRMED">Đã xác nhận</option>
+              <option value="PROCESSING">Đang xử lý</option>
+              <option value="SHIPPED">Đang giao hàng</option>
+              <option value="DELIVERED">Đã giao</option>
+              <option value="CANCELLED">Đã hủy</option>
+              <option value="RETURN_REQUESTED">Yêu cầu trả hàng</option>
+            </select>
+          </div>
         </div>
       </div>
-
       {/* Table */}
       <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
         <table className="w-full text-sm">
@@ -547,10 +520,13 @@ const AdminOrdersPage = () => {
         <div className="flex items-center gap-2 text-sm text-gray-600">
           Hiển thị
           <select
-            value={pageSize}
+            value={filters.size}
             onChange={(e) => {
-              setPageSize(Number(e.target.value));
-              setCurrentPage(1);
+              setFilters({
+                ...filters,
+                size: Number(e.target.value),
+                page: 1,
+              });
             }}
             className="border rounded px-2 py-1"
           >
@@ -562,9 +538,9 @@ const AdminOrdersPage = () => {
         </div>
 
         <Pagination
-          currentPage={currentPage}
+          currentPage={filters.page}
           totalPages={totalPages}
-          onPageChange={setCurrentPage}
+          onPageChange={(page) => setFilters({ ...filters, page })}
         />
       </div>
 
@@ -734,4 +710,3 @@ const AdminOrdersPage = () => {
 };
 
 export default AdminOrdersPage;
-

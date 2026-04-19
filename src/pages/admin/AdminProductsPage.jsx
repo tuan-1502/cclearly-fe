@@ -146,8 +146,8 @@ const AdminProductsPage = () => {
         productData.variants = variants.map((v) => ({
           variantId:
             (typeof v.id === 'string' && v.id.startsWith('v')) ||
-            v.id?.toString().startsWith('lv') ||
-            v.id?.toString().startsWith('av')
+              v.id?.toString().startsWith('lv') ||
+              v.id?.toString().startsWith('av')
               ? null
               : v.id,
           sku: v.sku,
@@ -244,24 +244,25 @@ const AdminProductsPage = () => {
       </div>
 
       {/* Filters UI */}
-      <div className="bg-white rounded-xl p-4 border border-gray-100 flex flex-wrap gap-4 items-center mb-6">
-        <div className="flex-1 relative min-w-[300px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-          <input
-            type="text"
-            placeholder="Tìm kiếm theo tên, mã SKU..."
-            value={filters.search}
-            onChange={(e) => setFilters({ ...filters, search: e.target.value, page: 1 })}
-            className="w-full pl-9 pr-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-red-200 outline-none transition"
-          />
-        </div>
+      <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6">
+        <div className="flex flex-col md:flex-row gap-4">
+          <div className="flex-1 relative min-w-[300px]">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+            <input
+              type="text"
+              placeholder="Tìm kiếm theo tên, mã SKU..."
+              value={filters.search}
+              onChange={(e) => setFilters({ ...filters, search: e.target.value, page: 1 })}
+              className="w-full pl-12 pr-4 py-3 bg-[#f9f9f9] border border-gray-200 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-[#0f5dd9] transition"
+            />
+          </div>
 
-        <div className="flex items-center gap-2 border rounded-lg px-3 py-2 text-sm bg-gray-50/50">
-          <TrendingUp size={16} className="text-gray-400" />
+          {/* <div className="bg-[#f9f9f9] border border-gray-200 rounded-full px-6 py-3 text-sm flex items-center gap-2"> */}
+
           <select
             value={sortOption}
             onChange={(e) => setSortOption(e.target.value)}
-            className="outline-none bg-transparent font-medium"
+            className="bg-[#f9f9f9] border border-gray-200 rounded-full px-6 py-3 text-sm focus:outline-none"
           >
             <option value="newest">Mới nhất</option>
             <option value="oldest">Cũ nhất</option>
@@ -270,20 +271,21 @@ const AdminProductsPage = () => {
             <option value="price-asc">Giá tăng dần</option>
             <option value="price-desc">Giá giảm dần</option>
           </select>
-        </div>
+          {/* </div> */}
 
-        <div className="flex items-center gap-2 border rounded-lg px-3 py-2 text-sm">
-          <Filter size={16} className="text-gray-400" />
-          <select
-            value={filters.type}
-            onChange={(e) => setFilters({ ...filters, type: e.target.value, page: 1 })}
-            className="outline-none bg-transparent"
-          >
-            <option value="">Tất cả loại</option>
-            <option value="frame">Gọng kính</option>
-            <option value="lens">Tròng kính</option>
-            <option value="accessory">Phụ kiện</option>
-          </select>
+          <div className="bg-[#f9f9f9] border border-gray-200 rounded-full px-6 py-3 text-sm flex items-center gap-2">
+            <Filter size={16} className="text-gray-400" />
+            <select
+              value={filters.type}
+              onChange={(e) => setFilters({ ...filters, type: e.target.value, page: 1 })}
+              className="outline-none bg-transparent"
+            >
+              <option value="">Tất cả loại</option>
+              <option value="frame">Gọng kính</option>
+              <option value="lens">Tròng kính</option>
+              <option value="accessory">Phụ kiện</option>
+            </select>
+          </div>
         </div>
       </div>
 
@@ -373,7 +375,7 @@ const AdminProductsPage = () => {
                       <td className="px-4 py-2.5 text-sm font-bold text-[#222]">
                         {product.variants?.length > 1 && (
                           <span className="text-xs font-normal text-gray-400 mr-0.5">
-                            Từ{' '}
+
                           </span>
                         )}
                         {new Intl.NumberFormat('vi-VN', {
@@ -479,4 +481,3 @@ const AdminProductsPage = () => {
 };
 
 export default AdminProductsPage;
-
