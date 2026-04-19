@@ -155,51 +155,53 @@ const StaffPage = () => {
         </div>
         <button
           onClick={handleOpenCreate}
-          className="bg-[#d90f0f] text-white px-6 py-3 rounded-full font-medium hover:bg-[#b00c0c] transition flex items-center gap-2 shadow-lg shadow-red-100"
+          className="bg-red-600 text-white px-6 py-3 rounded-full font-medium hover:bg-red-700 transition flex items-center gap-2 shadow-lg shadow-red-100"
         >
           <Plus className="w-5 h-5" /> Thêm nhân viên
         </button>
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-xl p-4 border border-gray-100 flex flex-wrap gap-4 items-center">
-        <div className="flex-1 relative min-w-[300px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-          <input
-            type="text"
-            placeholder="Tìm theo tên, email, SĐT..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-red-200 outline-none transition"
-          />
-        </div>
+      <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+        <div className="flex flex-col md:flex-row gap-4">
+          <div className="flex-1 relative min-w-[300px]">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" size={18} />
+            <input
+              type="text"
+              placeholder="Tìm theo tên, email, SĐT..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full pl-12 pr-4 py-3 bg-[#f9f9f9] border border-gray-200 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-[#0f5dd9] transition"
+            />
+          </div>
 
-        <div className="flex items-center gap-2 border rounded-lg px-3 py-2 text-sm bg-gray-50/50">
-          <TrendingUp size={16} className="text-gray-400" />
-          <select
-            value={sortOption}
-            onChange={(e) => setSortOption(e.target.value)}
-            className="outline-none bg-transparent font-medium"
-          >
-            <option value="newest">Mới nhất</option>
-            <option value="name-asc">Tên (A-Z)</option>
-            <option value="name-desc">Tên (Z-A)</option>
-          </select>
-        </div>
+          {/* <div className="bg-[#f9f9f9] border border-gray-200 rounded-full px-6 py-3 text-sm flex items-center gap-2">
+            <TrendingUp size={16} className="text-gray-400" /> */}
+            <select
+              value={sortOption}
+              onChange={(e) => setSortOption(e.target.value)}
+              className="bg-[#f9f9f9] border border-gray-200 rounded-full px-6 py-3 text-sm focus:outline-none"
+            >
+              <option value="newest">Mới nhất</option>
+              <option value="name-asc">Tên (A-Z)</option>
+              <option value="name-desc">Tên (Z-A)</option>
+            </select>
+          {/* </div> */}
 
-        <div className="flex items-center gap-2 border rounded-lg px-3 py-2 text-sm">
-          <Filter size={16} className="text-gray-400" />
-          <select
-            value={roleFilter}
-            onChange={(e) => setRoleFilter(e.target.value)}
-            className="outline-none bg-transparent"
-          >
-            <option value="all">Tất cả vai trò</option>
-            <option value="ADMIN">Admin</option>
-            <option value="MANAGER">Quản lý</option>
-            <option value="SALES_STAFF">Bán hàng</option>
-            <option value="OPERATION_STAFF">Vận hành</option>
-          </select>
+          <div className="bg-[#f9f9f9] border border-gray-200 rounded-full px-6 py-3 text-sm flex items-center gap-2">
+            <Filter size={16} className="text-gray-400" />
+            <select
+              value={roleFilter}
+              onChange={(e) => setRoleFilter(e.target.value)}
+              className="outline-none bg-transparent"
+            >
+              <option value="all">Tất cả vai trò</option>
+              <option value="ADMIN">Admin</option>
+              <option value="MANAGER">Quản lý</option>
+              <option value="SALES_STAFF">Bán hàng</option>
+              <option value="OPERATION_STAFF">Vận hành</option>
+            </select>
+          </div>
         </div>
       </div>
 
@@ -278,7 +280,7 @@ const StaffPage = () => {
                     <div className="flex justify-end gap-1.5">
                       <button
                         onClick={() => handleOpenEdit(user)}
-                        className="p-2 text-gray-400 hover:text-[#d90f0f] hover:bg-blue-50 rounded-lg transition"
+                        className="p-2 text-gray-400 hover:text-red-600 hover:bg-blue-50 rounded-lg transition"
                         title="Chỉnh sửa"
                       >
                         <Edit2 className="w-4 h-4" />
@@ -427,7 +429,7 @@ const StaffPage = () => {
                 <button
                   type="submit"
                   disabled={isPending}
-                  className="px-8 py-2 bg-[#361414] text-white rounded-lg hover:bg-[#0d1322] disabled:bg-gray-400 transition font-bold text-sm flex items-center gap-2 shadow-lg"
+                  className="px-8 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 disabled:bg-gray-400 transition font-bold text-sm flex items-center gap-2 shadow-lg"
                 >
                   {isPending ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
@@ -467,4 +469,3 @@ const StaffPage = () => {
 };
 
 export default StaffPage;
-

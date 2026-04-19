@@ -26,6 +26,13 @@ const ManagerInventoryPage = () => {
   const [typeFilter, setTypeFilter] = useState('all'); // 'all', 'frame', 'lens', 'accessory'
   const [expandedProducts, setExpandedProducts] = useState({});
 
+
+  const [filters, setFilters] = useState({
+    page: 1,
+    size: 20,
+    type: '',
+    search: '',
+  });
   // Modal states
   const [showImportModal, setShowImportModal] = useState(false);
   const [importForm, setImportForm] = useState({
@@ -133,7 +140,7 @@ const ManagerInventoryPage = () => {
         </div>
         <button
           onClick={() => setShowImportModal(true)}
-          className="flex items-center gap-2 px-5 py-2.5 bg-[#d90f0f] text-white rounded-xl font-medium hover:bg-[#b00c0c]"
+          className="flex items-center gap-2 px-5 py-2.5 bg-red-600 text-white rounded-xl font-medium hover:bg-red-700 transition-colors"
         >
           <Upload size={18} />
           Nhập kho
@@ -145,7 +152,7 @@ const ManagerInventoryPage = () => {
         <div className="bg-white rounded-xl p-5 shadow-sm">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center">
-              <Package className="w-6 h-6 text-[#d90f0f]" />
+              <Package className="w-6 h-6 text-red-600" />
             </div>
             <div>
               <p className="text-2xl font-bold text-[#222]">
@@ -191,75 +198,50 @@ const ManagerInventoryPage = () => {
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-xl p-5 shadow-sm">
-        <div className="flex flex-wrap gap-4 items-center justify-between">
-          <div className="flex flex-wrap gap-4 flex-1">
-            <div className="flex-1 min-w-[250px] relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Tìm kiếm sản phẩm..."
-                value={searchTerm}
-                onChange={(e) => {
-                  setSearchTerm(e.target.value);
-                  setCurrentPage(1);
-                }}
-                className="w-full pl-12 pr-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d90f0f]"
-              />
-            </div>
-            <select
-              value={stockFilter}
+      <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+        <div className="flex flex-col md:flex-row gap-4">
+          <div className="flex-1 min-w-[250px] relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Tìm kiếm sản phẩm..."
+              value={searchTerm}
               onChange={(e) => {
-                setStockFilter(e.target.value);
+                setSearchTerm(e.target.value);
                 setCurrentPage(1);
               }}
-              className="px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d90f0f]"
-            >
-              <option value="all">Tất cả tồn kho</option>
-              <option value="available">Còn hàng</option>
-              <option value="low">Sắp hết (&lt;10)</option>
-              <option value="out">Hết hàng</option>
-            </select>
+              className="w-full pl-12 pr-4 py-3 bg-[#f9f9f9] border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-[#0f5dd9] text-sm"
+            />
           </div>
 
+          <select
+            value={stockFilter}
+            onChange={(e) => {
+              setStockFilter(e.target.value);
+              setCurrentPage(1);
+            }}
+            className="bg-[#f9f9f9] border border-gray-200 rounded-full px-6 py-3 text-sm focus:outline-none"
+          >
+            <option value="all">Tất cả tồn kho</option>
+            <option value="available">Còn hàng</option>
+            <option value="low">Sắp hết (&lt;10)</option>
+            <option value="out">Hết hàng</option>
+          </select>
+
           {/* Type Filter - Loại sản phẩm */}
-          <div className="flex items-center gap-2 bg-gray-100 p-1 rounded-lg">
-            <button
-              onClick={() => {
-                setTypeFilter('all');
-                setCurrentPage(1);
-              }}
-              className={`px-3 py-1.5 text-sm rounded-md transition-all ${typeFilter === 'all' ? 'bg-white shadow text-[#d90f0f] font-medium' : 'text-gray-500 hover:text-gray-700'}`}
+
+          <div className="bg-[#f9f9f9] border border-gray-200 rounded-full px-6 py-3 text-sm flex items-center gap-2">
+            {/* <Filter size={16} className="text-gray-400" /> */}
+            <select
+              value={filters.type}
+              onChange={(e) => setFilters({ ...filters, type: e.target.value, page: 1 })}
+              className="outline-none bg-transparent"
             >
-              Tất cả
-            </button>
-            <button
-              onClick={() => {
-                setTypeFilter('frame');
-                setCurrentPage(1);
-              }}
-              className={`px-3 py-1.5 text-sm rounded-md transition-all ${typeFilter === 'frame' ? 'bg-white shadow text-[#d90f0f] font-medium' : 'text-gray-500 hover:text-gray-700'}`}
-            >
-              Gọng kính
-            </button>
-            <button
-              onClick={() => {
-                setTypeFilter('lens');
-                setCurrentPage(1);
-              }}
-              className={`px-3 py-1.5 text-sm rounded-md transition-all ${typeFilter === 'lens' ? 'bg-white shadow text-[#d90f0f] font-medium' : 'text-gray-500 hover:text-gray-700'}`}
-            >
-              Tròng kính
-            </button>
-            <button
-              onClick={() => {
-                setTypeFilter('accessory');
-                setCurrentPage(1);
-              }}
-              className={`px-3 py-1.5 text-sm rounded-md transition-all ${typeFilter === 'accessory' ? 'bg-white shadow text-[#d90f0f] font-medium' : 'text-gray-500 hover:text-gray-700'}`}
-            >
-              Phụ kiện
-            </button>
+              <option value="">Tất cả loại</option>
+              <option value="frame">Gọng kính</option>
+              <option value="lens">Tròng kính</option>
+              <option value="accessory">Phụ kiện</option>
+            </select>
           </div>
         </div>
       </div>
@@ -445,7 +427,7 @@ const ManagerInventoryPage = () => {
                 setPageSize(Number(e.target.value));
                 setCurrentPage(1);
               }}
-              className="px-3 py-1.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#d90f0f]"
+              className="px-3 py-1.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-600"
             >
               {PAGE_SIZES.map((size) => (
                 <option key={size} value={size}>
@@ -493,7 +475,7 @@ const ManagerInventoryPage = () => {
                       variantId: e.target.value,
                     })
                   }
-                  className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d90f0f]"
+                  className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-600"
                 >
                   <option value="">Chọn biến thể</option>
                   {inventoryItems.map((item) => (
@@ -519,7 +501,7 @@ const ManagerInventoryPage = () => {
                           warehouseId: e.target.value,
                         })
                       }
-                      className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d90f0f]"
+                      className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-600"
                     >
                       <option value="">Chọn kho</option>
                       {selectedItem.warehouseStocks.map((ws) => (
@@ -542,7 +524,7 @@ const ManagerInventoryPage = () => {
                   onChange={(e) =>
                     setImportForm({ ...importForm, quantity: e.target.value })
                   }
-                  className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d90f0f]"
+                  className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-600"
                   placeholder="Nhập số lượng"
                 />
               </div>
@@ -557,7 +539,7 @@ const ManagerInventoryPage = () => {
                     setImportForm({ ...importForm, reason: e.target.value })
                   }
                   rows={3}
-                  className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d90f0f]"
+                  className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-600"
                   placeholder="Nhập lý do nhập kho..."
                 />
               </div>
@@ -571,7 +553,7 @@ const ManagerInventoryPage = () => {
               </button>
               <button
                 onClick={handleImport}
-                className="flex-1 px-5 py-2.5 bg-[#d90f0f] text-white rounded-xl hover:bg-[#b00c0c] font-medium"
+                className="flex-1 px-5 py-2.5 bg-red-600 text-white rounded-xl hover:bg-red-700 font-medium transition-colors"
               >
                 Nhập kho
               </button>

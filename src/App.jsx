@@ -1,4 +1,4 @@
-﻿import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { AdminLayout } from './components/layout/AdminLayout';
@@ -123,126 +123,126 @@ function AppRoutes() {
 
   return (
     <Routes>
-        {/* Customer Routes */}
-        <Route element={<MainLayout />}>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/products" element={<ProductListPage />} />
-          <Route path="/products/:id" element={<ProductDetailPage />} />
-          <Route path="/prescription-form" element={<PrescriptionFormPage />} />
-          <Route path="/frames" element={<ProductListPage type="frame" />} />
-          <Route path="/lenses" element={<ProductListPage type="lens" />} />
-          <Route path="/best-sellers" element={<BestSellerPage />} />
-          <Route
-            path="/accessories"
-            element={<ProductListPage type="accessory" />}
-          />
-          <Route path="/stores" element={<StoresPage />} />
-          <Route path="/blog" element={<BlogPage />} />
-          <Route path="/faq" element={<BlogPage />} />
-          <Route path="/contact" element={<BlogPage />} />
-          <Route path="/about" element={<BlogPage />} />
-          <Route path="/careers" element={<BlogPage />} />
-          <Route path="/cart" element={<CartPage />} />
-          <Route path="/checkout" element={<CheckoutPage />} />
-          <Route path="/orders" element={<OrderHistoryPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/wishlist" element={<WishlistPage />} />
-          <Route path="/returns" element={<ReturnPage />} />
-          <Route path="/notifications" element={<NotificationPage />} />
-        </Route>
-
-        {/* Auth Routes */}
-        <Route element={<AuthLayout />}>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-          <Route path="/verify-email" element={<VerifyEmailPage />} />
-          <Route path="/reset-password" element={<ResetPasswordPage />} />
-        </Route>
-
-        {/* System Admin Routes - Full Access */}
+      {/* Customer Routes */}
+      <Route element={<MainLayout />}>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/products" element={<ProductListPage />} />
+        <Route path="/products/:id" element={<ProductDetailPage />} />
+        <Route path="/prescription-form" element={<PrescriptionFormPage />} />
+        <Route path="/frames" element={<ProductListPage type="frame" />} />
+        <Route path="/lenses" element={<ProductListPage type="lens" />} />
+        <Route path="/best-sellers" element={<BestSellerPage />} />
         <Route
-          element={
-            <AdminRoute>
-              <AdminLayout />
-            </AdminRoute>
-          }
-        >
-          <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/admin/orders" element={<AdminOrdersPage />} />
-          <Route path="/admin/products" element={<AdminProductsPage />} />
-          <Route path="/admin/promotions" element={<PromotionPage />} />
-          <Route path="/admin/staff" element={<StaffPage />} />
-          <Route path="/admin/reports" element={<AdminReportsPage />} />
-          <Route path="/admin/logs" element={<SystemLogsPage />} />
-          <Route path="/admin/banners" element={<BannerPage />} />
-          <Route path="/admin/settings" element={<AdminSettingsPage />} />
-          <Route path="/admin/roles" element={<RolePermissionPage />} />
-          <Route path="/admin/policies" element={<AdminPolicyPage />} />
-          <Route path="/admin/integrations" element={<IntegrationPage />} />
-        </Route>
+          path="/accessories"
+          element={<ProductListPage type="accessory" />}
+        />
+        <Route path="/stores" element={<StoresPage />} />
+        <Route path="/blog" element={<BlogPage />} />
+        <Route path="/faq" element={<BlogPage />} />
+        <Route path="/contact" element={<BlogPage />} />
+        <Route path="/about" element={<BlogPage />} />
+        <Route path="/careers" element={<BlogPage />} />
+        <Route path="/cart" element={<CartPage />} />
+        <Route path="/checkout" element={<CheckoutPage />} />
+        <Route path="/orders" element={<OrderHistoryPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/wishlist" element={<WishlistPage />} />
+        <Route path="/returns" element={<ReturnPage />} />
+        <Route path="/notifications" element={<NotificationPage />} />
+      </Route>
 
-        {/* Manager Routes */}
+      {/* Auth Routes */}
+      <Route element={<AuthLayout />}>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/verify-email" element={<VerifyEmailPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
+      </Route>
+
+      {/* System Admin Routes - Full Access */}
+      <Route
+        element={
+          <AdminRoute>
+            <AdminLayout />
+          </AdminRoute>
+        }
+      >
+        <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/admin/orders" element={<AdminOrdersPage />} />
+        <Route path="/admin/products" element={<AdminProductsPage />} />
+        <Route path="/admin/promotions" element={<PromotionPage />} />
+        <Route path="/admin/staff" element={<StaffPage />} />
+        <Route path="/admin/reports" element={<AdminReportsPage />} />
+        <Route path="/admin/logs" element={<SystemLogsPage />} />
+        <Route path="/admin/banners" element={<BannerPage />} />
+        <Route path="/admin/settings" element={<AdminSettingsPage />} />
+        <Route path="/admin/roles" element={<RolePermissionPage />} />
+        <Route path="/admin/policies" element={<AdminPolicyPage />} />
+        <Route path="/admin/integrations" element={<IntegrationPage />} />
+      </Route>
+
+      {/* Manager Routes */}
+      <Route
+        element={
+          <ManagerRoute>
+            <AdminLayout />
+          </ManagerRoute>
+        }
+      >
+        <Route path="/manager" element={<ManagerDashboardPage />} />
+        <Route path="/manager/orders" element={<AdminOrdersPage />} />
+        <Route path="/manager/products" element={<AdminProductsPage />} />
+        <Route path="/manager/inventory" element={<InventoryPage />} />
+        <Route path="/manager/lenses" element={<LensManagementPage />} />
+        <Route path="/manager/policies" element={<ManagerPolicyPage />} />
+        <Route path="/manager/promotions" element={<PromotionPage />} />
+        <Route path="/manager/staff" element={<StaffPage />} />
+        <Route path="/manager/reports" element={<AdminReportsPage />} />
+      </Route>
+
+      {/* Sales Routes */}
+      <Route
+        element={
+          <SalesRoute>
+            <AdminLayout />
+          </SalesRoute>
+        }
+      >
+        <Route path="/sales" element={<SalesDashboardPage />} />
+        <Route path="/sales/orders" element={<SalesOrdersPage />} />
+        <Route path="/sales/returns" element={<SalesReturnsPage />} />
+        <Route path="/sales/customers" element={<SalesCustomersPage />} />
+      </Route>
+
+      {/* Operations Routes */}
+      <Route
+        element={
+          <OperationsRoute>
+            <AdminLayout />
+          </OperationsRoute>
+        }
+      >
+        <Route path="/operations" element={<OperationsBoardPage />} />
+        <Route path="/operations/orders" element={<OperationsOrdersPage />} />
+        <Route path="/operations/inventory" element={<InventoryPage />} />
         <Route
-          element={
-            <ManagerRoute>
-              <AdminLayout />
-            </ManagerRoute>
-          }
-        >
-          <Route path="/manager" element={<ManagerDashboardPage />} />
-          <Route path="/manager/orders" element={<AdminOrdersPage />} />
-          <Route path="/manager/products" element={<AdminProductsPage />} />
-          <Route path="/manager/inventory" element={<InventoryPage />} />
-          <Route path="/manager/lenses" element={<LensManagementPage />} />
-          <Route path="/manager/policies" element={<ManagerPolicyPage />} />
-          <Route path="/manager/promotions" element={<PromotionPage />} />
-          <Route path="/manager/staff" element={<StaffPage />} />
-          <Route path="/manager/reports" element={<AdminReportsPage />} />
-        </Route>
-
-        {/* Sales Routes */}
+          path="/operations/lens-lab"
+          element={<OperationsLensLabPage />}
+        />
         <Route
-          element={
-            <SalesRoute>
-              <AdminLayout />
-            </SalesRoute>
-          }
-        >
-          <Route path="/sales" element={<SalesDashboardPage />} />
-          <Route path="/sales/orders" element={<SalesOrdersPage />} />
-          <Route path="/sales/returns" element={<SalesReturnsPage />} />
-          <Route path="/sales/customers" element={<SalesCustomersPage />} />
-        </Route>
-
-        {/* Operations Routes */}
+          path="/operations/shipping"
+          element={<OperationsShippingPage />}
+        />
         <Route
-          element={
-            <OperationsRoute>
-              <AdminLayout />
-            </OperationsRoute>
-          }
-        >
-          <Route path="/operations" element={<OperationsBoardPage />} />
-          <Route path="/operations/orders" element={<OperationsOrdersPage />} />
-          <Route path="/operations/inventory" element={<InventoryPage />} />
-          <Route
-            path="/operations/lens-lab"
-            element={<OperationsLensLabPage />}
-          />
-          <Route
-            path="/operations/shipping"
-            element={<OperationsShippingPage />}
-          />
-          <Route
-            path="/operations/preorder"
-            element={<PreorderReceivePage />}
-          />
-        </Route>
+          path="/operations/preorder"
+          element={<PreorderReceivePage />}
+        />
+      </Route>
 
-        {/* Fallback */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+      {/* Fallback */}
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   );
 }
 

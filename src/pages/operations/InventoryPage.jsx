@@ -1,15 +1,15 @@
-﻿// Operations Inventory Page - Quản lý kho
+﻿// Manager Inventory Page - Quản lý kho chi tiết theo biến thể
 import {
   Search,
-  Plus,
   Package,
   Warehouse,
   AlertTriangle,
   X,
   Upload,
-  Filter,
+  ChevronDown,
+  ChevronRight,
 } from 'lucide-react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import Pagination from '@/components/ui/Pagination';
 import { useAuth } from '@/contexts/AuthContext';
@@ -17,14 +17,14 @@ import { useInventory, useImportStock } from '@/hooks/useInventory';
 
 const PAGE_SIZES = [10, 20, 50, 100];
 
-const InventoryPage = () => {
+const ManagerInventoryPage = () => {
   const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
-  const [storeFilter, setStoreFilter] = useState('all');
-  const [typeFilter, setTypeFilter] = useState('all');
   const [stockFilter, setStockFilter] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(20);
+  const [typeFilter, setTypeFilter] = useState('all'); // 'all', 'frame', 'lens', 'accessory'
+  const [expandedProducts, setExpandedProducts] = useState({});
 
   // Modal states
   const [showImportModal, setShowImportModal] = useState(false);
@@ -35,10 +35,13 @@ const InventoryPage = () => {
     reason: '',
   });
 
-  const { data: inventoryItems = [] } = useInventory({ search: searchTerm });
+  // Fetch inventory from API
+  const { data: inventoryItems = [] } = useInventory({
+    search: searchTerm || undefined,
+  });
   const importStockMutation = useImportStock();
 
-  // Stats
+  // Stats from API data
   const totalStock = inventoryItems.reduce(
     (sum, item) => sum + (item.totalStock || 0),
     0
@@ -48,15 +51,31 @@ const InventoryPage = () => {
   ).length;
   const totalVariants = inventoryItems.length;
 
-  // Filter items
+  // Toggle expand product
+  const toggleExpandProduct = (productId) => {
+    setExpandedProducts((prev) => ({
+      ...prev,
+      [productId]: !prev[productId],
+    }));
+  };
+
+  // Filter inventory items
   const filteredProducts = inventoryItems.filter((item) => {
+    const matchesSearch =
+      item.productName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.variantSku?.toLowerCase().includes(searchTerm.toLowerCase());
+
+    // Filter theo loại sản phẩm
     const matchesType = typeFilter === 'all' || item.productType === typeFilter;
+
+    // Filter theo tồn kho
     const matchesStock =
       stockFilter === 'all' ||
       (stockFilter === 'low' && item.totalStock < 10) ||
       (stockFilter === 'out' && item.totalStock === 0) ||
       (stockFilter === 'available' && item.totalStock > 0);
-    return matchesType && matchesStock;
+
+    return matchesSearch && matchesType && matchesStock;
   });
 
   // Pagination
@@ -77,13 +96,12 @@ const InventoryPage = () => {
       toast.error('Vui lòng chọn biến thể và nhập số lượng');
       return;
     }
-
     importStockMutation.mutate(
       {
         variantId: importForm.variantId,
-        warehouseId: importForm.warehouseId,
-        quantity: Number(importForm.quantity),
-        reason: importForm.reason,
+        warehouseId: importForm.warehouseId || undefined,
+        quantity: parseInt(importForm.quantity),
+        reason: importForm.reason || 'Nhập kho thủ công',
       },
       {
         onSuccess: () => {
@@ -99,7 +117,7 @@ const InventoryPage = () => {
     );
   };
 
-  const selectedVariant = inventoryItems.find(
+  const selectedItem = inventoryItems.find(
     (item) => item.variantId === importForm.variantId
   );
 
@@ -110,7 +128,7 @@ const InventoryPage = () => {
         <div>
           <h1 className="text-2xl font-bold text-[#222]">Quản lý kho</h1>
           <p className="text-[#4f5562]">
-            Xin chào, {user?.name || 'Operations'}!
+            Quản lý tồn kho chi tiết theo biến thể
           </p>
         </div>
         <button
@@ -174,47 +192,50 @@ const InventoryPage = () => {
 
       {/* Filters */}
       <div className="bg-white rounded-xl p-5 shadow-sm">
-        <div className="flex flex-wrap gap-4">
-          <div className="flex-1 min-w-[250px] relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Tìm kiếm sản phẩm..."
-              value={searchTerm}
+        <div className="flex flex-wrap gap-4 items-center justify-between">
+          <div className="flex flex-wrap gap-4 flex-1">
+            <div className="flex-1 min-w-[250px] relative">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Tìm kiếm sản phẩm..."
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setCurrentPage(1);
+                }}
+                className="w-full pl-12 pr-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d90f0f]"
+              />
+            </div>
+            <select
+              value={stockFilter}
               onChange={(e) => {
-                setSearchTerm(e.target.value);
+                setStockFilter(e.target.value);
                 setCurrentPage(1);
               }}
-              className="w-full pl-12 pr-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d90f0f]"
-            />
-          </div>
+              className="px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d90f0f]"
+            >
+              <option value="all">Tất cả tồn kho</option>
+              <option value="available">Còn hàng</option>
+              <option value="low">Sắp hết (&lt;10)</option>
+              <option value="out">Hết hàng</option>
+            </select>
 
-          <select
-            value={typeFilter}
-            onChange={(e) => {
-              setTypeFilter(e.target.value);
-              setCurrentPage(1);
-            }}
-            className="px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d90f0f]"
-          >
-            <option value="all">Tất cả loại</option>
-            <option value="frame">Gọng kính</option>
-            <option value="lens">Tròng kính</option>
-            <option value="accessory">Phụ kiện</option>
-          </select>
-          <select
-            value={stockFilter}
-            onChange={(e) => {
-              setStockFilter(e.target.value);
-              setCurrentPage(1);
-            }}
-            className="px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d90f0f]"
-          >
-            <option value="all">Tất cả tồn kho</option>
-            <option value="available">Còn hàng</option>
-            <option value="low">Sắp hết (&lt;10)</option>
-            <option value="out">Hết hàng</option>
-          </select>
+            <select
+              value={typeFilter}
+              onChange={(a) => {
+                setTypeFilter(a.target.value);
+                setCurrentPage(1);
+              }}
+              className="px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d90f0f]"
+            >
+              <option value="all">Tất cả</option>
+              <option value="available">Gọng Kính</option>
+              <option value="low">Tròng kính</option>
+              <option value="out">Phụ Kiện</option>
+            </select>
+
+          </div>
         </div>
       </div>
 
@@ -224,6 +245,7 @@ const InventoryPage = () => {
           <table className="w-full">
             <thead className="bg-gray-50">
               <tr>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase w-10"></th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                   Sản phẩm
                 </th>
@@ -242,93 +264,141 @@ const InventoryPage = () => {
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                   Trạng thái
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  Thao tác
-                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {paginatedProducts.map((item) => (
-                <tr key={item.variantId} className="hover:bg-gray-50">
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
-                        <Package className="w-5 h-5 text-gray-400" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-[#222]">
-                          {item.productName}
-                        </p>
-                        {item.colorName && (
-                          <p className="text-xs text-gray-400">
-                            {item.colorName}
-                          </p>
+              {paginatedProducts.map((item) => {
+                const isExpanded = expandedProducts[item.variantId];
+                const hasWarehouses =
+                  item.warehouseStocks && item.warehouseStocks.length > 0;
+
+                return (
+                  <React.Fragment key={item.variantId}>
+                    <tr className="hover:bg-gray-50">
+                      <td className="px-4 py-3">
+                        {hasWarehouses && (
+                          <button
+                            onClick={() => toggleExpandProduct(item.variantId)}
+                            className="p-1 hover:bg-gray-100 rounded"
+                          >
+                            {isExpanded ? (
+                              <ChevronDown size={16} />
+                            ) : (
+                              <ChevronRight size={16} />
+                            )}
+                          </button>
                         )}
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3 text-sm text-[#4f5562]">
-                    {item.variantSku}
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
-                      {item.productType === 'frame'
-                        ? 'Gọng'
-                        : item.productType === 'lens'
-                          ? 'Tròng'
-                          : 'Phụ kiện'}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span
-                      className={`font-medium ${item.totalStock < 10 ? 'text-orange-600' : 'text-[#222]'}`}
-                    >
-                      {item.totalStock}
-                    </span>
-                    {item.warehouseStocks?.length > 0 && (
-                      <p className="text-xs text-gray-400 mt-0.5">
-                        {item.warehouseStocks
-                          .map((w) => `${w.warehouseName}: ${w.quantityOnHand}`)
-                          .join(' | ')}
-                      </p>
-                    )}
-                  </td>
-                  <td className="px-4 py-3 text-sm font-medium text-[#222]">
-                    {formatCurrency(Number(item.price))}
-                  </td>
-                  <td className="px-4 py-3">
-                    {item.totalStock === 0 ? (
-                      <span className="px-2 py-1 bg-red-100 text-red-600 text-xs rounded-full">
-                        Hết hàng
-                      </span>
-                    ) : item.totalStock < 10 ? (
-                      <span className="px-2 py-1 bg-orange-100 text-orange-600 text-xs rounded-full">
-                        Sắp hết
-                      </span>
-                    ) : (
-                      <span className="px-2 py-1 bg-green-100 text-green-600 text-xs rounded-full">
-                        Còn hàng
-                      </span>
-                    )}
-                  </td>
-                  <td className="px-4 py-3">
-                    <button
-                      onClick={() => {
-                        setImportForm({
-                          ...importForm,
-                          variantId: item.variantId,
-                          warehouseId:
-                            item.warehouseStocks?.[0]?.warehouseId || '',
-                        });
-                        setShowImportModal(true);
-                      }}
-                      className="text-[#d90f0f] hover:bg-blue-50 px-3 py-1 rounded-lg text-sm font-medium"
-                    >
-                      Nhập kho
-                    </button>
-                  </td>
-                </tr>
-              ))}
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                            <Package className="w-5 h-5 text-gray-400" />
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium text-[#222]">
+                              {item.productName}
+                            </p>
+                            {item.colorName && (
+                              <p className="text-xs text-gray-400">
+                                {item.colorName}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 text-sm text-[#4f5562]">
+                        {item.variantSku}
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
+                          {item.productType === 'frame'
+                            ? 'Gọng'
+                            : item.productType === 'lens'
+                              ? 'Tròng'
+                              : 'Phụ kiện'}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <span
+                          className={`font-medium ${item.totalStock < 10 ? 'text-orange-600' : 'text-[#222]'}`}
+                        >
+                          {item.totalStock}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-sm font-medium text-[#222]">
+                        {formatCurrency(Number(item.price))}
+                      </td>
+                      <td className="px-4 py-3">
+                        {item.totalStock === 0 ? (
+                          <span className="px-2 py-1 bg-red-100 text-red-600 text-xs rounded-full">
+                            Hết hàng
+                          </span>
+                        ) : item.totalStock < 10 ? (
+                          <span className="px-2 py-1 bg-orange-100 text-orange-600 text-xs rounded-full">
+                            Sắp hết
+                          </span>
+                        ) : (
+                          <span className="px-2 py-1 bg-green-100 text-green-600 text-xs rounded-full">
+                            Còn hàng
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                    {/* Warehouse rows */}
+                    {isExpanded &&
+                      hasWarehouses &&
+                      item.warehouseStocks.map((ws) => (
+                        <tr
+                          key={ws.warehouseId}
+                          className="bg-blue-50/50 hover:bg-blue-50"
+                        >
+                          <td className="px-4 py-3"></td>
+                          <td className="px-4 py-3 pl-12">
+                            <div className="flex items-center gap-2">
+                              <Warehouse className="w-4 h-4 text-gray-400" />
+                              <span className="text-sm text-[#222]">
+                                {ws.warehouseName}
+                              </span>
+                            </div>
+                          </td>
+                          <td className="px-4 py-3 text-sm text-[#4f5562]">
+                            {ws.locationCode || '-'}
+                          </td>
+                          <td className="px-4 py-3">
+                            <span className="px-2 py-1 bg-red-100 text-red-600 text-xs rounded-full">
+                              Kho
+                            </span>
+                          </td>
+                          <td className="px-4 py-3">
+                            <span
+                              className={`font-medium ${ws.quantityOnHand < 5 ? 'text-orange-600' : 'text-[#222]'}`}
+                            >
+                              {ws.quantityOnHand}
+                            </span>
+                          </td>
+                          <td className="px-4 py-3 text-sm font-medium text-[#222]">
+                            -
+                          </td>
+                          <td className="px-4 py-3">
+                            {ws.quantityOnHand === 0 ? (
+                              <span className="px-2 py-1 bg-red-100 text-red-600 text-xs rounded-full">
+                                Hết hàng
+                              </span>
+                            ) : ws.quantityOnHand < 5 ? (
+                              <span className="px-2 py-1 bg-orange-100 text-orange-600 text-xs rounded-full">
+                                Sắp hết
+                              </span>
+                            ) : (
+                              <span className="px-2 py-1 bg-green-100 text-green-600 text-xs rounded-full">
+                                Còn hàng
+                              </span>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                  </React.Fragment>
+                );
+              })}
             </tbody>
           </table>
         </div>
@@ -392,51 +462,49 @@ const InventoryPage = () => {
                 </label>
                 <select
                   value={importForm.variantId}
-                  onChange={(e) => {
-                    const variant = inventoryItems.find(
-                      (v) => v.variantId === e.target.value
-                    );
+                  onChange={(e) =>
                     setImportForm({
                       ...importForm,
                       variantId: e.target.value,
-                      warehouseId:
-                        variant?.warehouseStocks?.[0]?.warehouseId || '',
-                    });
-                  }}
+                    })
+                  }
                   className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d90f0f]"
                 >
                   <option value="">Chọn biến thể</option>
                   {inventoryItems.map((item) => (
                     <option key={item.variantId} value={item.variantId}>
-                      {item.productName} - {item.colorName || item.variantSku}
+                      {item.productName} - {item.variantSku}{' '}
+                      {item.colorName ? `(${item.colorName})` : ''}
                     </option>
                   ))}
                 </select>
               </div>
 
-              {selectedVariant?.warehouseStocks?.length > 0 && (
-                <div>
-                  <label className="block text-sm font-medium text-[#222] mb-1">
-                    Kho hàng
-                  </label>
-                  <select
-                    value={importForm.warehouseId}
-                    onChange={(e) =>
-                      setImportForm({
-                        ...importForm,
-                        warehouseId: e.target.value,
-                      })
-                    }
-                    className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d90f0f]"
-                  >
-                    {selectedVariant.warehouseStocks.map((w) => (
-                      <option key={w.warehouseId} value={w.warehouseId}>
-                        {w.warehouseName} (Tồn: {w.quantityOnHand})
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
+              {selectedItem?.warehouseStocks &&
+                selectedItem.warehouseStocks.length > 0 && (
+                  <div>
+                    <label className="block text-sm font-medium text-[#222] mb-1">
+                      Kho nhập
+                    </label>
+                    <select
+                      value={importForm.warehouseId}
+                      onChange={(e) =>
+                        setImportForm({
+                          ...importForm,
+                          warehouseId: e.target.value,
+                        })
+                      }
+                      className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d90f0f]"
+                    >
+                      <option value="">Chọn kho</option>
+                      {selectedItem.warehouseStocks.map((ws) => (
+                        <option key={ws.warehouseId} value={ws.warehouseId}>
+                          {ws.warehouseName} (Hiện có: {ws.quantityOnHand})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
 
               <div>
                 <label className="block text-sm font-medium text-[#222] mb-1">
@@ -465,7 +533,7 @@ const InventoryPage = () => {
                   }
                   rows={3}
                   className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d90f0f]"
-                  placeholder="Nhập lý do..."
+                  placeholder="Nhập lý do nhập kho..."
                 />
               </div>
             </div>
@@ -490,5 +558,4 @@ const InventoryPage = () => {
   );
 };
 
-export default InventoryPage;
-
+export default ManagerInventoryPage;
