@@ -71,6 +71,10 @@ const SalesReturnsPage = () => {
 
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [minPrice, setMinPrice] = useState('');
+  const [maxPrice, setMaxPrice] = useState('');
   const [rejectReason, setRejectReason] = useState('');
   const [confirmModal, setConfirmModal] = useState({
     isOpen: false,
@@ -84,12 +88,46 @@ const SalesReturnsPage = () => {
   const filteredReturns = returns.filter((ret) => {
     const retId = String(ret.refundId || ret.id || '');
     const orderId = String(ret.orderCode || ret.orderId || '');
+    
+    // Search in: refund ID, order ID, customer name, phone, email, product name
     const matchesSearch =
       retId.toLowerCase().includes(searchTerm.toLowerCase()) ||
       orderId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      ret.customerName?.toLowerCase().includes(searchTerm.toLowerCase());
+      ret.customerName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      ret.customerPhone?.includes(searchTerm) ||
+      ret.customerEmail?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      ret.items?.some(item => item.name?.toLowerCase().includes(searchTerm.toLowerCase()));
+    
     const matchesStatus = statusFilter === 'all' || ret.status === statusFilter;
-    return matchesSearch && matchesStatus;
+    
+    // Date range filter
+    let matchesDate = true;
+    if (startDate || endDate) {
+      const retDate = new Date(ret.requestDate);
+      if (startDate) {
+        const start = new Date(startDate);
+        matchesDate = matchesDate && retDate >= start;
+      }
+      if (endDate) {
+        const end = new Date(endDate);
+        end.setHours(23, 59, 59, 999);
+        matchesDate = matchesDate && retDate <= end;
+      }
+    }
+    
+    // Price range filter
+    let matchesPrice = true;
+    if (minPrice || maxPrice) {
+      const amount = Number(ret.refundAmount || 0);
+      if (minPrice) {
+        matchesPrice = matchesPrice && amount >= parseFloat(minPrice);
+      }
+      if (maxPrice) {
+        matchesPrice = matchesPrice && amount <= parseFloat(maxPrice);
+      }
+    }
+    
+    return matchesSearch && matchesStatus && matchesDate && matchesPrice;
   });
 
   const stats = [
@@ -213,31 +251,102 @@ const SalesReturnsPage = () => {
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-xl p-4 border border-gray-100 flex flex-col md:flex-row gap-4 items-center">
-        <div className="flex-1 relative w-full">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-          <input
-            type="text"
-            placeholder="Tìm kiếm: mã yêu cầu, mã đơn, tên khách..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#d90f0f]"
-          />
+      <div className="bg-white rounded-xl p-4 border border-gray-100 space-y-4">
+        {/* Main Search */}
+        <div className="flex flex-col md:flex-row gap-4 items-start md:items-center">
+          <div className="flex-1 relative w-full">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Tìm: mã yêu cầu, mã đơn, tên khách, SĐT, email, tên sản phẩm..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#d90f0f]"
+            />
+          </div>
+          <div className="flex items-center gap-2 border rounded-lg px-3 py-2 text-sm">
+            <Filter size={16} className="text-gray-400" />
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="outline-none bg-transparent"
+            >
+              <option value="all">Tất cả trạng thái</option>
+              <option value="PENDING">Chờ xử lý</option>
+              <option value="APPROVED">Đã duyệt</option>
+              <option value="COMPLETED">Hoàn thành</option>
+              <option value="REJECTED">Từ chối</option>
+            </select>
+          </div>
         </div>
-        <div className="flex items-center gap-2 border rounded-lg px-3 py-2 text-sm">
-          <Filter size={16} className="text-gray-400" />
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="outline-none bg-transparent"
+
+        {/* Range Filters - Date & Price */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Date Range */}
+          <div>
+            <label className="block text-sm font-medium text-[#222] mb-2">
+              <Calendar className="w-4 h-4 inline mr-1" />
+              Khoảng ngày
+            </label>
+            <div className="flex gap-2 items-center">
+              <input
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#d90f0f]"
+              />
+              <span className="text-gray-400">—</span>
+              <input
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#d90f0f]"
+              />
+            </div>
+          </div>
+
+          {/* Price Range */}
+          <div>
+            <label className="block text-sm font-medium text-[#222] mb-2">
+              <DollarSign className="w-4 h-4 inline mr-1" />
+              Khoảng giá hoàn lại (VND)
+            </label>
+            <div className="flex gap-2 items-center">
+              <input
+                type="number"
+                placeholder="Từ"
+                value={minPrice}
+                onChange={(e) => setMinPrice(e.target.value)}
+                className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#d90f0f]"
+              />
+              <span className="text-gray-400">—</span>
+              <input
+                type="number"
+                placeholder="Đến"
+                value={maxPrice}
+                onChange={(e) => setMaxPrice(e.target.value)}
+                className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#d90f0f]"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Clear Filters Button */}
+        {(searchTerm || statusFilter !== 'all' || startDate || endDate || minPrice || maxPrice) && (
+          <button
+            onClick={() => {
+              setSearchTerm('');
+              setStatusFilter('all');
+              setStartDate('');
+              setEndDate('');
+              setMinPrice('');
+              setMaxPrice('');
+            }}
+            className="text-sm text-[#d90f0f] hover:text-[#b00c0c] font-medium"
           >
-            <option value="all">Tất cả trạng thái</option>
-            <option value="PENDING">Chờ xử lý</option>
-            <option value="APPROVED">Đã duyệt</option>
-            <option value="COMPLETED">Hoàn thành</option>
-            <option value="REJECTED">Từ chối</option>
-          </select>
-        </div>
+            Xóa tất cả bộ lọc
+          </button>
+        )}
       </div>
 
       {/* Loading skeleton */}

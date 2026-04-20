@@ -21,6 +21,10 @@ const SalesCustomersPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [statusFilter, setStatusFilter] = useState('all');
+  const [minSpending, setMinSpending] = useState('');
+  const [maxSpending, setMaxSpending] = useState('');
+  const [minOrders, setMinOrders] = useState('');
+  const [maxOrders, setMaxOrders] = useState('');
 
   const { data: allUsers = [], isLoading: usersLoading } = useCustomers();
   const { data: ordersData, isLoading: ordersLoading } = useAdminOrders({ size: 1000 });
@@ -49,10 +53,22 @@ const SalesCustomersPage = () => {
       (cust.fullName || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
       (cust.email || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
       (cust.phoneNumber || '').includes(searchTerm);
+    
     const matchStatus =
       statusFilter === 'all' ||
       cust.status?.toUpperCase() === statusFilter;
-    return matchSearch && matchStatus;
+    
+    // Range filter for spending
+    const min = minSpending ? parseFloat(minSpending) : 0;
+    const max = maxSpending ? parseFloat(maxSpending) : Infinity;
+    const matchSpending = cust.totalSpent >= min && cust.totalSpent <= max;
+    
+    // Range filter for orders
+    const minOrd = minOrders ? parseInt(minOrders) : 0;
+    const maxOrd = maxOrders ? parseInt(maxOrders) : Infinity;
+    const matchOrders = cust.totalOrders >= minOrd && cust.totalOrders <= maxOrd;
+    
+    return matchSearch && matchStatus && matchSpending && matchOrders;
   });
 
   const formatCurrency = (amount) =>
@@ -159,26 +175,97 @@ const SalesCustomersPage = () => {
       </div>
 
       {/* Search & Filter */}
-      <div className="bg-white rounded-xl p-4 shadow-sm flex flex-col sm:flex-row gap-3">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-          <input
-            type="text"
-            placeholder="Tìm kiếm: tên, email, SĐT..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d90f0f]/20"
-          />
+      <div className="bg-white rounded-xl shadow-sm p-4 space-y-4">
+        {/* Main Search */}
+        <div className="flex flex-col sm:flex-row gap-3">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Tìm kiếm: tên, email, SĐT..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d90f0f]/20"
+            />
+          </div>
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="px-4 py-2 border border-gray-200 rounded-xl bg-white text-sm outline-none"
+          >
+            <option value="all">Tất cả trạng thái</option>
+            <option value="ACTIVE">Hoạt động</option>
+            <option value="INACTIVE">Không hoạt động</option>
+          </select>
         </div>
-        <select
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-          className="px-4 py-2 border border-gray-200 rounded-xl bg-white text-sm outline-none"
-        >
-          <option value="all">Tất cả trạng thái</option>
-          <option value="ACTIVE">Hoạt động</option>
-          <option value="INACTIVE">Không hoạt động</option>
-        </select>
+
+        {/* Range Filters */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* Spending Range */}
+          <div>
+            <label className="block text-sm font-medium text-[#222] mb-2">
+              Khoảng tổng chi tiêu (VND)
+            </label>
+            <div className="flex gap-2 items-center">
+              <input
+                type="number"
+                placeholder="Từ"
+                value={minSpending}
+                onChange={(e) => setMinSpending(e.target.value)}
+                className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#d90f0f]/20"
+              />
+              <span className="text-gray-400">—</span>
+              <input
+                type="number"
+                placeholder="Đến"
+                value={maxSpending}
+                onChange={(e) => setMaxSpending(e.target.value)}
+                className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#d90f0f]/20"
+              />
+            </div>
+          </div>
+
+          {/* Orders Range */}
+          <div>
+            <label className="block text-sm font-medium text-[#222] mb-2">
+              Khoảng số đơn hàng
+            </label>
+            <div className="flex gap-2 items-center">
+              <input
+                type="number"
+                placeholder="Từ"
+                value={minOrders}
+                onChange={(e) => setMinOrders(e.target.value)}
+                className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#d90f0f]/20"
+                min="0"
+              />
+              <span className="text-gray-400">—</span>
+              <input
+                type="number"
+                placeholder="Đến"
+                value={maxOrders}
+                onChange={(e) => setMaxOrders(e.target.value)}
+                className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#d90f0f]/20"
+                min="0"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Clear Filters Button */}
+        {(minSpending || maxSpending || minOrders || maxOrders) && (
+          <button
+            onClick={() => {
+              setMinSpending('');
+              setMaxSpending('');
+              setMinOrders('');
+              setMaxOrders('');
+            }}
+            className="text-sm text-[#d90f0f] hover:text-[#b00c0c] font-medium"
+          >
+            Xóa bộ lọc nâng cao
+          </button>
+        )}
       </div>
 
       {/* Loading */}
