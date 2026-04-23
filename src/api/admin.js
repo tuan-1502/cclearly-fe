@@ -74,8 +74,8 @@ export const adminRequest = {
   },
 
   // Promotions CRUD
-  getPromotions: async () => {
-    const res = await http.get(ENDPOINT.PROMOTIONS);
+  getPromotions: async (params) => {
+    const res = await http.get(ENDPOINT.PROMOTIONS, { query: params });
     return res.data;
   },
 

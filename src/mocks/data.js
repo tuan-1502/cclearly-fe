@@ -1521,7 +1521,7 @@ export const LENS_BRANDS = [
   'Rodenstock',
 ];
 
-export const PAGE_SIZES = [5, 10, 20, 30, 50];
+export const PAGE_SIZES = [10, 20, 30];
 export const mockBanners = [
   {
     id: 'b1',

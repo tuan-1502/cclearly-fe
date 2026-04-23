@@ -13,6 +13,8 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import ConfirmModal from '@/components/ui/ConfirmModal';
+import Pagination from '@/components/ui/Pagination';
+import { PAGE_SIZES } from '@/mocks/data';
 import {
   usePromotions,
   useCreatePromotion,
@@ -22,13 +24,21 @@ import {
 } from '@/hooks/useAdmin';
 
 const PromotionPage = () => {
-  const { data: coupons = [], isLoading } = usePromotions();
+  const [filters, setFilters] = useState({
+    page: 1,
+    size: 20,
+    search: '',
+  });
+
+  const { data, isLoading } = usePromotions(filters);
+  const coupons = Array.isArray(data) ? data : data?.content || [];
+  const totalPages = data?.totalPages || 1;
+
   const createPromotionMutation = useCreatePromotion();
   const updatePromotionMutation = useUpdatePromotion();
   const deletePromotionMutation = useDeletePromotion();
   const togglePromotionMutation = useTogglePromotion();
 
-  const [couponSearch, setCouponSearch] = useState('');
   const [couponFilter, setCouponFilter] = useState('all');
   const [sortOption, setSortOption] = useState('newest');
 
@@ -136,19 +146,16 @@ const PromotionPage = () => {
 
   const filteredCoupons = coupons
     .filter((c) => {
-      const matchesSearch = c.code
-        .toLowerCase()
-        .includes(couponSearch.toLowerCase());
-
-      if (couponFilter === 'active') return matchesSearch && c.isActive;
-      if (couponFilter === 'disabled') return matchesSearch && !c.isActive;
-      return matchesSearch;
+      if (couponFilter === 'active') return c.isActive;
+      if (couponFilter === 'disabled') return !c.isActive;
+      return true;
     })
     .sort((a, b) => {
-      if (sortOption === 'name-asc') return (a.code || '').localeCompare(b.code || '');
-      if (sortOption === 'name-desc') return (b.code || '').localeCompare(a.code || '');
+      if (sortOption === 'name-asc') return (a.code || '').localeCompare(b.code || '', 'vi');
+      if (sortOption === 'name-desc') return (b.code || '').localeCompare(a.code || '', 'vi');
       if (sortOption === 'value-desc') return (b.value || 0) - (a.value || 0);
       if (sortOption === 'value-asc') return (a.value || 0) - (b.value || 0);
+      if (sortOption === 'newest') return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
       return 0;
     });
 
@@ -246,8 +253,8 @@ const PromotionPage = () => {
             <input
               type="text"
               placeholder="Tìm theo mã voucher..."
-              value={couponSearch}
-              onChange={(e) => setCouponSearch(e.target.value)}
+              value={filters.search}
+              onChange={(e) => setFilters({ ...filters, search: e.target.value, page: 1 })}
               className="w-full pl-12 pr-4 py-3 bg-[#f9f9f9] border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-[#0f5dd9] text-sm"
             />
           </div>
@@ -289,12 +296,13 @@ const PromotionPage = () => {
         ) : filteredCoupons.length === 0 ? (
           <div className="text-center py-12 text-gray-400">
             <Ticket className="w-10 h-10 mx-auto mb-2 text-gray-300" />
-            {couponSearch || couponFilter !== 'all'
+            {filters.search || couponFilter !== 'all'
               ? 'Không tìm thấy voucher nào'
               : 'Chưa có voucher nào. Nhấn "Tạo Voucher" để bắt đầu.'}
           </div>
         ) : (
-          <table className="w-full text-sm">
+          <>
+            <table className="w-full text-sm">
             <thead className="bg-gray-50 text-gray-500">
               <tr>
                 <th className="px-5 py-3 text-left">Mã</th>
@@ -399,6 +407,42 @@ const PromotionPage = () => {
               ))}
             </tbody>
           </table>
+          <div className="p-6 border-t border-[#ececec] flex flex-col md:flex-row justify-between items-center gap-4 bg-white">
+            <div className="flex items-center gap-6">
+              <div className="flex items-center gap-3">
+                <span className="text-sm text-[#4f5562]">Số vouchers: <strong>{filteredCoupons.length}</strong></span>
+                <span className="text-sm text-[#4f5562] ml-4">Số bản ghi mỗi trang:</span>
+                <select
+                  value={filters.size}
+                  onChange={(e) =>
+                    setFilters({
+                      ...filters,
+                      size: Number(e.target.value),
+                      page: 1,
+                    })
+                  }
+                  className="px-3 py-1.5 border border-[#e0e0e0] rounded-lg text-sm focus:outline-none focus:border-[#d90f0f] bg-white cursor-pointer"
+                >
+                  {PAGE_SIZES.map((size) => (
+                    <option key={size} value={size}>
+                      {size}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-[#4f5562]">
+                Trang <strong>{filters.page}</strong> / {totalPages}
+              </span>
+              <Pagination
+                currentPage={filters.page}
+                totalPages={totalPages}
+                onPageChange={(page) => setFilters({ ...filters, page })}
+              />
+            </div>
+          </div>
+          </>
         )}
       </div>
 
