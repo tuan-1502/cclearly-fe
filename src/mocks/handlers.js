@@ -654,6 +654,53 @@ export const handlers = [
   }),
 
   // ========== USER ==========
+  // Get Users (Admin)
+  http.get(`${BASE_URL}/admin/users`, async ({ request }) => {
+    await delay(300);
+    const url = new URL(request.url);
+    const page = parseInt(url.searchParams.get('page')) || 1;
+    const size = parseInt(url.searchParams.get('size')) || 10;
+    const search = url.searchParams.get('search') || '';
+    const role = url.searchParams.get('role') || '';
+
+    // Filter by role (exclude CUSTOMER by default if on staff management)
+    let filteredUsers = users.filter((u) => {
+      const uRole = u.role?.toUpperCase() || '';
+      if (role) {
+        return uRole === role.toUpperCase();
+      }
+      // If no specific role is requested, return all non-customers
+      return uRole !== 'CUSTOMER';
+    });
+
+    // Filter by search
+    if (search) {
+      const q = search.toLowerCase();
+      filteredUsers = filteredUsers.filter(
+        (u) =>
+          u.name?.toLowerCase().includes(q) ||
+          u.email?.toLowerCase().includes(q) ||
+          u.phone?.includes(q)
+      );
+    }
+
+    const total = filteredUsers.length;
+    const start = (page - 1) * size;
+    const end = start + size;
+    const paginated = filteredUsers.slice(start, end);
+
+    return HttpResponse.json({
+      success: true,
+      data: {
+        content: paginated,
+        totalElements: total,
+        totalPages: Math.ceil(total / size),
+        size,
+        number: page,
+      },
+    });
+  }),
+
   // Get User Profile
   http.get(`${BASE_URL}/users/profile`, async () => {
     await delay(300);
@@ -794,13 +841,39 @@ export const handlers = [
     });
   }),
 
-  // ========== COUPONS ==========
-  // Get All Coupons
-  http.get(`${BASE_URL}/coupons`, async () => {
-    await delay(200);
+  // ========== PROMOTIONS ==========
+  // Get All Promotions
+  http.get(`${BASE_URL}/promotions`, async ({ request }) => {
+    await delay(300);
+    const url = new URL(request.url);
+    const page = parseInt(url.searchParams.get('page')) || 1;
+    const size = parseInt(url.searchParams.get('size')) || 10;
+    const search = url.searchParams.get('search') || '';
+
+    let filtered = [...coupons];
+    if (search) {
+      const q = search.toLowerCase();
+      filtered = filtered.filter(
+        (c) =>
+          c.code?.toLowerCase().includes(q) ||
+          c.description?.toLowerCase().includes(q)
+      );
+    }
+
+    const total = filtered.length;
+    const start = (page - 1) * size;
+    const end = start + size;
+    const paginated = filtered.slice(start, end);
+
     return HttpResponse.json({
       success: true,
-      data: coupons,
+      data: {
+        content: paginated,
+        totalElements: total,
+        totalPages: Math.ceil(total / size),
+        size,
+        number: page,
+      },
     });
   }),
 
