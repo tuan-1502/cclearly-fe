@@ -81,6 +81,7 @@ const AdminProductsPage = () => {
           refractiveIndex: v.refractiveIndex || '',
           variantName: v.colorName || '',
           price: v.salePrice || product.basePrice,
+          images: v.images?.map((url, idx) => ({ id: idx, url, preview: url })) || [],
         })) || []
       );
     } else {
@@ -158,7 +159,15 @@ const AdminProductsPage = () => {
           refractiveIndex: v.refractiveIndex ? Number(v.refractiveIndex) : null,
           salePrice: v.price ? Number(v.price) : null,
           isPreorder: false,
+          imageUrls: (v.images || []).map((img) => img.url).filter(Boolean),
         }));
+        // Fallback: nếu sản phẩm chưa có ảnh chung, gom tất cả ảnh biến thể
+        const allVariantImageUrls = variants.flatMap((v) =>
+          (v.images || []).map((img) => img.url).filter(Boolean)
+        );
+        if (allVariantImageUrls.length > 0 && productData.imageUrls.length === 0) {
+          productData.imageUrls = allVariantImageUrls;
+        }
       }
 
       if (editingProduct) {

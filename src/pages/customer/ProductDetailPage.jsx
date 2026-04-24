@@ -1,4 +1,4 @@
-﻿import {
+import {
   Glasses,
   Scan,
   Minus,
@@ -284,7 +284,7 @@ const ProductDetailPage = () => {
                       }
                       return 0;
                     })
-                    .map((variant) => {
+                    .map((variant, index) => {
                       const isSelected =
                         selectedVariant?.variantId === variant.variantId;
                       const label =
@@ -299,7 +299,13 @@ const ProductDetailPage = () => {
                           key={variant.variantId}
                           onClick={() => {
                             setSelectedVariantId(variant.variantId);
-                            setMainImage(null);
+                            if (!variant.images?.length && product.images?.length) {
+                              setMainImage(
+                                product.images[Math.min(index, product.images.length - 1)]
+                              );
+                            } else {
+                              setMainImage(null);
+                            }
                           }}
                           className={`px-4 py-2 rounded-full text-sm font-medium border-2 transition ${
                             isSelected
