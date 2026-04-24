@@ -24,15 +24,13 @@ import {
 } from '@/hooks/useAdmin';
 
 const PromotionPage = () => {
-  const [filters, setFilters] = useState({
-    page: 1,
-    size: 20,
-    search: '',
-  });
+  const [page, setPage] = useState(1);
+  const [size, setSize] = useState(20);
+  const [search, setSearch] = useState('');
 
-  const { data, isLoading } = usePromotions(filters);
-  const coupons = Array.isArray(data) ? data : data?.content || [];
-  const totalPages = data?.totalPages || 1;
+  // Lấy dữ liệu với size lớn để xử lý ở Client
+  const { data, isLoading } = usePromotions({ size: 9999 });
+  const allCoupons = Array.isArray(data) ? data : data?.content || [];
 
   const createPromotionMutation = useCreatePromotion();
   const updatePromotionMutation = useUpdatePromotion();
@@ -144,10 +142,19 @@ const PromotionPage = () => {
 
   // ─── Derived data ────────────────────────────────────────
 
-  const filteredCoupons = coupons
+  const processedCoupons = allCoupons
     .filter((c) => {
       if (couponFilter === 'active') return c.isActive;
       if (couponFilter === 'disabled') return !c.isActive;
+      return true;
+    })
+    .filter((c) => {
+      if (search) {
+        return (
+          (c.code || '').toLowerCase().includes(search.toLowerCase()) ||
+          (c.description || '').toLowerCase().includes(search.toLowerCase())
+        );
+      }
       return true;
     })
     .sort((a, b) => {
@@ -158,6 +165,9 @@ const PromotionPage = () => {
       if (sortOption === 'newest') return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
       return 0;
     });
+
+  const totalPages = Math.ceil(processedCoupons.length / size) || 1;
+  const paginatedCoupons = processedCoupons.slice((page - 1) * size, page * size);
 
   const isPercent = (type) => type === 'PERCENT' || type === 'PERCENTAGE';
 
@@ -173,10 +183,10 @@ const PromotionPage = () => {
 
   // ─── Stats ───────────────────────────────────────────────
 
-  const totalVouchers = coupons.length;
-  const activeVouchers = coupons.filter((c) => c.isActive).length;
+  const totalVouchers = allCoupons.length;
+  const activeVouchers = allCoupons.filter((c) => c.isActive).length;
   const disabledVouchers = totalVouchers - activeVouchers;
-  const totalUsage = coupons.reduce((s, c) => s + (c.usageCount || 0), 0);
+  const totalUsage = allCoupons.reduce((s, c) => s + (c.usageCount || 0), 0);
 
   return (
     <div className="space-y-6">
@@ -253,8 +263,11 @@ const PromotionPage = () => {
             <input
               type="text"
               placeholder="Tìm theo mã voucher..."
-              value={filters.search}
-              onChange={(e) => setFilters({ ...filters, search: e.target.value, page: 1 })}
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(1);
+              }}
               className="w-full pl-12 pr-4 py-3 bg-[#f9f9f9] border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-[#0f5dd9] text-sm"
             />
           </div>
@@ -293,10 +306,10 @@ const PromotionPage = () => {
       <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
         {isLoading ? (
           <div className="text-center py-12 text-gray-400">Đang tải...</div>
-        ) : filteredCoupons.length === 0 ? (
+        ) : processedCoupons.length === 0 ? (
           <div className="text-center py-12 text-gray-400">
             <Ticket className="w-10 h-10 mx-auto mb-2 text-gray-300" />
-            {filters.search || couponFilter !== 'all'
+            {search || couponFilter !== 'all'
               ? 'Không tìm thấy voucher nào'
               : 'Chưa có voucher nào. Nhấn "Tạo Voucher" để bắt đầu.'}
           </div>
@@ -318,7 +331,7 @@ const PromotionPage = () => {
             </thead>
 
             <tbody className="divide-y">
-              {filteredCoupons.map((coupon) => (
+              {paginatedCoupons.map((coupon) => (
                 <tr
                   key={coupon.promotionId || coupon.code}
                   className="hover:bg-gray-50"
@@ -410,22 +423,18 @@ const PromotionPage = () => {
           <div className="p-6 border-t border-[#ececec] flex flex-col md:flex-row justify-between items-center gap-4 bg-white">
             <div className="flex items-center gap-6">
               <div className="flex items-center gap-3">
-                <span className="text-sm text-[#4f5562]">Số vouchers: <strong>{filteredCoupons.length}</strong></span>
-                <span className="text-sm text-[#4f5562] ml-4">Số bản ghi mỗi trang:</span>
+                <span className="text-sm text-[#4f5562]">Số bản ghi mỗi trang:</span>
                 <select
-                  value={filters.size}
-                  onChange={(e) =>
-                    setFilters({
-                      ...filters,
-                      size: Number(e.target.value),
-                      page: 1,
-                    })
-                  }
+                  value={size}
+                  onChange={(e) => {
+                    setSize(Number(e.target.value));
+                    setPage(1);
+                  }}
                   className="px-3 py-1.5 border border-[#e0e0e0] rounded-lg text-sm focus:outline-none focus:border-[#d90f0f] bg-white cursor-pointer"
                 >
-                  {PAGE_SIZES.map((size) => (
-                    <option key={size} value={size}>
-                      {size}
+                  {[5, ...PAGE_SIZES.filter(s => s !== 5)].sort((a,b) => a - b).map((s) => (
+                    <option key={s} value={s}>
+                      {s}
                     </option>
                   ))}
                 </select>
@@ -433,12 +442,12 @@ const PromotionPage = () => {
             </div>
             <div className="flex items-center gap-4">
               <span className="text-sm text-[#4f5562]">
-                Trang <strong>{filters.page}</strong> / {totalPages}
+                Trang <strong>{page}</strong> / {totalPages}
               </span>
               <Pagination
-                currentPage={filters.page}
+                currentPage={page}
                 totalPages={totalPages}
-                onPageChange={(page) => setFilters({ ...filters, page })}
+                onPageChange={(p) => setPage(p)}
               />
             </div>
           </div>
