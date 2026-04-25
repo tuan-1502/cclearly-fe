@@ -565,11 +565,15 @@ const ProductModal = ({
                         <td className="px-4 py-2">
                           <div className="flex flex-wrap items-center gap-1">
                             {(variant.images || []).map((img) => (
-                              <div key={img.id} className="relative group w-9 h-9">
+                              <div key={img.id} className="relative group w-9 h-9 bg-gray-100 rounded border border-gray-200 overflow-hidden flex items-center justify-center">
+                                <span className="text-[8px] text-gray-400 absolute z-0">Lỗi</span>
                                 <img
                                   src={img.preview}
                                   alt=""
-                                  className="w-full h-full object-cover rounded border border-gray-200"
+                                  className="w-full h-full object-cover relative z-10"
+                                  onError={(e) => {
+                                    e.target.style.display = 'none';
+                                  }}
                                 />
                                 <button
                                   type="button"

@@ -1,4 +1,4 @@
-﻿import {
+import {
   Glasses,
   Scan,
   Search,
@@ -14,6 +14,29 @@ import { useState, useMemo, useEffect, useCallback } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import Pagination from '@/components/ui/Pagination';
 import { useProducts } from '@/hooks/useProduct';
+
+const ProductImageFallback = ({ images, alt, IconComponent, className }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  
+  // If no images array, or it's empty, or we've exhausted all images
+  if (!images || !Array.isArray(images) || images.length === 0 || currentIndex >= images.length) {
+    return (
+      <div className="flex h-full items-center justify-center">
+        <IconComponent className="h-20 w-20 text-[#c5cdd8] transition-transform duration-300 group-hover:scale-110 group-hover:text-[#d90f0f]" />
+      </div>
+    );
+  }
+
+  return (
+    <img
+      key={currentIndex}
+      src={images[currentIndex]}
+      alt={alt}
+      className={className}
+      onError={() => setCurrentIndex(prev => prev + 1)}
+    />
+  );
+};
 
 const PAGE_SIZE_OPTIONS = [6, 12, 24, 48];
 const currencyFormatter = new Intl.NumberFormat('vi-VN', {
@@ -698,11 +721,6 @@ const ProductListPage = ({ type }) => {
                       )
                     : 0;
 
-                  const thumbnail =
-                    product.images && product.images.length > 0
-                      ? product.images[0]
-                      : null;
-
                   const IconComponent = getProductIcon(product.type);
                   const variantColors = unique(
                     (product.variants || []).map((v) => v.colorName)
@@ -711,6 +729,14 @@ const ProductListPage = ({ type }) => {
                     (v) => v.isPreorder
                   );
 
+                  // Collect all possible images for this product (product-level + all variant-level)
+                  const allImages = [
+                    ...(product.images || []),
+                    ...(product.variants || []).flatMap((v) => v.images || []),
+                  ];
+                  // Remove duplicates to avoid unnecessary 404 retries
+                  const uniqueImages = [...new Set(allImages)];
+
                   return (
                     <Link
                       key={product.id}
@@ -718,17 +744,12 @@ const ProductListPage = ({ type }) => {
                       className="group overflow-hidden rounded-xl border border-[#e4eaf6] bg-white transition hover:-translate-y-0.5 hover:shadow-lg"
                     >
                       <div className="relative aspect-square overflow-hidden bg-[#fafbfd]">
-                        {thumbnail ? (
-                          <img
-                            src={thumbnail}
-                            alt={product.name}
-                            className="h-full w-full object-contain p-4 transition-transform duration-300 group-hover:scale-105"
-                          />
-                        ) : (
-                          <div className="flex h-full items-center justify-center">
-                            <IconComponent className="h-20 w-20 text-[#c5cdd8] transition-transform duration-300 group-hover:scale-110 group-hover:text-[#d90f0f]" />
-                          </div>
-                        )}
+                        <ProductImageFallback
+                          images={uniqueImages}
+                          alt={product.name}
+                          IconComponent={IconComponent}
+                          className="h-full w-full object-contain p-4 transition-transform duration-300 group-hover:scale-105"
+                        />
 
                         <div className="absolute left-2 top-2 flex flex-col gap-1">
                           {product.isSale && (
