@@ -9,6 +9,10 @@ import {
   Truck,
   XCircle,
   Clock,
+  X,
+  Calendar,
+  DollarSign,
+  Tag,
 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
@@ -40,6 +44,11 @@ const AdminOrdersPage = () => {
     search: '',
   });
   const [sortOption, setSortOption] = useState('date-desc');
+
+  // ── Extended filters ──────────────────────────────────
+  const [dateRange, setDateRange] = useState({ from: '', to: '' });
+  const [priceRange, setPriceRange] = useState({ min: '', max: '' });
+  const [orderType, setOrderType] = useState('all'); // all | standard | prescription
 
   const { data: ordersData } = useAdminOrders({
     status: filters.type !== 'all' && filters.type !== '' ? filters.type : undefined,
@@ -117,13 +126,54 @@ const AdminOrdersPage = () => {
     }).format(amount);
 
   const filteredOrders = orders.filter((order) => {
-    if (!filters.search) return true;
-    const term = filters.search.toString().toLowerCase();
-    const code = (order.code || order.orderId || '').toString().toLowerCase();
-    const name = (order.recipientName || '').toLowerCase();
-    const phone = (order.shippingPhone || '').toLowerCase();
-    return code.includes(term) || name.includes(term) || phone.includes(term);
+    // Search
+    if (filters.search) {
+      const term = filters.search.toString().toLowerCase();
+      const code = (order.code || order.orderId || '').toString().toLowerCase();
+      const name = (order.recipientName || '').toLowerCase();
+      const phone = (order.shippingPhone || '').toLowerCase();
+      if (!code.includes(term) && !name.includes(term) && !phone.includes(term)) return false;
+    }
+
+    // Filter by order type (Thường / Có toa)
+    if (orderType !== 'all') {
+      if (orderType === 'prescription' && order.type !== 'prescription') return false;
+      if (orderType === 'standard' && order.type === 'prescription') return false;
+    }
+
+    // Filter by date range
+    if (dateRange.from || dateRange.to) {
+      const orderDate = new Date(order.createdAt);
+      if (dateRange.from) {
+        const from = new Date(dateRange.from);
+        from.setHours(0, 0, 0, 0);
+        if (orderDate < from) return false;
+      }
+      if (dateRange.to) {
+        const to = new Date(dateRange.to);
+        to.setHours(23, 59, 59, 999);
+        if (orderDate > to) return false;
+      }
+    }
+
+    // Filter by price range
+    const amount = order.finalAmount || order.totalAmount || 0;
+    if (priceRange.min !== '' && amount < Number(priceRange.min)) return false;
+    if (priceRange.max !== '' && amount > Number(priceRange.max)) return false;
+
+    return true;
   });
+
+  const isFilterActive =
+    dateRange.from || dateRange.to ||
+    priceRange.min !== '' || priceRange.max !== '' ||
+    orderType !== 'all';
+
+  const handleClearFilters = () => {
+    setDateRange({ from: '', to: '' });
+    setPriceRange({ min: '', max: '' });
+    setOrderType('all');
+  };
 
   // sorting
   if (sortOption === 'date-desc') {
@@ -312,8 +362,10 @@ const AdminOrdersPage = () => {
       </div>
 
       {/* Filters UI */}
-      <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6">
-        <div className="flex flex-col md:flex-row gap-4">
+      <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6 space-y-4">
+
+        {/* Row 1: Search + Sort + Trạng thái */}
+        <div className="flex flex-col md:flex-row gap-3">
           <div className="flex-1 relative min-w-[300px]">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
             <input
@@ -325,8 +377,6 @@ const AdminOrdersPage = () => {
             />
           </div>
 
-          {/* <div className="bg-[#f9f9f9] border border-gray-200 rounded-full px-6 py-3 text-sm flex items-center gap-2"> */}
-          {/* <TrendingUp size={16} className="text-gray-400" /> */}
           <select
             value={sortOption}
             onChange={(e) => setSortOption(e.target.value)}
@@ -337,7 +387,6 @@ const AdminOrdersPage = () => {
             <option value="name-asc">Tên (A-Z)</option>
             <option value="name-desc">Tên (Z-A)</option>
           </select>
-          {/* </div> */}
 
           <div className="bg-[#f9f9f9] border border-gray-200 rounded-full px-6 py-3 text-sm flex items-center gap-2">
             <Filter size={16} className="text-gray-400" />
@@ -357,6 +406,119 @@ const AdminOrdersPage = () => {
             </select>
           </div>
         </div>
+
+        {/* Divider */}
+        <div className="border-t border-gray-100" />
+
+        {/* Row 2: Extended filters */}
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+
+          {/* Loại đơn */}
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 text-sm font-semibold text-gray-700">
+              <Tag size={15} className="text-gray-400" />
+              Loại đơn:
+            </div>
+            <select
+              value={orderType}
+              onChange={(e) => setOrderType(e.target.value)}
+              className="bg-[#f9f9f9] border border-gray-200 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0f5dd9] min-w-[150px]"
+            >
+              <option value="all">Tất cả</option>
+              <option value="standard">Thường</option>
+              <option value="prescription">Có toa kính</option>
+            </select>
+          </div>
+
+          {/* Khoảng ngày */}
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 text-sm font-semibold text-gray-700">
+              <Calendar size={15} className="text-gray-400" />
+              Ngày đặt:
+            </div>
+            <div className="flex items-center gap-2">
+              <input
+                type="date"
+                value={dateRange.from}
+                onChange={(e) => setDateRange({ ...dateRange, from: e.target.value })}
+                className="bg-[#f9f9f9] border border-gray-200 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0f5dd9] cursor-pointer"
+              />
+              <span className="text-gray-400 font-medium">—</span>
+              <input
+                type="date"
+                value={dateRange.to}
+                onChange={(e) => setDateRange({ ...dateRange, to: e.target.value })}
+                className="bg-[#f9f9f9] border border-gray-200 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0f5dd9] cursor-pointer"
+              />
+            </div>
+          </div>
+
+          {/* Khoảng giá */}
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 text-sm font-semibold text-gray-700">
+              <DollarSign size={15} className="text-gray-400" />
+              Tổng tiền:
+            </div>
+            <div className="flex items-center gap-2">
+              <input
+                type="number"
+                placeholder="Từ"
+                value={priceRange.min}
+                onChange={(e) => setPriceRange({ ...priceRange, min: e.target.value })}
+                className="w-28 bg-[#f9f9f9] border border-gray-200 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0f5dd9]"
+                min="0"
+              />
+              <span className="text-gray-400 font-medium">—</span>
+              <input
+                type="number"
+                placeholder="Đến"
+                value={priceRange.max}
+                onChange={(e) => setPriceRange({ ...priceRange, max: e.target.value })}
+                className="w-28 bg-[#f9f9f9] border border-gray-200 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0f5dd9]"
+                min="0"
+              />
+              <span className="text-xs text-gray-400">₫</span>
+            </div>
+          </div>
+
+          {/* Nút xóa bộ lọc */}
+          {isFilterActive && (
+            <button
+              onClick={handleClearFilters}
+              className="flex items-center gap-1.5 px-4 py-2 text-sm text-red-600 hover:text-red-700 hover:bg-red-50 rounded-full transition-colors border border-red-200 font-medium"
+            >
+              <X size={14} />
+              Xóa bộ lọc
+            </button>
+          )}
+        </div>
+
+        {/* Active filter tags */}
+        {isFilterActive && (
+          <div className="flex flex-wrap gap-2 pt-1">
+            {orderType !== 'all' && (
+              <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-50 text-blue-700 text-xs rounded-full font-medium border border-blue-100">
+                <Tag size={11} />
+                Loại: {orderType === 'prescription' ? 'Có toa kính' : 'Thường'}
+              </span>
+            )}
+            {(dateRange.from || dateRange.to) && (
+              <span className="inline-flex items-center gap-1 px-3 py-1 bg-green-50 text-green-700 text-xs rounded-full font-medium border border-green-100">
+                <Calendar size={11} />
+                Ngày: {dateRange.from || '?'} → {dateRange.to || '?'}
+              </span>
+            )}
+            {(priceRange.min !== '' || priceRange.max !== '') && (
+              <span className="inline-flex items-center gap-1 px-3 py-1 bg-orange-50 text-orange-700 text-xs rounded-full font-medium border border-orange-100">
+                <DollarSign size={11} />
+                Giá: {priceRange.min !== '' ? Number(priceRange.min).toLocaleString('vi-VN') + '₫' : '0'} → {priceRange.max !== '' ? Number(priceRange.max).toLocaleString('vi-VN') + '₫' : '∞'}
+              </span>
+            )}
+            <span className="inline-flex items-center px-3 py-1 bg-gray-100 text-gray-600 text-xs rounded-full font-medium">
+              {filteredOrders.length} đơn hàng
+            </span>
+          </div>
+        )}
       </div>
       {/* Table */}
       <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">

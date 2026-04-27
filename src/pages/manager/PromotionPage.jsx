@@ -10,6 +10,9 @@ import {
   Package,
   X,
   TrendingUp,
+  DollarSign,
+  Percent,
+  Tag,
 } from 'lucide-react';
 import { useState } from 'react';
 import ConfirmModal from '@/components/ui/ConfirmModal';
@@ -39,6 +42,11 @@ const PromotionPage = () => {
 
   const [couponFilter, setCouponFilter] = useState('all');
   const [sortOption, setSortOption] = useState('newest');
+
+  // ── Extended filters ──────────────────────────────────
+  const [discountTypeFilter, setDiscountTypeFilter] = useState('all'); // all | FIXED | PERCENT
+  const [priceRange, setPriceRange] = useState({ min: '', max: '' });
+  const [percentRange, setPercentRange] = useState({ min: '', max: '' });
 
   const [showCouponModal, setShowCouponModal] = useState(false);
   const [editingCoupon, setEditingCoupon] = useState(null);
@@ -142,19 +150,40 @@ const PromotionPage = () => {
 
   // ─── Derived data ────────────────────────────────────────
 
-  const processedCoupons = allCoupons
+  const isPercent = (type) => type === 'PERCENT' || type === 'PERCENTAGE';
+
+  const filteredCoupons = coupons
     .filter((c) => {
-      if (couponFilter === 'active') return c.isActive;
-      if (couponFilter === 'disabled') return !c.isActive;
-      return true;
-    })
-    .filter((c) => {
-      if (search) {
-        return (
-          (c.code || '').toLowerCase().includes(search.toLowerCase()) ||
-          (c.description || '').toLowerCase().includes(search.toLowerCase())
-        );
+      const matchesSearch = c.code
+        .toLowerCase()
+        .includes(couponSearch.toLowerCase());
+
+      if (couponFilter === 'active' && !c.isActive) return false;
+      if (couponFilter === 'disabled' && c.isActive) return false;
+      if (!matchesSearch) return false;
+
+      // Filter by discount type
+      if (discountTypeFilter !== 'all') {
+        const cType = isPercent(c.discountType) ? 'PERCENT' : 'FIXED';
+        if (cType !== discountTypeFilter) return false;
       }
+
+      // Filter by price range (for FIXED type)
+      if (discountTypeFilter === 'FIXED' || discountTypeFilter === 'all') {
+        if (!isPercent(c.discountType)) {
+          if (priceRange.min !== '' && (c.value || 0) < Number(priceRange.min)) return false;
+          if (priceRange.max !== '' && (c.value || 0) > Number(priceRange.max)) return false;
+        }
+      }
+
+      // Filter by percent range (for PERCENT type)
+      if (discountTypeFilter === 'PERCENT' || discountTypeFilter === 'all') {
+        if (isPercent(c.discountType)) {
+          if (percentRange.min !== '' && (c.value || 0) < Number(percentRange.min)) return false;
+          if (percentRange.max !== '' && (c.value || 0) > Number(percentRange.max)) return false;
+        }
+      }
+
       return true;
     })
     .sort((a, b) => {
@@ -166,10 +195,17 @@ const PromotionPage = () => {
       return 0;
     });
 
-  const totalPages = Math.ceil(processedCoupons.length / size) || 1;
-  const paginatedCoupons = processedCoupons.slice((page - 1) * size, page * size);
+  const isExtFilterActive =
+    discountTypeFilter !== 'all' ||
+    priceRange.min !== '' || priceRange.max !== '' ||
+    percentRange.min !== '' || percentRange.max !== '';
 
-  const isPercent = (type) => type === 'PERCENT' || type === 'PERCENTAGE';
+  const handleClearExtFilters = () => {
+    setDiscountTypeFilter('all');
+    setPriceRange({ min: '', max: '' });
+    setPercentRange({ min: '', max: '' });
+  };
+
 
   const formatDiscount = (coupon) => {
     if (isPercent(coupon.discountType)) return `${coupon.value}%`;
@@ -256,7 +292,9 @@ const PromotionPage = () => {
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+      <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 space-y-4">
+
+        {/* Row 1: Search + Sort + Trạng thái */}
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1 relative min-w-[300px]">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" size={18} />
@@ -272,20 +310,17 @@ const PromotionPage = () => {
             />
           </div>
 
-          {/* <div className="bg-[#f9f9f9] border border-gray-200 rounded-full px-6 py-3 text-sm flex items-center gap-2">
-            <TrendingUp size={16} className="text-gray-400" /> */}
-            <select
-              value={sortOption}
-              onChange={(e) => setSortOption(e.target.value)}
-              className="bg-[#f9f9f9] border border-gray-200 rounded-full px-6 py-3 text-sm focus:outline-none"
-            >
-              <option value="newest">Mới nhất</option>
-              <option value="name-asc">Tên (A-Z)</option>
-              <option value="name-desc">Tên (Z-A)</option>
-              <option value="value-desc">Giảm giá cao nhất</option>
-              <option value="value-asc">Giảm giá thấp nhất</option>
-            </select>
-          {/* </div> */}
+          <select
+            value={sortOption}
+            onChange={(e) => setSortOption(e.target.value)}
+            className="bg-[#f9f9f9] border border-gray-200 rounded-full px-6 py-3 text-sm focus:outline-none"
+          >
+            <option value="newest">Mới nhất</option>
+            <option value="name-asc">Tên (A-Z)</option>
+            <option value="name-desc">Tên (Z-A)</option>
+            <option value="value-desc">Giảm giá cao nhất</option>
+            <option value="value-asc">Giảm giá thấp nhất</option>
+          </select>
 
           <div className="bg-[#f9f9f9] border border-gray-200 rounded-full px-6 py-3 text-sm flex items-center gap-2">
             <Filter size={16} className="text-gray-400" />
@@ -300,6 +335,135 @@ const PromotionPage = () => {
             </select>
           </div>
         </div>
+
+        {/* Divider */}
+        <div className="border-t border-gray-100" />
+
+        {/* Row 2: Extended filters */}
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+
+          {/* Loại voucher */}
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 text-sm font-semibold text-gray-700">
+              <Tag size={15} className="text-gray-400" />
+              Loại:
+            </div>
+            <select
+              value={discountTypeFilter}
+              onChange={(e) => {
+                setDiscountTypeFilter(e.target.value);
+                // Reset các khoảng khi đổi loại
+                setPriceRange({ min: '', max: '' });
+                setPercentRange({ min: '', max: '' });
+              }}
+              className="bg-[#f9f9f9] border border-gray-200 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0f5dd9] min-w-[150px]"
+            >
+              <option value="all">Tất cả</option>
+              <option value="FIXED">Cố định (₫)</option>
+              <option value="PERCENT">Phần trăm (%)</option>
+            </select>
+          </div>
+
+          {/* Khoảng giá - chỉ hiện khi chọn Cố định */}
+          {(discountTypeFilter === 'FIXED') && (
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 text-sm font-semibold text-gray-700">
+                <DollarSign size={15} className="text-gray-400" />
+                Khoảng giá:
+              </div>
+              <div className="flex items-center gap-2">
+                <input
+                  type="number"
+                  placeholder="Từ"
+                  value={priceRange.min}
+                  onChange={(e) => setPriceRange({ ...priceRange, min: e.target.value })}
+                  className="w-28 bg-[#f9f9f9] border border-gray-200 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0f5dd9]"
+                  min="0"
+                />
+                <span className="text-gray-400 font-medium">—</span>
+                <input
+                  type="number"
+                  placeholder="Đến"
+                  value={priceRange.max}
+                  onChange={(e) => setPriceRange({ ...priceRange, max: e.target.value })}
+                  className="w-28 bg-[#f9f9f9] border border-gray-200 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0f5dd9]"
+                  min="0"
+                />
+                <span className="text-xs text-gray-400">₫</span>
+              </div>
+            </div>
+          )}
+
+          {/* Khoảng phần trăm - chỉ hiện khi chọn Phần trăm */}
+          {(discountTypeFilter === 'PERCENT') && (
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 text-sm font-semibold text-gray-700">
+                <Percent size={15} className="text-gray-400" />
+                Khoảng %:
+              </div>
+              <div className="flex items-center gap-2">
+                <input
+                  type="number"
+                  placeholder="Từ"
+                  value={percentRange.min}
+                  onChange={(e) => setPercentRange({ ...percentRange, min: e.target.value })}
+                  className="w-20 bg-[#f9f9f9] border border-gray-200 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0f5dd9]"
+                  min="0"
+                  max="100"
+                />
+                <span className="text-gray-400 font-medium">—</span>
+                <input
+                  type="number"
+                  placeholder="Đến"
+                  value={percentRange.max}
+                  onChange={(e) => setPercentRange({ ...percentRange, max: e.target.value })}
+                  className="w-20 bg-[#f9f9f9] border border-gray-200 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0f5dd9]"
+                  min="0"
+                  max="100"
+                />
+                <span className="text-xs text-gray-400">%</span>
+              </div>
+            </div>
+          )}
+
+          {/* Nút xóa bộ lọc */}
+          {isExtFilterActive && (
+            <button
+              onClick={handleClearExtFilters}
+              className="flex items-center gap-1.5 px-4 py-2 text-sm text-red-600 hover:text-red-700 hover:bg-red-50 rounded-full transition-colors border border-red-200 font-medium"
+            >
+              <X size={14} />
+              Xóa bộ lọc
+            </button>
+          )}
+        </div>
+
+        {/* Active filter tags */}
+        {isExtFilterActive && (
+          <div className="flex flex-wrap gap-2 pt-1">
+            {discountTypeFilter !== 'all' && (
+              <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-50 text-blue-700 text-xs rounded-full font-medium border border-blue-100">
+                <Tag size={11} />
+                Loại: {discountTypeFilter === 'FIXED' ? 'Cố định (₫)' : 'Phần trăm (%)'}
+              </span>
+            )}
+            {(priceRange.min !== '' || priceRange.max !== '') && (
+              <span className="inline-flex items-center gap-1 px-3 py-1 bg-orange-50 text-orange-700 text-xs rounded-full font-medium border border-orange-100">
+                <DollarSign size={11} />
+                Giá: {priceRange.min !== '' ? Number(priceRange.min).toLocaleString('vi-VN') + '₫' : '0'} → {priceRange.max !== '' ? Number(priceRange.max).toLocaleString('vi-VN') + '₫' : '∞'}
+              </span>
+            )}
+            {(percentRange.min !== '' || percentRange.max !== '') && (
+              <span className="inline-flex items-center gap-1 px-3 py-1 bg-purple-50 text-purple-700 text-xs rounded-full font-medium border border-purple-100">
+                <Percent size={11} />
+                %: {percentRange.min || '0'}% → {percentRange.max || '100'}%
+              </span>
+            )}
+            <span className="inline-flex items-center px-3 py-1 bg-gray-100 text-gray-600 text-xs rounded-full font-medium">
+              {filteredCoupons.length} voucher
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Table */}
