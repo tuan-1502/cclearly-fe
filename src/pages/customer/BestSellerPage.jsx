@@ -5,6 +5,7 @@ import {
   SlidersHorizontal,
   Sparkles,
   Star,
+  Package,
 } from 'lucide-react';
 import { useMemo, useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
@@ -16,6 +17,28 @@ const currencyFormatter = new Intl.NumberFormat('vi-VN', {
   style: 'currency',
   currency: 'VND',
 });
+
+const ProductImageFallback = ({ images, alt, IconComponent, className }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  
+  if (!images || !Array.isArray(images) || images.length === 0 || currentIndex >= images.length) {
+    return (
+      <div className="flex h-full items-center justify-center">
+        <IconComponent className="h-20 w-20 text-[#c5cdd8] transition-transform duration-300 group-hover:scale-110 group-hover:text-[#d90f0f]" />
+      </div>
+    );
+  }
+
+  return (
+    <img
+      key={currentIndex}
+      src={images[currentIndex]}
+      alt={alt}
+      className={className}
+      onError={() => setCurrentIndex(prev => prev + 1)}
+    />
+  );
+};
 
 const BestSellerPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -71,7 +94,7 @@ const BestSellerPage = () => {
 
   console.log('All Products Data:', allProductsData);
   console.log('All Products Count:', allProducts.length);
-  
+
   if (allProducts.length > 0) {
     console.log('First Product Structure:', allProducts[0]);
     console.log('First Product Keys:', Object.keys(allProducts[0]));
@@ -90,16 +113,16 @@ const BestSellerPage = () => {
   // Improved filter criteria for Best Sellers
   const bestSellers = useMemo(() => {
     console.log('Filtering products for Best Sellers...');
-    
+
     // Try multiple filter strategies
     let filtered = [];
-    
+
     // Strategy 1: Filter by isSale or high rating
     const bySaleOrRating = allProducts.filter((product) => {
       return product.isSale || (product.rating && product.rating >= 4.5);
     });
     console.log(`Strategy 1 (isSale or rating>=4.5): ${bySaleOrRating.length} products`);
-    
+
     if (bySaleOrRating.length > 0) {
       filtered = bySaleOrRating;
     } else {
@@ -108,7 +131,7 @@ const BestSellerPage = () => {
         return product.stock > 0 && (product.type === 'frame' || product.type === 'lens');
       });
       console.log(`Strategy 2 (stock>0 and frame/lens): ${byStockAndCategory.length} products`);
-      
+
       if (byStockAndCategory.length > 0) {
         filtered = byStockAndCategory;
       } else {
@@ -122,22 +145,22 @@ const BestSellerPage = () => {
     // Scoring function for sorting
     const getScore = (product) => {
       let score = 0;
-      
+
       // Higher score for sale items
       if (product.isSale) score += 1000;
-      
+
       // Higher score for products with better ratings
       if (product.rating) score += product.rating * 100;
-      
+
       // Higher score for products with more reviews
       if (product.reviewCount) score += product.reviewCount * 10;
-      
+
       // Higher score for higher price (premium products)
       if (product.price) score += product.price / 1000;
-      
+
       // Higher score for more stock
       if (product.stock) score += Math.min(product.stock, 100);
-      
+
       return score;
     };
 
@@ -151,11 +174,11 @@ const BestSellerPage = () => {
     const saleCount = bestSellers.filter((product) => product.isSale).length;
     const avgRating = bestSellers.length
       ? (
-          bestSellers.reduce(
-            (total, product) => total + (product.rating || 0),
-            0
-          ) / bestSellers.length
-        ).toFixed(1)
+        bestSellers.reduce(
+          (total, product) => total + (product.rating || 0),
+          0
+        ) / bestSellers.length
+      ).toFixed(1)
       : '0.0';
 
     return {
@@ -356,11 +379,10 @@ const BestSellerPage = () => {
                 <button
                   key={option.value || 'all'}
                   onClick={() => handleCategoryChange(option.value)}
-                  className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition ${
-                    isActive
+                  className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition ${isActive
                       ? 'border-[#d90f0f] bg-[#d90f0f] text-white shadow-[0_8px_20px_rgba(15,93,217,0.3)]'
                       : 'border-[#d8e2f2] bg-white text-[#4f5562] hover:border-[#d90f0f]/35 hover:text-[#d90f0f]'
-                  }`}
+                    }`}
                 >
                   <span>{option.label}</span>
                   <span
@@ -386,11 +408,25 @@ const BestSellerPage = () => {
                     product.originalPrice > product.basePrice;
                   const discountPercent = hasDiscount
                     ? Math.round(
-                        ((product.originalPrice - product.basePrice) /
-                          product.originalPrice) *
-                          100
-                      )
+                      ((product.originalPrice - product.basePrice) /
+                        product.originalPrice) *
+                      100
+                    )
                     : 0;
+
+                  const IconComponent =
+                    product.type === 'frame'
+                      ? Glasses
+                      : product.type === 'lens'
+                        ? Scan
+                        : Package;
+
+                  // Collect all possible images for this product (product-level + all variant-level)
+                  const allImages = [
+                    ...(product.images || []),
+                    ...(product.variants || []).flatMap((v) => v.images || []),
+                  ];
+                  const uniqueImages = [...new Set(allImages)];
 
                   return (
                     <Link
@@ -401,11 +437,12 @@ const BestSellerPage = () => {
                       <div className="relative aspect-square overflow-hidden bg-[linear-gradient(145deg,#f7f9ff,#edf2ff)]">
                         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(15,93,217,0.12),transparent_50%)]" />
                         <div className="relative flex h-full items-center justify-center">
-                          {product.type === 'frame' ? (
-                            <Glasses className="h-24 w-24 text-[#7b8494] transition-transform duration-300 group-hover:scale-110 group-hover:text-[#d90f0f]" />
-                          ) : (
-                            <Scan className="h-24 w-24 text-[#7b8494] transition-transform duration-300 group-hover:scale-110 group-hover:text-[#d90f0f]" />
-                          )}
+                          <ProductImageFallback
+                            images={uniqueImages}
+                            alt={product.name}
+                            IconComponent={IconComponent}
+                            className="h-full w-full object-contain p-4 transition-transform duration-300 group-hover:scale-105"
+                          />
                         </div>
 
                         <div className="absolute left-3 top-3 flex flex-col gap-2">
@@ -438,9 +475,6 @@ const BestSellerPage = () => {
                         <h3 className="line-clamp-1 text-lg font-semibold text-[#1d2433]">
                           {product.name}
                         </h3>
-                        <p className="mt-2 line-clamp-2 text-sm text-[#606b7f]">
-                          {product.description}
-                        </p>
 
                         <div className="mt-4 flex items-center justify-between">
                           <div className="flex items-center gap-1 text-[#f7b500]">
