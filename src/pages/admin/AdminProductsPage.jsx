@@ -1,4 +1,4 @@
-import { Glasses, Scan, Plus, Search, Edit2, Trash2, TrendingUp, Filter } from 'lucide-react';
+import { Glasses, Scan, Plus, Search, Edit2, Trash2, TrendingUp, Filter, X, DollarSign, Hash } from 'lucide-react';
 import { useState } from 'react';
 import ProductModal from '@/components/admin/product/ProductModal';
 import ConfirmModal from '@/components/ui/ConfirmModal';
@@ -28,6 +28,10 @@ const AdminProductsPage = () => {
     isOpen: false,
     productId: null,
   });
+
+  // ── Extended filters ──────────────────────────────────
+  const [priceRange, setPriceRange] = useState({ min: '', max: '' });
+  const [variantRange, setVariantRange] = useState({ min: '', max: '' });
 
   const { data, isLoading } = useProducts(filters);
   const createProduct = useCreateProduct();
@@ -213,8 +217,19 @@ const AdminProductsPage = () => {
     setVariants(variants.filter((_, i) => i !== index));
   };
 
-  // Sorting logic (local sorting since API might not support all these)
-  const products = (data?.content || []).sort((a, b) => {
+  // Sorting + client-side filtering
+  const products = (data?.content || [])
+    .filter((p) => {
+      // Price range
+      if (priceRange.min !== '' && (p.basePrice || 0) < Number(priceRange.min)) return false;
+      if (priceRange.max !== '' && (p.basePrice || 0) > Number(priceRange.max)) return false;
+      // Variant count range
+      const varCount = p.variants?.length || 0;
+      if (variantRange.min !== '' && varCount < Number(variantRange.min)) return false;
+      if (variantRange.max !== '' && varCount > Number(variantRange.max)) return false;
+      return true;
+    })
+    .sort((a, b) => {
     if (sortOption === 'name-asc') return (a.name || '').localeCompare(b.name || '', 'vi');
     if (sortOption === 'name-desc') return (b.name || '').localeCompare(a.name || '', 'vi');
     if (sortOption === 'price-asc') return (a.basePrice || 0) - (b.basePrice || 0);
@@ -223,6 +238,15 @@ const AdminProductsPage = () => {
     if (sortOption === 'oldest') return new Date(a.createdAt || 0) - new Date(b.createdAt || 0);
     return 0;
   });
+
+  const isFilterActive =
+    priceRange.min !== '' || priceRange.max !== '' ||
+    variantRange.min !== '' || variantRange.max !== '';
+
+  const handleClearFilters = () => {
+    setPriceRange({ min: '', max: '' });
+    setVariantRange({ min: '', max: '' });
+  };
 
   const totalPages = data?.totalPages || 1;
 
@@ -244,7 +268,9 @@ const AdminProductsPage = () => {
       </div>
 
       {/* Filters UI */}
-      <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6">
+      <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6 space-y-4">
+
+        {/* Row 1: Search + Sort + Loại */}
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1 relative min-w-[300px]">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
@@ -256,8 +282,6 @@ const AdminProductsPage = () => {
               className="w-full pl-12 pr-4 py-3 bg-[#f9f9f9] border border-gray-200 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-[#0f5dd9] transition"
             />
           </div>
-
-          {/* <div className="bg-[#f9f9f9] border border-gray-200 rounded-full px-6 py-3 text-sm flex items-center gap-2"> */}
 
           <select
             value={sortOption}
@@ -271,7 +295,6 @@ const AdminProductsPage = () => {
             <option value="price-asc">Giá tăng dần</option>
             <option value="price-desc">Giá giảm dần</option>
           </select>
-          {/* </div> */}
 
           <div className="bg-[#f9f9f9] border border-gray-200 rounded-full px-6 py-3 text-sm flex items-center gap-2">
             <Filter size={16} className="text-gray-400" />
@@ -287,6 +310,100 @@ const AdminProductsPage = () => {
             </select>
           </div>
         </div>
+
+        {/* Divider */}
+        <div className="border-t border-gray-100" />
+
+        {/* Row 2: Extended filters */}
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+
+          {/* Khoảng giá */}
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 text-sm font-semibold text-gray-700">
+              <DollarSign size={15} className="text-gray-400" />
+              Khoảng giá:
+            </div>
+            <div className="flex items-center gap-2">
+              <input
+                type="number"
+                placeholder="Từ"
+                value={priceRange.min}
+                onChange={(e) => setPriceRange({ ...priceRange, min: e.target.value })}
+                className="w-28 bg-[#f9f9f9] border border-gray-200 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0f5dd9]"
+                min="0"
+              />
+              <span className="text-gray-400 font-medium">—</span>
+              <input
+                type="number"
+                placeholder="Đến"
+                value={priceRange.max}
+                onChange={(e) => setPriceRange({ ...priceRange, max: e.target.value })}
+                className="w-28 bg-[#f9f9f9] border border-gray-200 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0f5dd9]"
+                min="0"
+              />
+              <span className="text-xs text-gray-400">₫</span>
+            </div>
+          </div>
+
+          {/* Số biến thể */}
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 text-sm font-semibold text-gray-700">
+              <Hash size={15} className="text-gray-400" />
+              Số biến thể:
+            </div>
+            <div className="flex items-center gap-2">
+              <input
+                type="number"
+                placeholder="Từ"
+                value={variantRange.min}
+                onChange={(e) => setVariantRange({ ...variantRange, min: e.target.value })}
+                className="w-20 bg-[#f9f9f9] border border-gray-200 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0f5dd9]"
+                min="0"
+              />
+              <span className="text-gray-400 font-medium">—</span>
+              <input
+                type="number"
+                placeholder="Đến"
+                value={variantRange.max}
+                onChange={(e) => setVariantRange({ ...variantRange, max: e.target.value })}
+                className="w-20 bg-[#f9f9f9] border border-gray-200 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0f5dd9]"
+                min="0"
+              />
+            </div>
+          </div>
+
+          {/* Nút xóa bộ lọc */}
+          {isFilterActive && (
+            <button
+              onClick={handleClearFilters}
+              className="flex items-center gap-1.5 px-4 py-2 text-sm text-red-600 hover:text-red-700 hover:bg-red-50 rounded-full transition-colors border border-red-200 font-medium"
+            >
+              <X size={14} />
+              Xóa bộ lọc
+            </button>
+          )}
+        </div>
+
+        {/* Active filter tags */}
+        {isFilterActive && (
+          <div className="flex flex-wrap gap-2 pt-1">
+            {(priceRange.min !== '' || priceRange.max !== '') && (
+              <span className="inline-flex items-center gap-1 px-3 py-1 bg-orange-50 text-orange-700 text-xs rounded-full font-medium border border-orange-100">
+                <DollarSign size={11} />
+                Giá: {priceRange.min !== '' ? Number(priceRange.min).toLocaleString('vi-VN') + '₫' : '0'} → {priceRange.max !== '' ? Number(priceRange.max).toLocaleString('vi-VN') + '₫' : '∞'}
+              </span>
+            )}
+            {(variantRange.min !== '' || variantRange.max !== '') && (
+              <span className="inline-flex items-center gap-1 px-3 py-1 bg-purple-50 text-purple-700 text-xs rounded-full font-medium border border-purple-100">
+                <Hash size={11} />
+                Biến thể: {variantRange.min || '0'} → {variantRange.max || '∞'}
+              </span>
+            )}
+            <span className="inline-flex items-center px-3 py-1 bg-gray-100 text-gray-600 text-xs rounded-full font-medium">
+              {products.length} sản phẩm
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Table UI */}
