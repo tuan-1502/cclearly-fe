@@ -12,6 +12,8 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import ConfirmModal from '@/components/ui/ConfirmModal';
+import Pagination from '@/components/ui/Pagination';
+import { PAGE_SIZES } from '@/mocks/data';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAdminUsers, useCreateUser, useUpdateUser } from '@/hooks/useAdmin';
 
@@ -44,8 +46,12 @@ const emptyForm = {
 };
 
 const StaffPage = () => {
-  const [search, setSearch] = useState('');
-  const [roleFilter, setRoleFilter] = useState('all');
+  const [filters, setFilters] = useState({
+    page: 1,
+    size: 20,
+    search: '',
+    role: 'all',
+  });
   const [sortOption, setSortOption] = useState('newest');
   const [showModal, setShowModal] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
@@ -53,32 +59,28 @@ const StaffPage = () => {
   const [lockModal, setLockModal] = useState({ isOpen: false, user: null });
 
   const { user: currentUser } = useAuth();
-  const { data: allUsers = [], isLoading } = useAdminUsers({
-    page: 1,
-    size: 100,
+  const { data, isLoading } = useAdminUsers({
+    page: filters.page,
+    size: filters.size,
+    search: filters.search,
+    role: filters.role === 'all' ? '' : filters.role,
   });
+
+  const allUsers = Array.isArray(data) ? data : data?.content || [];
+  const totalPages = data?.totalPages || 1;
+
   const createUser = useCreateUser();
   const updateUser = useUpdateUser();
 
-  const staff = (Array.isArray(allUsers) ? allUsers : allUsers?.content || [])
+  const staff = (Array.isArray(allUsers) ? allUsers : allUsers || [])
     .filter((u) => {
       const role = u.role?.toUpperCase() || '';
       return role !== 'CUSTOMER';
     })
-    .filter((u) => {
-      const q = search.toLowerCase();
-      const matchesSearch = !search || 
-        u.fullName?.toLowerCase().includes(q) ||
-        u.email?.toLowerCase().includes(q) ||
-        u.phoneNumber?.includes(q);
-
-      const matchesRole = roleFilter === 'all' || u.role === roleFilter;
-      
-      return matchesSearch && matchesRole;
-    })
     .sort((a, b) => {
       if (sortOption === 'name-asc') return (a.fullName || '').localeCompare(b.fullName || '', 'vi');
       if (sortOption === 'name-desc') return (b.fullName || '').localeCompare(a.fullName || '', 'vi');
+      if (sortOption === 'newest') return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
       return 0; // Default logic
     });
 
@@ -169,8 +171,8 @@ const StaffPage = () => {
             <input
               type="text"
               placeholder="Tìm theo tên, email, SĐT..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              value={filters.search}
+              onChange={(e) => setFilters({ ...filters, search: e.target.value, page: 1 })}
               className="w-full pl-12 pr-4 py-3 bg-[#f9f9f9] border border-gray-200 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-[#0f5dd9] transition"
             />
           </div>
@@ -191,8 +193,8 @@ const StaffPage = () => {
           <div className="bg-[#f9f9f9] border border-gray-200 rounded-full px-6 py-3 text-sm flex items-center gap-2">
             <Filter size={16} className="text-gray-400" />
             <select
-              value={roleFilter}
-              onChange={(e) => setRoleFilter(e.target.value)}
+              value={filters.role}
+              onChange={(e) => setFilters({ ...filters, role: e.target.value, page: 1 })}
               className="outline-none bg-transparent"
             >
               <option value="all">Tất cả vai trò</option>
@@ -216,6 +218,7 @@ const StaffPage = () => {
             Không có nhân viên nào
           </div>
         ) : (
+          <>
           <table className="w-full">
             <thead className="bg-[#f3f3f3]">
               <tr>
@@ -312,6 +315,42 @@ const StaffPage = () => {
               ))}
             </tbody>
           </table>
+          <div className="p-6 border-t border-[#ececec] flex flex-col md:flex-row justify-between items-center gap-4 bg-white">
+            <div className="flex items-center gap-6">
+              <div className="flex items-center gap-3">
+                <span className="text-sm text-[#4f5562]">Số nhân sự: <strong>{staff.length}</strong></span>
+                <span className="text-sm text-[#4f5562] ml-4">Số bản ghi mỗi trang:</span>
+                <select
+                  value={filters.size}
+                  onChange={(e) =>
+                    setFilters({
+                      ...filters,
+                      size: Number(e.target.value),
+                      page: 1,
+                    })
+                  }
+                  className="px-3 py-1.5 border border-[#e0e0e0] rounded-lg text-sm focus:outline-none focus:border-[#d90f0f] bg-white cursor-pointer"
+                >
+                  {PAGE_SIZES.map((size) => (
+                    <option key={size} value={size}>
+                      {size}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-[#4f5562]">
+                Trang <strong>{filters.page}</strong> / {totalPages}
+              </span>
+              <Pagination
+                currentPage={filters.page}
+                totalPages={totalPages}
+                onPageChange={(page) => setFilters({ ...filters, page })}
+              />
+            </div>
+          </div>
+          </>
         )}
       </div>
 

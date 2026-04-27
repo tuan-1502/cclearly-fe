@@ -1,4 +1,4 @@
-﻿import {
+import {
   Glasses,
   Scan,
   Minus,
@@ -95,7 +95,7 @@ const ProductDetailPage = () => {
     if (!canPurchase) return;
     try {
       await addToCart.mutateAsync(buildCartData());
-    } catch (err) {}
+    } catch (err) { }
   };
 
   const handleBuyNow = async () => {
@@ -103,7 +103,7 @@ const ProductDetailPage = () => {
     try {
       await addToCart.mutateAsync(buildCartData());
       navigate('/checkout');
-    } catch (err) {}
+    } catch (err) { }
   };
 
   if (isLoading) {
@@ -191,11 +191,10 @@ const ProductDetailPage = () => {
                   <button
                     key={idx}
                     onClick={() => setMainImage(img)}
-                    className={`w-20 h-20 rounded-xl overflow-hidden border-2 flex-shrink-0 ${
-                      (mainImage || displayImages[0]) === img
+                    className={`w-20 h-20 rounded-xl overflow-hidden border-2 flex-shrink-0 ${(mainImage || displayImages[0]) === img
                         ? 'border-red-500'
                         : 'border-transparent'
-                    }`}
+                      }`}
                   >
                     <img
                       src={img}
@@ -284,7 +283,7 @@ const ProductDetailPage = () => {
                       }
                       return 0;
                     })
-                    .map((variant) => {
+                    .map((variant, index) => {
                       const isSelected =
                         selectedVariant?.variantId === variant.variantId;
                       const label =
@@ -299,13 +298,18 @@ const ProductDetailPage = () => {
                           key={variant.variantId}
                           onClick={() => {
                             setSelectedVariantId(variant.variantId);
-                            setMainImage(null);
+                            if (!variant.images?.length && product.images?.length) {
+                              setMainImage(
+                                product.images[Math.min(index, product.images.length - 1)]
+                              );
+                            } else {
+                              setMainImage(null);
+                            }
                           }}
-                          className={`px-4 py-2 rounded-full text-sm font-medium border-2 transition ${
-                            isSelected
+                          className={`px-4 py-2 rounded-full text-sm font-medium border-2 transition ${isSelected
                               ? 'border-red-600 bg-blue-50 text-red-700'
                               : 'border-gray-200 bg-white text-gray-700 hover:border-gray-400'
-                          }`}
+                            }`}
                         >
                           {label}
                         </button>
@@ -320,22 +324,20 @@ const ProductDetailPage = () => {
               <div className="flex gap-3 mb-6">
                 <button
                   onClick={() => setOrderType('regular')}
-                  className={`px-5 py-2 rounded-full text-sm font-semibold ${
-                    orderType === 'regular'
+                  className={`px-5 py-2 rounded-full text-sm font-semibold ${orderType === 'regular'
                       ? 'bg-black text-white'
                       : 'bg-gray-100'
-                  }`}
+                    }`}
                 >
                   Mua ngay
                 </button>
 
                 <button
                   onClick={() => setOrderType('prescription')}
-                  className={`px-5 py-2 rounded-full text-sm font-semibold ${
-                    orderType === 'prescription'
+                  className={`px-5 py-2 rounded-full text-sm font-semibold ${orderType === 'prescription'
                       ? 'bg-black text-white'
                       : 'bg-gray-100'
-                  }`}
+                    }`}
                 >
                   Theo đơn kính
                 </button>
@@ -417,11 +419,10 @@ const ProductDetailPage = () => {
           <div className="flex gap-8 border-b mb-8 text-sm font-semibold">
             <button
               onClick={() => setActiveTab('description')}
-              className={`pb-3 ${
-                activeTab === 'description'
+              className={`pb-3 ${activeTab === 'description'
                   ? 'border-b-2 border-black'
                   : 'text-gray-400'
-              }`}
+                }`}
             >
               Mô tả chi tiết
             </button>
@@ -429,11 +430,10 @@ const ProductDetailPage = () => {
             {hasSpecs && (
               <button
                 onClick={() => setActiveTab('specs')}
-                className={`pb-3 ${
-                  activeTab === 'specs'
+                className={`pb-3 ${activeTab === 'specs'
                     ? 'border-b-2 border-black'
                     : 'text-gray-400'
-                }`}
+                  }`}
               >
                 Thông số kỹ thuật
               </button>
@@ -441,11 +441,10 @@ const ProductDetailPage = () => {
 
             <button
               onClick={() => setActiveTab('warranty')}
-              className={`pb-3 ${
-                activeTab === 'warranty'
+              className={`pb-3 ${activeTab === 'warranty'
                   ? 'border-b-2 border-black'
                   : 'text-gray-400'
-              }`}
+                }`}
             >
               Bảo hành
             </button>
@@ -489,9 +488,8 @@ const ProductDetailPage = () => {
               {specsData.map((spec, index) => (
                 <div
                   key={spec.label}
-                  className={`grid grid-cols-2 px-6 py-3 text-sm ${
-                    index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
-                  }`}
+                  className={`grid grid-cols-2 px-6 py-3 text-sm ${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
+                    }`}
                 >
                   <span className="text-gray-500">{spec.label}</span>
                   <span className="font-medium">{spec.value}</span>

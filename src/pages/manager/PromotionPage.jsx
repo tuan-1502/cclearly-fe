@@ -16,6 +16,8 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import ConfirmModal from '@/components/ui/ConfirmModal';
+import Pagination from '@/components/ui/Pagination';
+import { PAGE_SIZES } from '@/mocks/data';
 import {
   usePromotions,
   useCreatePromotion,
@@ -25,13 +27,19 @@ import {
 } from '@/hooks/useAdmin';
 
 const PromotionPage = () => {
-  const { data: coupons = [], isLoading } = usePromotions();
+  const [page, setPage] = useState(1);
+  const [size, setSize] = useState(20);
+  const [search, setSearch] = useState('');
+
+  // Lấy dữ liệu với size lớn để xử lý ở Client
+  const { data, isLoading } = usePromotions({ size: 9999 });
+  const allCoupons = Array.isArray(data) ? data : data?.content || [];
+
   const createPromotionMutation = useCreatePromotion();
   const updatePromotionMutation = useUpdatePromotion();
   const deletePromotionMutation = useDeletePromotion();
   const togglePromotionMutation = useTogglePromotion();
 
-  const [couponSearch, setCouponSearch] = useState('');
   const [couponFilter, setCouponFilter] = useState('all');
   const [sortOption, setSortOption] = useState('newest');
 
@@ -179,10 +187,11 @@ const PromotionPage = () => {
       return true;
     })
     .sort((a, b) => {
-      if (sortOption === 'name-asc') return (a.code || '').localeCompare(b.code || '');
-      if (sortOption === 'name-desc') return (b.code || '').localeCompare(a.code || '');
+      if (sortOption === 'name-asc') return (a.code || '').localeCompare(b.code || '', 'vi');
+      if (sortOption === 'name-desc') return (b.code || '').localeCompare(a.code || '', 'vi');
       if (sortOption === 'value-desc') return (b.value || 0) - (a.value || 0);
       if (sortOption === 'value-asc') return (a.value || 0) - (b.value || 0);
+      if (sortOption === 'newest') return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
       return 0;
     });
 
@@ -210,10 +219,10 @@ const PromotionPage = () => {
 
   // ─── Stats ───────────────────────────────────────────────
 
-  const totalVouchers = coupons.length;
-  const activeVouchers = coupons.filter((c) => c.isActive).length;
+  const totalVouchers = allCoupons.length;
+  const activeVouchers = allCoupons.filter((c) => c.isActive).length;
   const disabledVouchers = totalVouchers - activeVouchers;
-  const totalUsage = coupons.reduce((s, c) => s + (c.usageCount || 0), 0);
+  const totalUsage = allCoupons.reduce((s, c) => s + (c.usageCount || 0), 0);
 
   return (
     <div className="space-y-6">
@@ -292,8 +301,11 @@ const PromotionPage = () => {
             <input
               type="text"
               placeholder="Tìm theo mã voucher..."
-              value={couponSearch}
-              onChange={(e) => setCouponSearch(e.target.value)}
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(1);
+              }}
               className="w-full pl-12 pr-4 py-3 bg-[#f9f9f9] border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-[#0f5dd9] text-sm"
             />
           </div>
@@ -458,15 +470,16 @@ const PromotionPage = () => {
       <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
         {isLoading ? (
           <div className="text-center py-12 text-gray-400">Đang tải...</div>
-        ) : filteredCoupons.length === 0 ? (
+        ) : processedCoupons.length === 0 ? (
           <div className="text-center py-12 text-gray-400">
             <Ticket className="w-10 h-10 mx-auto mb-2 text-gray-300" />
-            {couponSearch || couponFilter !== 'all'
+            {search || couponFilter !== 'all'
               ? 'Không tìm thấy voucher nào'
               : 'Chưa có voucher nào. Nhấn "Tạo Voucher" để bắt đầu.'}
           </div>
         ) : (
-          <table className="w-full text-sm">
+          <>
+            <table className="w-full text-sm">
             <thead className="bg-gray-50 text-gray-500">
               <tr>
                 <th className="px-5 py-3 text-left">Mã</th>
@@ -482,7 +495,7 @@ const PromotionPage = () => {
             </thead>
 
             <tbody className="divide-y">
-              {filteredCoupons.map((coupon) => (
+              {paginatedCoupons.map((coupon) => (
                 <tr
                   key={coupon.promotionId || coupon.code}
                   className="hover:bg-gray-50"
@@ -571,6 +584,38 @@ const PromotionPage = () => {
               ))}
             </tbody>
           </table>
+          <div className="p-6 border-t border-[#ececec] flex flex-col md:flex-row justify-between items-center gap-4 bg-white">
+            <div className="flex items-center gap-6">
+              <div className="flex items-center gap-3">
+                <span className="text-sm text-[#4f5562]">Số bản ghi mỗi trang:</span>
+                <select
+                  value={size}
+                  onChange={(e) => {
+                    setSize(Number(e.target.value));
+                    setPage(1);
+                  }}
+                  className="px-3 py-1.5 border border-[#e0e0e0] rounded-lg text-sm focus:outline-none focus:border-[#d90f0f] bg-white cursor-pointer"
+                >
+                  {[5, ...PAGE_SIZES.filter(s => s !== 5)].sort((a,b) => a - b).map((s) => (
+                    <option key={s} value={s}>
+                      {s}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-[#4f5562]">
+                Trang <strong>{page}</strong> / {totalPages}
+              </span>
+              <Pagination
+                currentPage={page}
+                totalPages={totalPages}
+                onPageChange={(p) => setPage(p)}
+              />
+            </div>
+          </div>
+          </>
         )}
       </div>
 

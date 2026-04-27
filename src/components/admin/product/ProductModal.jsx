@@ -1,4 +1,4 @@
-﻿import {
+import {
   Glasses,
   Scan,
   Palette,
@@ -116,6 +116,27 @@ const ProductModal = ({
     });
   };
 
+  const handleVariantImageUpload = async (index, e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const url = await uploadRequest.uploadImage(file, 'products');
+      const currentImages = variants[index].images || [];
+      const newImages = [...currentImages, { id: Date.now(), url, preview: url }];
+      handleVariantChange(index, 'images', newImages);
+    } catch (err) {
+      toast.error('Upload ảnh thất bại');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleRemoveVariantImage = (index, imageId) => {
+    const newImages = (variants[index].images || []).filter((img) => img.id !== imageId);
+    handleVariantChange(index, 'images', newImages);
+  };
+
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
       <div className="bg-white rounded-2xl w-full max-w-5xl shadow-2xl max-h-[95vh] flex flex-col">
@@ -135,10 +156,10 @@ const ProductModal = ({
         {/* Body - Có thể cuộn */}
         <div className="p-6 overflow-y-auto custom-scrollbar space-y-6">
           <form id="product-form" onSubmit={onSubmit} className="space-y-6">
-            {/* Section 1: Thông tin cơ bản (3 cột để tiết kiệm diện tích) */}
-            <div className="grid grid-cols-3 gap-4">
-              <div className="col-span-2 space-y-4">
-                <div>
+            {/* Section 1: Thông tin cơ bản */}
+            <div className="grid grid-cols-1 gap-4">
+              <div className={`grid ${formData.type === 'accessory' ? 'grid-cols-3' : 'grid-cols-2'} gap-4`}>
+                <div className="col-span-1">
                   <label className="block text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wider">
                     Tên sản phẩm
                   </label>
@@ -153,86 +174,40 @@ const ProductModal = ({
                     placeholder="VD: Gọng kính Ray-Ban Aviator"
                   />
                 </div>
-                <div
-                  className={`grid ${formData.type === 'accessory' ? 'grid-cols-2' : 'grid-cols-1'} gap-3`}
-                >
-                  {formData.type === 'accessory' && (
-                    <div>
-                      <label className="block text-xs font-semibold text-gray-600 mb-1 uppercase">
-                        Giá (VND)
-                      </label>
-                      <input
-                        type="number"
-                        value={formData.price}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            price: Number(e.target.value),
-                          })
-                        }
-                        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-red-500/20 outline-none"
-                      />
-                    </div>
-                  )}
+                <div>
+                  <label className="block text-xs font-semibold text-gray-600 mb-1 uppercase">
+                    Loại
+                  </label>
+                  <select
+                    value={formData.type}
+                    onChange={(e) =>
+                      setFormData({ ...formData, type: e.target.value })
+                    }
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg outline-none bg-gray-50"
+                  >
+                    <option value="frame">Gọng kính</option>
+                    <option value="lens">Tròng kính</option>
+                    <option value="accessory">Phụ kiện</option>
+                  </select>
+                </div>
+                {formData.type === 'accessory' && (
                   <div>
                     <label className="block text-xs font-semibold text-gray-600 mb-1 uppercase">
-                      Loại
+                      Giá (VND)
                     </label>
-                    <select
-                      value={formData.type}
+                    <input
+                      type="number"
+                      value={formData.price}
                       onChange={(e) =>
-                        setFormData({ ...formData, type: e.target.value })
+                        setFormData({
+                          ...formData,
+                          price: Number(e.target.value),
+                        })
                       }
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg outline-none bg-gray-50"
-                    >
-                      <option value="frame">Gọng kính</option>
-                      <option value="lens">Tròng kính</option>
-                      <option value="accessory">Phụ kiện</option>
-                    </select>
+                      className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-red-500/20 outline-none"
+                    />
                   </div>
-                </div>
-              </div>
-
-              {/* Upload Ảnh - Gọn hơn */}
-              <div className="col-span-1">
-                <label className="block text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wider">
-                  Hình ảnh
-                </label>
-                <div className="border-2 border-dashed border-gray-200 rounded-lg p-2 min-h-[110px]">
-                  <div className="flex flex-wrap gap-2 mb-2">
-                    {formData.images?.map((img) => (
-                      <div key={img.id} className="relative group w-12 h-12">
-                        <img
-                          src={img.preview}
-                          alt="Thumb"
-                          className="w-full h-full object-cover rounded-md border"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => handleRemoveImage(img.id)}
-                          className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition"
-                        >
-                          <X size={10} />
-                        </button>
-                      </div>
-                    ))}
-                    <label className="w-12 h-12 flex flex-col items-center justify-center border border-dashed border-gray-300 rounded-md cursor-pointer hover:bg-gray-50 text-gray-400">
-                      {uploading ? (
-                        <Loader2 size={16} className="animate-spin" />
-                      ) : (
-                        <Plus size={16} />
-                      )}
-                      <input
-                        type="file"
-                        multiple
-                        accept="image/*"
-                        onChange={handleImageUpload}
-                        className="hidden"
-                        disabled={uploading}
-                      />
-                    </label>
-                  </div>
-                </div>
+                )}
               </div>
             </div>
 
@@ -490,6 +465,7 @@ const ProductModal = ({
                       <th className="px-4 py-2 text-left">Mô tả biến thể</th>
                       <th className="px-4 py-2 text-left">SKU</th>
                       <th className="px-4 py-2 text-left">Giá niêm yết</th>
+                      <th className="px-4 py-2 text-left">Ảnh màu</th>
                       <th className="px-4 py-2 text-center w-12"></th>
                     </tr>
                   </thead>
@@ -584,6 +560,45 @@ const ProductModal = ({
                             }
                             className="w-full p-1.5 border rounded"
                           />
+                        </td>
+                        {/* Ảnh theo màu */}
+                        <td className="px-4 py-2">
+                          <div className="flex flex-wrap items-center gap-1">
+                            {(variant.images || []).map((img) => (
+                              <div key={img.id} className="relative group w-9 h-9 bg-gray-100 rounded border border-gray-200 overflow-hidden flex items-center justify-center">
+                                <span className="text-[8px] text-gray-400 absolute z-0">Lỗi</span>
+                                <img
+                                  src={img.preview}
+                                  alt=""
+                                  className="w-full h-full object-cover relative z-10"
+                                  onError={(e) => {
+                                    e.target.style.display = 'none';
+                                  }}
+                                />
+                                <button
+                                  type="button"
+                                  onClick={() => handleRemoveVariantImage(index, img.id)}
+                                  className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full p-px opacity-0 group-hover:opacity-100 transition"
+                                >
+                                  <X size={8} />
+                                </button>
+                              </div>
+                            ))}
+                            <label className="w-9 h-9 flex items-center justify-center border border-dashed border-gray-300 rounded cursor-pointer hover:bg-gray-50 text-gray-400 flex-shrink-0">
+                              {uploading ? (
+                                <Loader2 size={12} className="animate-spin" />
+                              ) : (
+                                <Plus size={12} />
+                              )}
+                              <input
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => handleVariantImageUpload(index, e)}
+                                className="hidden"
+                                disabled={uploading}
+                              />
+                            </label>
+                          </div>
                         </td>
                         <td className="px-4 py-2 text-center">
                           <button

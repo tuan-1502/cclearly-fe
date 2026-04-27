@@ -85,6 +85,7 @@ const AdminProductsPage = () => {
           refractiveIndex: v.refractiveIndex || '',
           variantName: v.colorName || '',
           price: v.salePrice || product.basePrice,
+          images: v.images?.map((url, idx) => ({ id: idx, url, preview: url })) || [],
         })) || []
       );
     } else {
@@ -162,7 +163,15 @@ const AdminProductsPage = () => {
           refractiveIndex: v.refractiveIndex ? Number(v.refractiveIndex) : null,
           salePrice: v.price ? Number(v.price) : null,
           isPreorder: false,
+          images: (v.images || []).map((img) => img.url).filter(Boolean),
         }));
+        // Fallback: nếu sản phẩm chưa có ảnh chung, gom tất cả ảnh biến thể
+        const allVariantImageUrls = variants.flatMap((v) =>
+          (v.images || []).map((img) => img.url).filter(Boolean)
+        );
+        if (allVariantImageUrls.length > 0 && productData.imageUrls.length === 0) {
+          productData.imageUrls = allVariantImageUrls;
+        }
       }
 
       if (editingProduct) {
@@ -441,28 +450,49 @@ const AdminProductsPage = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#ececec]">
-                  {products.map((product) => (
+                  {products.map((product) => {
+                    const allImages = [
+                      ...(product.images || []),
+                      ...(product.variants || []).flatMap((v) => v.images || []),
+                    ];
+                    const uniqueImages = [...new Set(allImages)];
+
+                    return (
                     <tr
                       key={product.id}
                       className="hover:bg-gray-50 transition-colors group"
                     >
                       <td className="px-4 py-2.5">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center shrink-0 border border-gray-100 overflow-hidden">
-                            {product.images?.length > 0 ? (
+                          <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center shrink-0 border border-gray-100 overflow-hidden relative">
+                            <div className="absolute inset-0 flex items-center justify-center z-0">
+                              {product.type === 'frame' ? (
+                                <Glasses className="w-5 h-5 text-gray-400" />
+                              ) : product.type === 'lens' ? (
+                                <Scan className="w-5 h-5 text-gray-400" />
+                              ) : (
+                                <span className="text-gray-400 text-xs font-bold">PK</span>
+                              )}
+                            </div>
+                            {uniqueImages.length > 0 && (
                               <img
-                                src={product.images[0]}
+                                src={uniqueImages[0]}
                                 alt={product.name}
-                                className="w-full h-full object-cover"
+                                className="w-full h-full object-cover z-10"
+                                data-images={JSON.stringify(uniqueImages)}
+                                data-index="0"
+                                onError={(e) => {
+                                  const imgArray = JSON.parse(e.target.dataset.images || '[]');
+                                  let idx = parseInt(e.target.dataset.index || '0', 10);
+                                  idx++;
+                                  if (idx < imgArray.length) {
+                                    e.target.dataset.index = idx.toString();
+                                    e.target.src = imgArray[idx];
+                                  } else {
+                                    e.target.style.display = 'none';
+                                  }
+                                }}
                               />
-                            ) : product.type === 'frame' ? (
-                              <Glasses className="w-5 h-5 text-gray-400" />
-                            ) : product.type === 'lens' ? (
-                              <Scan className="w-5 h-5 text-gray-400" />
-                            ) : (
-                              <span className="text-gray-400 text-xs font-bold">
-                                PK
-                              </span>
                             )}
                           </div>
                           <div className="min-w-0">
@@ -532,7 +562,7 @@ const AdminProductsPage = () => {
                         </div>
                       </td>
                     </tr>
-                  ))}
+                  )})}
                 </tbody>
               </table>
             </div>

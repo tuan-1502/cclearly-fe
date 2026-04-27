@@ -144,10 +144,10 @@ export const useDeleteBanner = () => {
 };
 
 // ─── Promotions ──────────────────────────────────────────────
-export const usePromotions = () => {
+export const usePromotions = (params) => {
   return useQuery({
-    queryKey: QUERY_KEYS.PROMOTIONS,
-    queryFn: () => adminRequest.getPromotions(),
+    queryKey: [...QUERY_KEYS.PROMOTIONS, params],
+    queryFn: () => adminRequest.getPromotions(params),
     staleTime: 2 * 60 * 1000,
   });
 };
